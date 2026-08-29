@@ -12,6 +12,7 @@ from backend.auth import get_current_user
 auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/api/login/student", methods=["POST"])
+@auth_bp.route("/login/student", methods=["POST"])
 def login_student():
     """
     Authenticates student against database with hashed password and role check.
@@ -60,6 +61,7 @@ def login_student():
     })
 
 @auth_bp.route("/api/login/teacher", methods=["POST"])
+@auth_bp.route("/login/teacher", methods=["POST"])
 def login_teacher():
     """
     Authenticates faculty against database with hashed password and role check.
@@ -105,6 +107,7 @@ def login_teacher():
     })
 
 @auth_bp.route("/api/register/student", methods=["POST"])
+@auth_bp.route("/register/student", methods=["POST"])
 def register_student():
     """
     Public student self-registration endpoint storing hashed credentials in database.
@@ -176,6 +179,7 @@ def register_student():
     }), 201
 
 @auth_bp.route("/api/register/teacher", methods=["POST"])
+@auth_bp.route("/register/teacher", methods=["POST"])
 def register_teacher():
     """
     Public faculty self-registration endpoint storing hashed credentials in database.
@@ -228,7 +232,9 @@ def register_teacher():
     }), 201
 
 @auth_bp.route("/api/me", methods=["GET"])
+@auth_bp.route("/me", methods=["GET"])
 @auth_bp.route("/api/auth/me", methods=["GET"])
+@auth_bp.route("/auth/me", methods=["GET"])
 def get_me():
     """
     Returns safe current authenticated user profile. Never exposes passwords or hashes.
@@ -259,6 +265,7 @@ def get_me():
     return jsonify(response_data)
 
 @auth_bp.route("/api/logout", methods=["POST", "GET"])
+@auth_bp.route("/logout", methods=["POST", "GET"])
 def logout():
     """
     Destroys the current session and clears all authentication state.
@@ -267,6 +274,7 @@ def logout():
     return jsonify({"success": True, "message": "Logged out successfully."})
 
 @auth_bp.route("/api/forgot-password", methods=["POST"])
+@auth_bp.route("/forgot-password", methods=["POST"])
 def forgot_password():
     """
     Secure password reset handler. Does not expose account existence.
