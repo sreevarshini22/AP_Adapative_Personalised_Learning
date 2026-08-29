@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML & Quantum Benchmarks | AP Adaptive Personalised Learning Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/" style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
+        <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i>
+        <span>AP Adaptive Personalised Learning</span>
+      </a>
+      <span class="badge-tag">ML Benchmarks</span>
+    </div>
+    <div class="nav-links">
+      <a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="/login" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Sign In / Register</a>
+      <a href="/ml-performance" class="nav-link active"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
+    </div>
+  </nav>
+
+  <main class="main-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div>
+        <h1>Classical Machine Learning Evaluation & Diagnostics</h1>
+        <p>Comprehensive validation metrics across 4 classical ML classifiers trained on 5,500+ AP engineering student records.</p>
+      </div>
+      <div>
+        <span class="badge badge-primary" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+          <i class="fa-solid fa-microchip"></i> Classical ML Architecture (No Quantum Hardware Required)
+        </span>
+      </div>
+    </div>
+
+    <!-- Champion Model Card -->
+    <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(6, 182, 212, 0.15)); border: 1px solid rgba(79, 70, 229, 0.4);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+          <div style="font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
+            Selected Production Classifier
+          </div>
+          <h2 id="championModelTitle" style="font-size: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> <span id="champName">Gradient Boosting Classifier</span>
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 680px; margin-top: 0.35rem;">
+            Optimized via multi-stage validation. Selected based on maximum weighted F1 score and generalized accuracy across diverse engineering disciplines.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 2rem; align-items: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Validation Accuracy</div>
+            <div id="champAcc" style="font-size: 1.85rem; font-weight: 800; color: #10b981;">92.6%</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Weighted F1-Score</div>
+            <div id="champF1" style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">0.9262</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Dataset Records</div>
+            <div id="champSamples" style="font-size: 1.85rem; font-weight: 800; color: #fff;">5,500</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Model Benchmark Comparison Table -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-table" style="color: var(--primary-light);"></i>
+          Multi-Model Benchmark Comparison
+        </div>
+        <span class="badge badge-neutral">Stratified 80/20 Train-Test Split</span>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Model Architecture</th>
+              <th>Accuracy</th>
+              <th>Precision (Macro)</th>
+              <th>Precision (Weighted)</th>
+              <th>Recall (Weighted)</th>
+              <th>F1-Score (Weighted)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="benchmarkTableBody">
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-dim);">
+                <i class="fa-solid fa-spinner fa-spin"></i> Loading benchmark metrics...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Feature Importance & Confusion Matrix -->
+    <div class="grid-2">
+      <!-- Feature Importance Bar Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-chart-bar" style="color: var(--secondary);"></i>
+            Global Feature Importance (Predictive Weights)
+          </div>
+        </div>
+        <div style="height: 320px; position: relative;">
+          <canvas id="featureImportanceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Confusion Matrix Visualization -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-table-cells-large" style="color: #f59e0b;"></i>
+            Champion Model Confusion Matrix
+          </div>
+          <span class="badge badge-neutral">Test Set: 1,100 Students</span>
+        </div>
+
+        <div style="padding: 1rem 0; display: flex; flex-direction: column; align-items: center;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600;">
+            Predicted Class &rarr;
+          </div>
+          <div id="confusionMatrixContainer" style="display: grid; grid-template-columns: 80px repeat(3, 100px); gap: 6px; font-size: 0.85rem; text-align: center;">
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem;">
+            Diagonal cells represent correct classifications for Low, Medium, and High risk tiers.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Interactive ML Prediction Playground -->
+    <div class="card" style="margin-top: 1rem; margin-bottom: 2rem;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-sliders" style="color: var(--primary-light);"></i>
+          Live Interactive ML Inference Playground
+        </div>
+        <span class="badge badge-info">Test Custom Feature Vectors</span>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">
+        Adjust the student performance sliders below to run live inference against the trained Classical ML pipeline and observe risk classification and probabilities in real time.
+      </p>
+
+      <div class="grid-3" style="margin-bottom: 1.5rem;">
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Class Attendance (%)</span>
+            <strong id="valAttendance" style="color: var(--secondary);">68%</strong>
+          </label>
+          <input type="range" id="sliderAttendance" min="35" max="100" value="68" class="form-control" style="padding: 0;" oninput="updateSliderVal('Attendance', '%'); triggerLivePrediction();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Programming Score</span>
+            <strong id="valProg" style="color: var(--secondary);">52</strong>
+          </label>
+          <input type="range" id="sliderProg" min="20" max="100" value="52" class="form-control" style="padding: 0;" oninput="updateSliderVal('Prog', ''); triggerLivePrediction();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Mathematics Score</span>
+            <strong id="valMath" style="color: var(--secondary);">64</strong>
+          </label>
+          <input type="range" id="sliderMath" min="20" max="100" value="64" class="form-control" style="padding: 0;" oninput="updateSliderVal('Math', ''); triggerLivePrediction();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Data Structures Score</span>
+            <strong id="valDSA" style="color: var(--secondary);">58</strong>
+          </label>
+          <input type="range" id="sliderDSA" min="20" max="100" value="58" class="form-control" style="padding: 0;" oninput="updateSliderVal('DSA', ''); triggerLivePrediction();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Weekly Study Hours</span>
+            <strong id="valStudyHours" style="color: var(--secondary);">5 hrs</strong>
+          </label>
+          <input type="range" id="sliderStudyHours" min="1" max="25" value="5" class="form-control" style="padding: 0;" oninput="updateSliderVal('StudyHours', ' hrs'); triggerLivePrediction();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>LMS Learning Activity</span>
+            <strong id="valActivity" style="color: var(--secondary);">50</strong>
+          </label>
+          <input type="range" id="sliderActivity" min="10" max="100" value="50" class="form-control" style="padding: 0;" oninput="updateSliderVal('Activity', ''); triggerLivePrediction();">
+        </div>
+      </div>
+
+      <!-- Live Inference Result Panel -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Live Inference Output:</div>
+            <div id="liveRiskBadge" class="badge badge-high-risk" style="font-size: 0.9rem; padding: 0.35rem 0.85rem;">High Risk</div>
+          </div>
+          <div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Risk Score: </span>
+            <strong id="liveRiskScore" style="color: var(--secondary); font-size: 1.15rem;">68.5%</strong>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.825rem; color: var(--text-muted);">
+          <div>Low: <strong id="liveProbLow" style="color: #10b981;">8%</strong></div>
+          <div>Medium: <strong id="liveProbMed" style="color: #f59e0b;">27%</strong></div>
+          <div>High: <strong id="liveProbHigh" style="color: #ef4444;">65%</strong></div>
+        </div>
+
+        <div id="liveExplanations" style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-main); display: flex; flex-direction: column; gap: 0.3rem;">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>AP Adaptive Personalised Learning Platform &bull; Machine Learning Benchmark Evaluation Suite</p>
+  </footer>
+
+  <script>
+    let featureChartInstance = null;
+
+    async function loadMLMetrics() {
+      try {
+        const res = await fetch('/api/ml/metrics');
+        const data = await res.json();
+        if (!data.success) return;
+
+        const m = data.metrics;
+        const bestName = m.best_model_name;
+        const bestMetrics = m.best_model_metrics;
+        const comparison = m.benchmark_comparison;
+        const featureImps = m.feature_importances;
+        const dataset = m.dataset_summary;
+
+        // Render Champion Header
+        document.getElementById('champName').textContent = bestName;
+        document.getElementById('champAcc').textContent = `${(bestMetrics.accuracy * 100).toFixed(1)}%`;
+        document.getElementById('champF1').textContent = bestMetrics.f1_weighted.toFixed(4);
+        document.getElementById('champSamples').textContent = dataset.total_samples.toLocaleString();
+
+        // Render Benchmark Table
+        renderBenchmarkTable(comparison, bestName);
+
+        // Render Feature Importance Chart
+        renderFeatureImportance(featureImps);
+
+        // Render Confusion Matrix
+        renderConfusionMatrix(bestMetrics.confusion_matrix, bestMetrics.classes);
+
+        // Trigger initial live prediction
+        triggerLivePrediction();
+      } catch (err) {
+        console.error('Error loading ML metrics:', err);
+      }
+    }
+
+    function renderBenchmarkTable(comparison, bestName) {
+      const tbody = document.getElementById('benchmarkTableBody');
+      tbody.innerHTML = Object.entries(comparison).map(([name, met]) => {
+        const isBest = name === bestName;
+        return `
+          <tr style="${isBest ? 'background: rgba(79, 70, 229, 0.15); font-weight: 600;' : ''}">
+            <td>
+              <strong style="color: #fff;">${name}</strong>
+              ${isBest ? '<span class="badge badge-primary" style="margin-left: 0.5rem; font-size: 0.65rem;">Champion</span>' : ''}
+            </td>
+            <td style="color: #10b981;">${(met.accuracy * 100).toFixed(2)}%</td>
+            <td>${(met.precision_macro * 100).toFixed(2)}%</td>
+            <td>${(met.precision_weighted * 100).toFixed(2)}%</td>
+            <td>${(met.recall_weighted * 100).toFixed(2)}%</td>
+            <td><strong style="color: var(--secondary);">${met.f1_weighted.toFixed(4)}</strong></td>
+            <td>
+              <span class="badge ${isBest ? 'badge-success' : 'badge-neutral'}">
+                ${isBest ? 'Production' : 'Evaluated'}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderFeatureImportance(imps) {
+      const ctx = document.getElementById('featureImportanceChart').getContext('2d');
+      if (featureChartInstance) featureChartInstance.destroy();
+
+      const labels = Object.keys(imps).slice(0, 10).map(k => k.replace(/_/g, ' ').toUpperCase());
+      const values = Object.values(imps).slice(0, 10);
+
+      featureChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Predictive Feature Importance',
+            data: values,
+            backgroundColor: 'rgba(6, 182, 212, 0.75)',
+            borderColor: '#06b6d4',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+            y: { ticks: { color: '#f8fafc', font: { size: 10 } }, grid: { display: false } }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function renderConfusionMatrix(matrix, classes) {
+      const container = document.getElementById('confusionMatrixContainer');
+      let html = '<div style="font-weight: 700; color: var(--text-dim);">Actual ↓</div>';
+      
+      classes.forEach(c => {
+        html += `<div style="font-weight: 700; font-size: 0.75rem; color: #a5b4fc;">${c.replace(' Risk', '')}</div>`;
+      });
+
+      matrix.forEach((row, i) => {
+        html += `<div style="font-weight: 700; font-size: 0.75rem; color: #a5b4fc; text-align: left; line-height: 40px;">${classes[i].replace(' Risk', '')}</div>`;
+        row.forEach((val, j) => {
+          const isDiag = i === j;
+          const bg = isDiag ? 'rgba(16, 185, 129, 0.25)' : (val > 15 ? 'rgba(239, 68, 68, 0.2)' : 'var(--bg-surface)');
+          const border = isDiag ? '1px solid var(--risk-low)' : '1px solid var(--bg-card-border)';
+          html += `
+            <div style="background: ${bg}; border: ${border}; border-radius: var(--radius-sm); height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: ${isDiag ? '#10b981' : '#fff'};">
+              ${val}
+            </div>
+          `;
+        });
+      });
+
+      container.innerHTML = html;
+    }
+
+    function updateSliderVal(name, suffix) {
+      const val = document.getElementById(`slider${name}`).value;
+      document.getElementById(`val${name}`).textContent = `${val}${suffix}`;
+    }
+
+    let predictDebounce;
+    function triggerLivePrediction() {
+      clearTimeout(predictDebounce);
+      predictDebounce = setTimeout(async () => {
+        const payload = {
+          attendance: parseFloat(document.getElementById('sliderAttendance').value),
+          programming_score: parseFloat(document.getElementById('sliderProg').value),
+          mathematics_score: parseFloat(document.getElementById('sliderMath').value),
+          data_structures_score: parseFloat(document.getElementById('sliderDSA').value),
+          physics_score: 65,
+          database_score: 65,
+          communication_score: 70,
+          assignment_score: 65,
+          quiz_score: 60,
+          exam_score: 62,
+          study_hours: parseFloat(document.getElementById('sliderStudyHours').value),
+          learning_activity: parseFloat(document.getElementById('sliderActivity').value),
+          previous_performance: 65,
+          overall_progress: 55
+        };
+
+        try {
+          const res = await fetch('/api/ml/predict-custom', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (!data.success) return;
+
+          const p = data.prediction;
+          const badge = document.getElementById('liveRiskBadge');
+          let bClass = 'badge-low-risk';
+          if (p.risk_level === 'High Risk') bClass = 'badge-high-risk';
+          else if (p.risk_level === 'Medium Risk') bClass = 'badge-med-risk';
+
+          badge.className = `badge ${bClass}`;
+          badge.textContent = p.risk_level;
+
+          document.getElementById('liveRiskScore').textContent = `${Math.round(p.risk_score)}%`;
+          document.getElementById('liveProbLow').textContent = `${Math.round((p.probabilities['Low Risk'] || 0) * 100)}%`;
+          document.getElementById('liveProbMed').textContent = `${Math.round((p.probabilities['Medium Risk'] || 0) * 100)}%`;
+          document.getElementById('liveProbHigh').textContent = `${Math.round((p.probabilities['High Risk'] || 0) * 100)}%`;
+
+          const expContainer = document.getElementById('liveExplanations');
+          expContainer.innerHTML = p.explanations.map(e => `<div>&bull; ${e}</div>`).join('');
+        } catch (err) {
+          console.error('Error during live inference:', err);
+        }
+      }, 150);
+    }
+
+    window.onload = loadMLMetrics;
+  </script>
+</body>
+</html>
