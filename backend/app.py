@@ -106,6 +106,10 @@ def create_app():
     def ml_performance_page():
         return send_from_directory(frontend_dir, "ml-performance.html")
         
+    @app.route("/favicon.ico")
+    def favicon_route():
+        return "", 204
+
     @app.route("/<path:path>")
     def serve_static(path):
         if os.path.exists(os.path.join(frontend_dir, path)):
