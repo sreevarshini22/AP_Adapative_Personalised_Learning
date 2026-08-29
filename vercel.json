@@ -4,6 +4,10 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
       "source": "/",
       "destination": "/frontend/login.html"
     },
@@ -38,10 +42,6 @@
     {
       "source": "/styles.css",
       "destination": "/frontend/styles.css"
-    },
-    {
-      "source": "/api/:match*",
-      "destination": "https://ap-adaptive-personalised-learning.onrender.com/api/:match*"
     },
     {
       "source": "/:path((?!frontend/).*)",
