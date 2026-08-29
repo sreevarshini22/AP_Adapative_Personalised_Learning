@@ -1,0 +1,27 @@
+{
+  "scaler_min": [
+    38.0,
+    22.0,
+    24.0,
+    20.0,
+    25.0
+  ],
+  "scaler_max": [
+    99.5,
+    99.0,
+    98.0,
+    100.0,
+    100.0
+  ],
+  "feature_columns": [
+    "attendance",
+    "mathematics_score",
+    "physics_score",
+    "programming_score",
+    "assignment_score"
+  ],
+  "normalization_range": [
+    0,
+    "pi"
+  ]
+}

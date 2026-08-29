@@ -1,0 +1,95 @@
+{
+  "framework": "PennyLane",
+  "device": "default.qubit",
+  "qubits": 5,
+  "layers": 2,
+  "encoding": "AngleEmbedding (Y-axis rotation mapped to [0, pi])",
+  "optimizer": "Adam",
+  "epochs": 10,
+  "training_time_seconds": 90.81,
+  "dataset_summary": {
+    "total_samples": 5500,
+    "train_samples": 4400,
+    "test_samples": 1100,
+    "features": [
+      "attendance",
+      "mathematics_score",
+      "physics_score",
+      "programming_score",
+      "assignment_score"
+    ],
+    "classes": [
+      "Low Risk",
+      "Medium Risk",
+      "High Risk"
+    ]
+  },
+  "quantum_metrics": {
+    "accuracy": 0.796,
+    "precision_weighted": 0.811,
+    "recall_weighted": 0.796,
+    "f1_weighted": 0.7878,
+    "confusion_matrix": [
+      [
+        32,
+        27,
+        0
+      ],
+      [
+        4,
+        130,
+        6
+      ],
+      [
+        0,
+        14,
+        37
+      ]
+    ],
+    "classification_report": {
+      "Low Risk": {
+        "precision": 0.8888888888888888,
+        "recall": 0.5423728813559322,
+        "f1-score": 0.6736842105263158,
+        "support": 59.0
+      },
+      "Medium Risk": {
+        "precision": 0.7602339181286549,
+        "recall": 0.9285714285714286,
+        "f1-score": 0.8360128617363344,
+        "support": 140.0
+      },
+      "High Risk": {
+        "precision": 0.8604651162790697,
+        "recall": 0.7254901960784313,
+        "f1-score": 0.7872340425531915,
+        "support": 51.0
+      },
+      "accuracy": 0.796,
+      "macro avg": {
+        "precision": 0.8365293077655377,
+        "recall": 0.7321448353352641,
+        "f1-score": 0.7656437049386139,
+        "support": 250.0
+      },
+      "weighted avg": {
+        "precision": 0.8110436556507548,
+        "recall": 0.796,
+        "f1-score": 0.7877524209374089,
+        "support": 250.0
+      }
+    }
+  },
+  "classical_rf_metrics": {
+    "accuracy": 0.888,
+    "precision_weighted": 0.8909,
+    "recall_weighted": 0.888,
+    "f1_weighted": 0.8886
+  },
+  "classical_lr_metrics": {
+    "accuracy": 0.82,
+    "precision_weighted": 0.8214,
+    "recall_weighted": 0.82,
+    "f1_weighted": 0.8201
+  }
+}
