@@ -1,51 +1,55 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
     },
     {
-      "source": "/",
-      "destination": "/frontend/login.html"
+      "src": "/styles.css",
+      "dest": "/frontend/styles.css"
     },
     {
-      "source": "/login",
-      "destination": "/frontend/login.html"
+      "src": "/login",
+      "dest": "/frontend/login.html"
     },
     {
-      "source": "/student-login",
-      "destination": "/frontend/student-login.html"
+      "src": "/student-login",
+      "dest": "/frontend/student-login.html"
     },
     {
-      "source": "/teacher-login",
-      "destination": "/frontend/teacher-login.html"
+      "src": "/teacher-login",
+      "dest": "/frontend/teacher-login.html"
     },
     {
-      "source": "/student-dashboard",
-      "destination": "/frontend/student-dashboard.html"
+      "src": "/student-dashboard",
+      "dest": "/frontend/student-dashboard.html"
     },
     {
-      "source": "/teacher-dashboard",
-      "destination": "/frontend/teacher-dashboard.html"
+      "src": "/teacher-dashboard",
+      "dest": "/frontend/teacher-dashboard.html"
     },
     {
-      "source": "/student-details",
-      "destination": "/frontend/student-details.html"
+      "src": "/student-details",
+      "dest": "/frontend/student-details.html"
     },
     {
-      "source": "/ml-performance",
-      "destination": "/frontend/ml-performance.html"
+      "src": "/ml-performance",
+      "dest": "/frontend/ml-performance.html"
     },
     {
-      "source": "/styles.css",
-      "destination": "/frontend/styles.css"
+      "src": "/",
+      "dest": "/frontend/login.html"
     },
     {
-      "source": "/:path((?!frontend/).*)",
-      "destination": "/frontend/:path"
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
     }
   ]
 }

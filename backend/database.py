@@ -4,12 +4,25 @@ Manages SQLite schema, tables for dynamic academics (subjects, lessons, labs, as
 """
 
 import os
+import shutil
 import sqlite3
 from werkzeug.security import generate_password_hash
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DB_DIR = os.path.join(PROJECT_ROOT, "database")
-DB_PATH = os.path.join(DB_DIR, "students.db")
+
+# Handle read-only serverless environments (e.g. Vercel / AWS Lambda)
+if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or not os.access(PROJECT_ROOT, os.W_OK):
+    DB_DIR = "/tmp"
+    DB_PATH = os.path.join(DB_DIR, "students.db")
+    orig_db = os.path.join(PROJECT_ROOT, "database", "students.db")
+    if os.path.exists(orig_db) and not os.path.exists(DB_PATH):
+        try:
+            shutil.copy2(orig_db, DB_PATH)
+        except Exception:
+            pass
+else:
+    DB_DIR = os.path.join(PROJECT_ROOT, "database")
+    DB_PATH = os.path.join(DB_DIR, "students.db")
 
 def get_db_connection():
     """Returns a SQLite database connection with row factory enabled."""
