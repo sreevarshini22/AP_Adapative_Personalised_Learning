@@ -42,6 +42,10 @@
     {
       "source": "/api/:match*",
       "destination": "https://ap-adaptive-personalised-learning.onrender.com/api/:match*"
+    },
+    {
+      "source": "/:path((?!frontend/).*)",
+      "destination": "/frontend/:path"
     }
   ]
 }
