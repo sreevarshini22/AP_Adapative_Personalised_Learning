@@ -125,7 +125,12 @@
 
             <div class="form-group">
               <label class="form-label" for="studentPassword">Password</label>
-              <input type="password" id="studentPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+              <div class="password-input-wrapper">
+                <input type="password" id="studentPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+                <button type="button" id="toggleStudentPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('studentPassword', 'toggleStudentPasswordBtn')" aria-label="Show password" title="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
             </div>
 
             <button type="submit" id="studentLoginBtn" class="btn btn-primary" style="width: 100%; padding: 0.75rem; margin-top: 0.5rem;">
@@ -167,7 +172,12 @@
 
             <div class="form-group">
               <label class="form-label" for="teacherPassword">Password</label>
-              <input type="password" id="teacherPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+              <div class="password-input-wrapper">
+                <input type="password" id="teacherPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+                <button type="button" id="toggleTeacherPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('teacherPassword', 'toggleTeacherPasswordBtn')" aria-label="Show password" title="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
             </div>
 
             <button type="submit" id="teacherLoginBtn" class="btn btn-secondary" style="width: 100%; padding: 0.75rem; margin-top: 0.5rem; background: var(--secondary); color: #000; font-weight: 700;">
@@ -221,8 +231,13 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Password *</label>
-            <input type="password" id="regPassword" class="form-control" required placeholder="Create a secure password">
+            <label class="form-label" for="regPassword">Password *</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPassword" class="form-control" required placeholder="Create a secure password" autocomplete="new-password">
+              <button type="button" id="toggleRegPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', 'toggleRegPasswordBtn')" aria-label="Show password" title="Show password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
@@ -489,6 +504,21 @@
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Instructions';
       }
+    }
+
+    function togglePasswordVisibility(inputId, btnId) {
+      const input = document.getElementById(inputId);
+      const btn = document.getElementById(btnId);
+      if (!input || !btn) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      const icon = btn.querySelector('i');
+      if (icon) {
+        icon.className = isPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+      }
+      const label = isPassword ? 'Hide password' : 'Show password';
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('title', label);
     }
 
     function showError(el, msg) {

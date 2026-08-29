@@ -39,7 +39,9 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         c = conn.cursor()
         test_emails = [
             'ananya.test@apedu.ac.in', 'divya.ai@apedu.ac.in',
-            'kiran.ece@apedu.ac.in', 'fresh.mech@apedu.ac.in'
+            'kiran.ece@apedu.ac.in', 'fresh.mech@apedu.ac.in',
+            '23ai701@student.apedu.ac.in', '23me901@student.apedu.ac.in',
+            '23ece801@student.apedu.ac.in', '23cse501@student.apedu.ac.in'
         ]
         test_rolls = ['23CSE501', '23AI701', '23ECE801', '23ME901']
         for email in test_emails:
@@ -51,7 +53,7 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         conn.close()
 
     def test_01_download_csv_template(self):
-        """Test 1: Teacher can download the CSV template with correct headers."""
+        """Test 1: Teacher can download the CSV template with 5 mandatory columns."""
         # 1. Login as teacher
         self.client.post("/api/login/teacher", json={
             "email": "teacher@example.com",
@@ -63,27 +65,27 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn("text/csv", res.content_type)
         csv_text = res.get_data(as_text=True)
-        self.assertIn("student_name", csv_text)
-        self.assertIn("roll_no", csv_text)
-        self.assertIn("email", csv_text)
-        self.assertIn("password", csv_text)
-        self.assertIn("branch", csv_text)
-        self.assertIn("year", csv_text)
-        self.assertIn("semester", csv_text)
+        self.assertIn("Student Name", csv_text)
+        self.assertIn("Roll No", csv_text)
+        self.assertIn("Branch", csv_text)
+        self.assertIn("Year", csv_text)
+        self.assertIn("Section", csv_text)
+        self.assertIn("Rahul Kumar", csv_text)
+        self.assertIn("23A91A0501", csv_text)
 
     def test_02_csv_preview_validation(self):
-        """Test 2: CSV preview endpoint validates rows, detects invalid records & missing columns."""
+        """Test 2: CSV preview endpoint validates rows, detects invalid records & missing values."""
         self.client.post("/api/login/teacher", json={
             "email": "teacher@example.com",
             "password": "teacher123"
         })
         
-        # Valid + Invalid mix CSV
+        # Valid + Invalid mix 5-column CSV
         csv_content = (
-            "student_name,roll_no,email,password,year,branch,section,semester\n"
-            "Ananya Sen,23CSE501,ananya.test@apedu.ac.in,Ananya123,2nd Year,CSE,A,3\n"
-            "Bad Email,23CSE502,invalid_email_format,Pass123,2nd Year,CSE,A,3\n"
-            "Missing Year,23CSE503,missing.yr@apedu.ac.in,Pass123,,CSE,A,3\n"
+            "Student Name,Roll No,Branch,Year,Section\n"
+            "Ananya Sen,23CSE501,CSE,2nd Year,A\n"
+            ",23CSE502,CSE,2nd Year,A\n"
+            "Missing Year,23CSE503,CSE,,A\n"
         )
         
         data = {
@@ -103,18 +105,47 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         self.assertEqual(preview_data["invalid_count"], 2)
         self.assertEqual(len(preview_data["preview"]), 1)
         self.assertEqual(preview_data["preview"][0]["student_name"], "Ananya Sen")
+        self.assertEqual(preview_data["preview"][0]["roll_no"], "23CSE501")
+        self.assertEqual(preview_data["preview"][0]["branch"], "CSE")
 
-    def test_03_bulk_csv_upload_and_password_hashing(self):
-        """Test 3: Teacher uploads CSV -> Students inserted into SQLite with hashed passwords."""
+    def test_03_missing_header_validation_error(self):
+        """Test 3: Missing required column returns exact error message."""
+        self.client.post("/api/login/teacher", json={
+            "email": "teacher@example.com",
+            "password": "teacher123"
+        })
+        
+        # CSV missing Section column
+        csv_content = (
+            "Student Name,Roll No,Branch,Year\n"
+            "Ananya Sen,23CSE501,CSE,2nd Year\n"
+        )
+        
+        data = {
+            "file": (io.BytesIO(csv_content.encode("utf-8")), "missing_header.csv")
+        }
+        
+        res = self.client.post(
+            "/api/teacher/students/upload/preview",
+            data=data,
+            content_type="multipart/form-data"
+        )
+        self.assertEqual(res.status_code, 400)
+        preview_data = res.get_json()
+        self.assertFalse(preview_data["success"])
+        self.assertEqual(preview_data["message"], "Invalid CSV. Required columns: Student Name, Roll No, Branch, Year, Section.")
+
+    def test_04_bulk_csv_upload_and_password_hashing(self):
+        """Test 4: Teacher uploads 5-column CSV -> Students inserted into SQLite with hashed passwords."""
         self.client.post("/api/login/teacher", json={
             "email": "teacher@example.com",
             "password": "teacher123"
         })
         
         csv_content = (
-            "student_name,roll_no,email,password,year,branch,section,semester,attendance\n"
-            "Divya Reddy,23AI701,divya.ai@apedu.ac.in,DivyaSecret123,2nd Year,CSE (AI & ML),B,3,88.0\n"
-            "Kiran Rao,23ECE801,kiran.ece@apedu.ac.in,KiranSecret123,3rd Year,ECE,A,5,82.0\n"
+            "Student Name,Roll No,Branch,Year,Section\n"
+            "Divya Reddy,23AI701,AIML,2,B\n"
+            "Kiran Rao,23ECE801,ECE,3,A\n"
         )
         
         data = {
@@ -135,11 +166,10 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         # Verify in SQLite database that password is NOT stored in plaintext
         conn = get_db_connection()
         c = conn.cursor()
-        c.execute("SELECT email, password_hash FROM users WHERE email = 'divya.ai@apedu.ac.in'")
+        c.execute("SELECT email, password_hash FROM users WHERE email = '23ai701@student.apedu.ac.in'")
         user_row = c.fetchone()
         self.assertIsNotNone(user_row)
-        self.assertNotEqual(user_row["password_hash"], "DivyaSecret123")
-        self.assertTrue(check_password_hash(user_row["password_hash"], "DivyaSecret123"))
+        self.assertTrue(check_password_hash(user_row["password_hash"], "23ai701"))
         
         # Verify import history table
         c.execute("SELECT file_name, imported_rows FROM student_import_history ORDER BY id DESC LIMIT 1")
@@ -148,8 +178,8 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         self.assertEqual(hist_row["imported_rows"], 2)
         conn.close()
 
-    def test_04_duplicate_handling(self):
-        """Test 4: Re-uploading existing roll numbers or emails skips duplicates safely."""
+    def test_05_duplicate_handling(self):
+        """Test 5: Re-uploading existing roll numbers skips duplicates safely."""
         self.client.post("/api/login/teacher", json={
             "email": "teacher@example.com",
             "password": "teacher123"
@@ -157,8 +187,8 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         
         # 1. Initial upload for Divya
         csv_initial = (
-            "student_name,roll_no,email,password,year,branch,section,semester\n"
-            "Divya Reddy,23AI701,divya.ai@apedu.ac.in,DivyaSecret123,2nd Year,CSE (AI & ML),B,3\n"
+            "Student Name,Roll No,Branch,Year,Section\n"
+            "Divya Reddy,23AI701,AIML,2nd Year,B\n"
         )
         self.client.post(
             "/api/teacher/students/upload",
@@ -168,9 +198,9 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         
         # 2. Second upload containing Divya (duplicate) and Fresh Student (new)
         csv_duplicate = (
-            "student_name,roll_no,email,password,year,branch,section,semester\n"
-            "Divya Reddy,23AI701,divya.ai@apedu.ac.in,DivyaSecret123,2nd Year,CSE (AI & ML),B,3\n"
-            "Fresh Student,23ME901,fresh.mech@apedu.ac.in,FreshPass123,4th Year,Mechanical Engineering,A,7\n"
+            "Student Name,Roll No,Branch,Year,Section\n"
+            "Divya Reddy,23AI701,AIML,2nd Year,B\n"
+            "Fresh Student,23ME901,Mechanical Engineering,4th Year,A\n"
         )
         
         data = {
@@ -187,16 +217,16 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         self.assertEqual(res_data["imported_rows"], 1) # Fresh Student imported
         self.assertEqual(res_data["skipped_rows"], 1) # Divya duplicate skipped
 
-    def test_05_new_student_immediate_login_and_dynamic_subject_isolation(self):
-        """Test 5: Imported student can immediately login & sees strictly only their matching subjects."""
+    def test_06_new_student_immediate_login_and_dynamic_subject_isolation(self):
+        """Test 6: Imported student can immediately login & sees strictly only their matching subjects."""
         # 1. Teacher uploads student
         self.client.post("/api/login/teacher", json={
             "email": "teacher@example.com",
             "password": "teacher123"
         })
         csv_content = (
-            "student_name,roll_no,email,password,year,branch,section,semester\n"
-            "Divya Reddy,23AI701,divya.ai@apedu.ac.in,DivyaSecret123,2nd Year,CSE (AI & ML),B,3\n"
+            "Student Name,Roll No,Branch,Year,Section\n"
+            "Divya Reddy,23AI701,AIML,2nd Year,B\n"
         )
         self.client.post(
             "/api/teacher/students/upload",
@@ -205,10 +235,10 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         )
         self.client.post("/api/logout")
 
-        # 2. Student login using credentials from CSV upload
+        # 2. Student login using credentials from CSV upload (email generated or roll_no)
         res_login = self.client.post("/api/login/student", json={
-            "email": "divya.ai@apedu.ac.in",
-            "password": "DivyaSecret123"
+            "email": "23ai701@student.apedu.ac.in",
+            "password": "23ai701"
         })
         self.assertEqual(res_login.status_code, 200)
         login_data = res_login.get_json()
@@ -235,8 +265,8 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         self.assertNotIn("EC401", subject_codes)
         self.assertNotIn("ME201", subject_codes)
 
-    def test_06_student_cannot_upload_csv(self):
-        """Test 6: Role isolation - Student is forbidden from calling teacher upload endpoints."""
+    def test_07_student_cannot_upload_csv(self):
+        """Test 7: Role isolation - Student is forbidden from calling teacher upload endpoints."""
         self.client.post("/api/login/student", json={
             "email": "student@example.com",
             "password": "student123"

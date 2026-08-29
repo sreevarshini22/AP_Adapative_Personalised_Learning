@@ -133,7 +133,7 @@
             Bulk Student CSV Upload & Enrollment
           </h3>
           <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.25rem;">
-            Upload hundreds of students in one step. Required fields: <code>student_name, roll_no, email, password, year, branch, section, semester</code>.
+            Upload students in bulk. Required columns: <code>Student Name, Roll No, Branch, Year, Section</code>.
           </p>
         </div>
         <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
@@ -141,8 +141,8 @@
           <button class="btn btn-primary" onclick="document.getElementById('quickCsvInput').click()" style="padding: 0.5rem 1rem;">
             <i class="fa-solid fa-cloud-arrow-up"></i> Choose CSV File
           </button>
-          <button class="btn btn-outline" onclick="downloadCsvTemplate()" style="padding: 0.5rem 1rem;">
-            <i class="fa-solid fa-download"></i> Template
+          <button class="btn btn-outline" onclick="downloadCsvTemplate()" style="padding: 0.5rem 1rem;" title="Download sample CSV format">
+            <i class="fa-solid fa-download"></i> Sample CSV
           </button>
           <button class="btn btn-outline" onclick="openUploadHistoryModal()" style="padding: 0.5rem 1rem;">
             <i class="fa-solid fa-history"></i> History
@@ -498,15 +498,18 @@
         <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--primary-light); padding: 1.5rem; border-radius: var(--radius-md); text-align: center; margin-bottom: 1.25rem;">
           <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.25rem; color: var(--primary-light); margin-bottom: 0.75rem;"></i>
           <h4 style="margin-bottom: 0.35rem;">Choose or Drag & Drop Student CSV</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-            Upload hundreds of students in one step. Required columns: <code>student_name, roll_no, email, password, year, branch, section, semester</code>.
+          <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Upload student records in one step. Required 5 columns: <code>Student Name, Roll No, Branch, Year, Section</code>.
           </p>
           <input type="file" id="bulkCsvFile" accept=".csv" class="form-control" style="max-width: 350px; margin: 0 auto 0.75rem auto;" onchange="onCsvFileChosen(event)">
           <div style="display: flex; justify-content: center; gap: 0.75rem;">
             <button class="btn btn-outline" style="font-size: 0.8rem;" onclick="downloadCsvTemplate()">
-              <i class="fa-solid fa-download"></i> Download CSV Template
+              <i class="fa-solid fa-download"></i> Download Sample CSV
             </button>
           </div>
+        </div>
+
+        <div id="csvUploadModalError" style="display: none; background: var(--risk-high-bg); border: 1px solid var(--risk-high-border); color: #fca5a5; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1rem;">
         </div>
 
         <div id="csvFileInfoBox" style="display: none; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.85rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1rem;">
@@ -532,7 +535,7 @@
       <div class="modal-header">
         <h3 style="display: flex; align-items: center; gap: 0.5rem;">
           <i class="fa-solid fa-list-check" style="color: var(--secondary);"></i>
-          CSV Validation & Pre-Import Preview
+          CSV Preview & Validation
         </h3>
         <button class="close-btn" onclick="closeCsvPreviewModal()">&times;</button>
       </div>
@@ -545,7 +548,7 @@
             <div id="previewTotalRows" style="font-size: 1.4rem; font-weight: 700;">0</div>
           </div>
           <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
-            <div style="font-size: 0.75rem; color: #6ee7b7;">VALID ROWS (READY)</div>
+            <div style="font-size: 0.75rem; color: #6ee7b7;">VALID STUDENTS FOUND</div>
             <div id="previewValidRows" style="font-size: 1.4rem; font-weight: 700; color: #10b981;">0</div>
           </div>
           <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
@@ -556,19 +559,17 @@
 
         <!-- Valid Records Preview Table -->
         <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
-          <i class="fa-solid fa-eye" style="color: var(--primary-light);"></i> Preview Valid Students (First 10)
+          <i class="fa-solid fa-eye" style="color: var(--primary-light);"></i> Preview Valid Students
         </h4>
         <div class="table-responsive" style="margin-bottom: 1.25rem;">
-          <table class="data-table" style="font-size: 0.8rem;">
+          <table class="data-table" style="font-size: 0.825rem;">
             <thead>
               <tr>
+                <th>Student Name</th>
                 <th>Roll No</th>
-                <th>Name</th>
-                <th>Email</th>
                 <th>Branch</th>
                 <th>Year</th>
-                <th>Sem</th>
-                <th>Sec</th>
+                <th>Section</th>
               </tr>
             </thead>
             <tbody id="previewValidTableBody">
@@ -587,8 +588,8 @@
               <thead>
                 <tr>
                   <th>Row #</th>
+                  <th>Student Name</th>
                   <th>Roll No</th>
-                  <th>Email</th>
                   <th>Validation Error</th>
                 </tr>
               </thead>
@@ -603,7 +604,7 @@
       <div class="modal-footer" style="display: flex; justify-content: space-between;">
         <button type="button" class="btn btn-secondary" onclick="closeCsvPreviewModal()">Cancel</button>
         <button type="button" id="confirmImportBtn" class="btn btn-primary" onclick="confirmAndExecuteCsvImport()">
-          <i class="fa-solid fa-file-import"></i> Confirm & Import Valid Students
+          <i class="fa-solid fa-file-import"></i> Import Students
         </button>
       </div>
     </div>
@@ -1041,13 +1042,25 @@
     let selectedCsvFile = null;
 
     function downloadCsvTemplate() {
-      window.location.href = '/api/teacher/students/template';
+      const csvContent = "Student Name,Roll No,Branch,Year,Section\n" +
+        "Rahul Kumar,23A91A0501,AIML,3,A\n" +
+        "Priya Sharma,23A91A0502,CSE,3,A\n" +
+        "Arjun Reddy,23A91A0503,AIML,3,B\n";
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'student_sample.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     function openBulkUploadModal() {
       selectedCsvFile = null;
       document.getElementById('bulkCsvFile').value = '';
       document.getElementById('csvFileInfoBox').style.display = 'none';
+      const errBox = document.getElementById('csvUploadModalError');
+      if (errBox) errBox.style.display = 'none';
       document.getElementById('previewCsvBtn').disabled = true;
       document.getElementById('bulkUploadModal').classList.add('show');
     }
@@ -1105,6 +1118,8 @@
       document.getElementById('csvFileNameText').textContent = file.name;
       document.getElementById('csvFileSizeText').textContent = `${(file.size / 1024).toFixed(1)} KB`;
       document.getElementById('csvFileInfoBox').style.display = 'block';
+      const errBox = document.getElementById('csvUploadModalError');
+      if (errBox) errBox.style.display = 'none';
       document.getElementById('previewCsvBtn').disabled = false;
     }
 
@@ -1118,6 +1133,12 @@
     async function requestCsvPreview() {
       if (!selectedCsvFile) return;
 
+      const previewBtn = document.getElementById('previewCsvBtn');
+      if (previewBtn) {
+        previewBtn.disabled = true;
+        previewBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validating CSV...';
+      }
+
       const formData = new FormData();
       formData.append('file', selectedCsvFile);
 
@@ -1128,8 +1149,18 @@
         });
         const data = await res.json();
 
+        if (previewBtn) {
+          previewBtn.disabled = false;
+          previewBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Validate & Preview CSV';
+        }
+
         if (!data.success) {
-          alert(`Validation Failed: ${data.message}`);
+          const errBox = document.getElementById('csvUploadModalError');
+          if (errBox) {
+            errBox.textContent = data.message;
+            errBox.style.display = 'block';
+          }
+          alert(`Validation Error: ${data.message}`);
           return;
         }
 
@@ -1140,25 +1171,23 @@
         document.getElementById('previewValidRows').textContent = data.valid_count;
         document.getElementById('previewInvalidRows').textContent = data.invalid_count;
 
-        // Render preview valid rows
+        // Render preview valid rows (Student Name, Roll No, Branch, Year, Section)
         const validTbody = document.getElementById('previewValidTableBody');
         validTbody.innerHTML = '';
-        if (data.preview.length) {
+        if (data.preview && data.preview.length) {
           data.preview.forEach(row => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-              <td style="font-family: monospace; font-weight: 600;">${row.roll_no}</td>
-              <td>${row.student_name}</td>
-              <td>${row.email}</td>
+              <td style="font-weight: 600; color: #fff;">${row.student_name}</td>
+              <td style="font-family: monospace; font-weight: 600; color: var(--primary-light);">${row.roll_no}</td>
               <td><span class="badge badge-outline">${row.branch}</span></td>
               <td>${row.year}</td>
-              <td>Sem ${row.semester}</td>
               <td>Sec ${row.section}</td>
             `;
             validTbody.appendChild(tr);
           });
         } else {
-          validTbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1rem;">No valid records detected.</td></tr>';
+          validTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No valid student records found in uploaded file.</td></tr>';
         }
 
         // Render errors if any
@@ -1172,8 +1201,8 @@
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td style="font-weight: 600; color: #f87171;">Row ${err.row}</td>
-              <td style="font-family: monospace;">${err.roll_no}</td>
-              <td>${err.email}</td>
+              <td>${err.student_name || '-'}</td>
+              <td style="font-family: monospace;">${err.roll_no || '-'}</td>
               <td style="color: #fca5a5;">${err.error}</td>
             `;
             errTbody.appendChild(tr);
@@ -1185,6 +1214,10 @@
         document.getElementById('confirmImportBtn').disabled = (data.valid_count === 0);
         openCsvPreviewModal();
       } catch (err) {
+        if (previewBtn) {
+          previewBtn.disabled = false;
+          previewBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Validate & Preview CSV';
+        }
         console.error('Error previewing CSV:', err);
         alert('Failed to process CSV file preview.');
       }
@@ -1198,7 +1231,7 @@
 
       const confirmBtn = document.getElementById('confirmImportBtn');
       confirmBtn.disabled = true;
-      confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing Records...';
+      confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing Students...';
 
       try {
         const res = await fetch('/api/teacher/students/upload', {
@@ -1207,7 +1240,7 @@
         });
         const data = await res.json();
 
-        confirmBtn.innerHTML = '<i class="fa-solid fa-file-import"></i> Confirm & Import Valid Students';
+        confirmBtn.innerHTML = '<i class="fa-solid fa-file-import"></i> Import Students';
         confirmBtn.disabled = false;
 
         if (data.success) {
@@ -1221,18 +1254,17 @@
           statusBox.style.color = '#6ee7b7';
           statusBox.innerHTML = `
             <i class="fa-solid fa-circle-check"></i> <strong>Import Successful:</strong> 
-            ${data.imported_rows} students added to database (${data.skipped_rows} duplicate/invalid skipped). 
-            They can now immediately log in with their assigned credentials.
+            ${data.imported_rows} student(s) imported into system (${data.skipped_rows} skipped / duplicate).
           `;
-          alert(`Success! ${data.imported_rows} students imported. They can now log in immediately with their credentials.`);
+          alert(`Success! ${data.imported_rows} student(s) imported successfully.`);
         } else {
           alert(`Import Error: ${data.message}`);
         }
       } catch (err) {
-        confirmBtn.innerHTML = '<i class="fa-solid fa-file-import"></i> Confirm & Import Valid Students';
+        confirmBtn.innerHTML = '<i class="fa-solid fa-file-import"></i> Import Students';
         confirmBtn.disabled = false;
         console.error('Error importing CSV:', err);
-        alert('An unexpected error occurred during CSV import.');
+        alert('An unexpected error occurred during student import.');
       }
     }
 

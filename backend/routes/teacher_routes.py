@@ -669,12 +669,14 @@ VALID_BRANCHES = [
 BRANCH_ALIASES = {
     "cse": "CSE",
     "computer science": "CSE",
+    "aiml": "CSE (AI & ML)",
     "ai & ml": "CSE (AI & ML)",
     "ai/ml": "CSE (AI & ML)",
     "cse (ai & ml)": "CSE (AI & ML)",
     "cse(ai&ml)": "CSE (AI & ML)",
     "cse-ai&ml": "CSE (AI & ML)",
     "data science": "CSE (Data Science)",
+    "ds": "CSE (Data Science)",
     "cse (data science)": "CSE (Data Science)",
     "ece": "ECE",
     "eee": "EEE",
@@ -688,10 +690,10 @@ BRANCH_ALIASES = {
 }
 
 YEAR_ALIASES = {
-    "1": "1st Year", "1st": "1st Year", "1st year": "1st Year", "first year": "1st Year",
-    "2": "2nd Year", "2nd": "2nd Year", "2nd year": "2nd Year", "second year": "2nd Year",
-    "3": "3rd Year", "3rd": "3rd Year", "3rd year": "3rd Year", "third year": "3rd Year",
-    "4": "4th Year", "4th": "4th Year", "4th year": "4th Year", "fourth year": "4th Year"
+    "1": "1st Year", "1st": "1st Year", "1st year": "1st Year", "first year": "1st Year", "year 1": "1st Year",
+    "2": "2nd Year", "2nd": "2nd Year", "2nd year": "2nd Year", "second year": "2nd Year", "year 2": "2nd Year",
+    "3": "3rd Year", "3rd": "3rd Year", "3rd year": "3rd Year", "third year": "3rd Year", "year 3": "3rd Year",
+    "4": "4th Year", "4th": "4th Year", "4th year": "4th Year", "fourth year": "4th Year", "year 4": "4th Year"
 }
 
 def normalize_branch(val):
@@ -716,60 +718,72 @@ def parse_csv_stream(stream_or_str):
     if isinstance(stream_or_str, bytes):
         stream_or_str = stream_or_str.decode("utf-8-sig", errors="replace")
     reader = csv.DictReader(io.StringIO(stream_or_str))
-    # Normalize header keys
     if not reader.fieldnames:
         return [], []
-    cleaned_fieldnames = [f.strip().lower().replace(" ", "_") if f else "" for f in reader.fieldnames]
-    reader.fieldnames = cleaned_fieldnames
+    raw_fieldnames = list(reader.fieldnames)
     rows = list(reader)
-    return rows, cleaned_fieldnames
+    return rows, raw_fieldnames
+
+def validate_csv_headers(fieldnames):
+    """
+    Validates that the 5 mandatory columns are present:
+    'Student Name', 'Roll No', 'Branch', 'Year', 'Section'.
+    Returns (is_valid, key_mapping).
+    """
+    if not fieldnames:
+        return False, None
+    mapping = {}
+    for raw_h in fieldnames:
+        if not raw_h:
+            continue
+        c = re.sub(r'[\s_]+', '', str(raw_h).strip().lower())
+        if c in ['studentname', 'name', 'fullname', 'student'] and 'student_name' not in mapping:
+            mapping['student_name'] = raw_h
+        elif c in ['rollno', 'rollnumber', 'roll', 'rollnum'] and 'roll_no' not in mapping:
+            mapping['roll_no'] = raw_h
+        elif c in ['branch', 'dept', 'department'] and 'branch' not in mapping:
+            mapping['branch'] = raw_h
+        elif c in ['year', 'academicyear', 'yr'] and 'year' not in mapping:
+            mapping['year'] = raw_h
+        elif c in ['section', 'sec'] and 'section' not in mapping:
+            mapping['section'] = raw_h
+
+    required_keys = ['student_name', 'roll_no', 'branch', 'year', 'section']
+    missing = [k for k in required_keys if k not in mapping]
+    if missing:
+        return False, None
+    return True, mapping
 
 @teacher_bp.route("/api/teacher/students/template", methods=["GET"])
 @teacher_required
 def download_student_csv_template():
-    """Generates and downloads a clean CSV template for bulk student upload."""
+    """Generates and downloads a clean 5-column CSV sample template for bulk student upload."""
     output = io.StringIO()
     writer = csv.writer(output)
     
-    # Headers
-    headers = [
-        "student_name", "roll_no", "email", "password", "year", "branch", "section", "semester",
-        "attendance", "mathematics_score", "physics_score", "programming_score",
-        "data_structures_score", "database_score", "communication_score",
-        "assignment_score", "quiz_score", "exam_score", "study_hours", "overall_progress"
-    ]
+    # 5 Mandatory Headers
+    headers = ["Student Name", "Roll No", "Branch", "Year", "Section"]
     writer.writerow(headers)
     
-    # Sample rows (teachers can delete and replace)
-    writer.writerow([
-        "Rahul Kumar", "23CSE101", "rahul.sample@apedu.ac.in", "Rahul123",
-        "2nd Year", "CSE", "A", "3",
-        "78.0", "70.0", "65.0", "75.0", "72.0", "68.0", "80.0", "75.0", "70.0", "72.0", "8.0", "65.0"
-    ])
-    writer.writerow([
-        "Priya Sharma", "23CSE102", "priya.sample@apedu.ac.in", "Priya123",
-        "2nd Year", "CSE", "A", "3",
-        "86.0", "88.0", "82.0", "90.0", "85.0", "88.0", "90.0", "88.0", "85.0", "86.0", "10.0", "82.0"
-    ])
-    writer.writerow([
-        "Arun Varma", "23ECE101", "arun.sample@apedu.ac.in", "Arun123",
-        "3rd Year", "ECE", "B", "5",
-        "64.0", "58.0", "60.0", "55.0", "52.0", "60.0", "65.0", "62.0", "58.0", "58.0", "5.0", "50.0"
-    ])
+    # Sample rows
+    writer.writerow(["Rahul Kumar", "23A91A0501", "AIML", "3", "A"])
+    writer.writerow(["Priya Sharma", "23A91A0502", "CSE", "3", "A"])
+    writer.writerow(["Arjun Reddy", "23A91A0503", "AIML", "3", "B"])
     
     csv_data = output.getvalue()
     return Response(
         csv_data,
         mimetype="text/csv",
-        headers={"Content-Disposition": "attachment;filename=student_bulk_upload_template.csv"}
+        headers={"Content-Disposition": "attachment;filename=student_sample.csv"}
     )
 
 @teacher_bp.route("/api/teacher/students/upload/preview", methods=["POST"])
 @teacher_required
 def preview_student_csv():
     """
-    Validates uploaded student CSV without saving.
-    Returns preview stats, valid rows, invalid rows, and validation error list.
+    Validates uploaded student CSV against the 5 mandatory columns.
+    Returns preview stats, valid rows (Student Name, Roll No, Branch, Year, Section),
+    invalid rows, and detailed validation error list.
     """
     if "file" not in request.files:
         return jsonify({"success": False, "message": "No file uploaded. Please select a CSV file."}), 400
@@ -786,104 +800,88 @@ def preview_student_csv():
     if not rows:
         return jsonify({"success": False, "message": "CSV file is empty or could not be read."}), 400
         
-    # Verify required headers
-    req_keys = ["student_name", "roll_no", "email", "password", "year", "branch", "section", "semester"]
-    missing_headers = [k for k in req_keys if not any(k in h for h in headers)]
-    if missing_headers:
+    # Verify 5 mandatory headers
+    is_valid, header_map = validate_csv_headers(headers)
+    if not is_valid:
         return jsonify({
             "success": False,
-            "message": f"Missing required CSV column headers: {', '.join(missing_headers)}"
+            "message": "Invalid CSV. Required columns: Student Name, Roll No, Branch, Year, Section."
         }), 400
         
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Pre-fetch existing emails and roll numbers
-    cursor.execute("SELECT LOWER(email) FROM users")
-    existing_emails = set(r[0] for r in cursor.fetchall())
+    # Pre-fetch existing roll numbers from database
     cursor.execute("SELECT UPPER(roll_no) FROM students")
     existing_rolls = set(r[0] for r in cursor.fetchall())
     conn.close()
     
-    seen_csv_emails = set()
     seen_csv_rolls = set()
-    
     valid_rows = []
     errors = []
     
     for idx, row in enumerate(rows, start=2): # Row 1 is header
-        name = row.get("student_name") or row.get("name") or row.get("full_name") or ""
-        roll = row.get("roll_no") or row.get("rollno") or row.get("roll_number") or ""
-        email = row.get("email") or ""
-        pwd = row.get("password") or ""
-        yr = row.get("year") or ""
-        br = row.get("branch") or ""
-        sec = row.get("section") or ""
-        sem = row.get("semester") or ""
+        name = str(row.get(header_map["student_name"]) or "").strip()
+        roll = str(row.get(header_map["roll_no"]) or "").strip().upper()
+        br_raw = str(row.get(header_map["branch"]) or "").strip()
+        yr_raw = str(row.get(header_map["year"]) or "").strip()
+        sec_raw = str(row.get(header_map["section"]) or "").strip().upper()
         
-        name = str(name).strip()
-        roll = str(roll).strip().upper()
-        email = str(email).strip().lower()
-        pwd = str(pwd).strip()
-        yr = normalize_year(yr)
-        br = normalize_branch(br)
-        sec = str(sec).strip().upper()
-        parsed_sem = parse_semester(sem)
-        
-        # Validations
         row_errs = []
+        
+        # Check for empty required values
+        missing_fields = []
         if not name:
-            row_errs.append("Student name is empty")
+            missing_fields.append("Student Name")
         if not roll:
-            row_errs.append("Roll number is empty")
-        elif roll in seen_csv_rolls:
-            row_errs.append(f"Duplicate roll number in CSV: {roll}")
-        elif roll in existing_rolls:
-            row_errs.append(f"Roll number already exists in database: {roll}")
+            missing_fields.append("Roll No")
+        if not br_raw:
+            missing_fields.append("Branch")
+        if not yr_raw:
+            missing_fields.append("Year")
+        if not sec_raw:
+            missing_fields.append("Section")
             
-        if not email:
-            row_errs.append("Email is empty")
-        elif not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email):
-            row_errs.append(f"Invalid email format: {email}")
-        elif email in seen_csv_emails:
-            row_errs.append(f"Duplicate email in CSV: {email}")
-        elif email in existing_emails:
-            row_errs.append(f"Email already registered in database: {email}")
+        if missing_fields:
+            row_errs.append(f"Missing required value(s): {', '.join(missing_fields)}")
             
-        if not pwd:
-            row_errs.append("Password is empty")
-        elif len(pwd) < 4:
-            row_errs.append("Password must be at least 4 characters")
+        # Duplicate Roll No checks
+        if roll:
+            if roll in seen_csv_rolls:
+                row_errs.append(f"Duplicate student roll number in CSV: {roll}")
+            elif roll in existing_rolls:
+                row_errs.append(f"Roll number already registered in database: {roll}")
+                
+        # Validate Academic Year
+        norm_yr = normalize_year(yr_raw)
+        if yr_raw and (not norm_yr or norm_yr not in ["1st Year", "2nd Year", "3rd Year", "4th Year"]):
+            row_errs.append(f"Invalid academic year '{yr_raw}'. Expected 1, 2, 3, or 4 (or 1st/2nd/3rd/4th Year).")
             
-        if not yr or yr not in ["1st Year", "2nd Year", "3rd Year", "4th Year"]:
-            row_errs.append(f"Invalid academic year '{row.get('year')}'. Expected 1st, 2nd, 3rd, or 4th Year.")
-            
-        if not br:
-            row_errs.append("Branch is empty")
-            
-        if not sec:
-            sec = "A"
-            
-        if not parsed_sem:
-            row_errs.append(f"Invalid semester '{sem}'. Expected integer between 1 and 8.")
-            
+        # Normalize Branch
+        norm_br = normalize_branch(br_raw) if br_raw else ""
+        
+        # Calculate semester from year
+        year_to_sem = {"1st Year": 1, "2nd Year": 3, "3rd Year": 5, "4th Year": 7}
+        parsed_sem = year_to_sem.get(norm_yr, 1)
+        
         if row_errs:
             errors.append({
                 "row": idx,
+                "student_name": name or "-",
                 "roll_no": roll or "-",
-                "email": email or "-",
+                "branch": br_raw or "-",
+                "year": yr_raw or "-",
+                "section": sec_raw or "-",
                 "error": "; ".join(row_errs)
             })
         else:
             seen_csv_rolls.add(roll)
-            seen_csv_emails.add(email)
             valid_rows.append({
                 "student_name": name,
                 "roll_no": roll,
-                "email": email,
-                "year": yr,
-                "branch": br,
-                "section": sec,
+                "branch": norm_br,
+                "year": norm_yr,
+                "section": sec_raw,
                 "semester": parsed_sem
             })
             
@@ -894,7 +892,7 @@ def preview_student_csv():
         "valid_rows": len(valid_rows),
         "invalid_count": len(errors),
         "invalid_rows": len(errors),
-        "preview": valid_rows[:10],
+        "preview": valid_rows,
         "errors": errors
     })
 
@@ -903,7 +901,8 @@ def preview_student_csv():
 def upload_students_csv():
     """
     Processes and inserts valid student records from CSV into SQLite database.
-    Hashes passwords securely with Werkzeug generate_password_hash.
+    Requires 5 columns: Student Name, Roll No, Branch, Year, Section.
+    Generates secure student login accounts with hashed passwords.
     Records metadata in student_import_history.
     """
     user_id = session.get("user_id")
@@ -920,6 +919,14 @@ def upload_students_csv():
     if not rows:
         return jsonify({"success": False, "message": "The CSV file contains no records."}), 400
         
+    # Verify 5 mandatory headers
+    is_valid, header_map = validate_csv_headers(headers)
+    if not is_valid:
+        return jsonify({
+            "success": False,
+            "message": "Invalid CSV. Required columns: Student Name, Roll No, Branch, Year, Section."
+        }), 400
+        
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -929,44 +936,44 @@ def upload_students_csv():
     cursor.execute("SELECT UPPER(roll_no) FROM students")
     existing_rolls = set(r[0] for r in cursor.fetchall())
     
-    seen_csv_emails = set()
     seen_csv_rolls = set()
-    
     imported_count = 0
     skipped_count = 0
     errors = []
     
     try:
-        cursor.execute("BEGIN TRANSACTION")
-        
         for idx, row in enumerate(rows, start=2):
-            name = (row.get("student_name") or row.get("name") or row.get("full_name") or "").strip()
-            roll = (row.get("roll_no") or row.get("rollno") or row.get("roll_number") or "").strip().upper()
-            email = (row.get("email") or "").strip().lower()
-            pwd = (row.get("password") or "").strip()
-            yr = normalize_year(row.get("year") or "")
-            br = normalize_branch(row.get("branch") or "")
-            sec = (row.get("section") or "A").strip().upper()
-            sem = parse_semester(row.get("semester"))
+            name = str(row.get(header_map["student_name"]) or "").strip()
+            roll = str(row.get(header_map["roll_no"]) or "").strip().upper()
+            br_raw = str(row.get(header_map["branch"]) or "").strip()
+            yr_raw = str(row.get(header_map["year"]) or "").strip()
+            sec = str(row.get(header_map["section"]) or "").strip().upper()
             
             # Row level validations
-            if not name or not roll or not email or not pwd or not yr or not br or not sem:
+            if not name or not roll or not br_raw or not yr_raw or not sec:
                 skipped_count += 1
+                missing = []
+                if not name: missing.append("Student Name")
+                if not roll: missing.append("Roll No")
+                if not br_raw: missing.append("Branch")
+                if not yr_raw: missing.append("Year")
+                if not sec: missing.append("Section")
                 errors.append({
                     "row": idx,
+                    "student_name": name or "-",
                     "roll_no": roll or "-",
-                    "email": email or "-",
-                    "error": "Missing mandatory fields (name, roll_no, email, password, year, branch, or semester)"
+                    "error": f"Missing required value(s): {', '.join(missing)}"
                 })
                 continue
                 
-            if not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email):
+            norm_yr = normalize_year(yr_raw)
+            if not norm_yr or norm_yr not in ["1st Year", "2nd Year", "3rd Year", "4th Year"]:
                 skipped_count += 1
                 errors.append({
                     "row": idx,
+                    "student_name": name,
                     "roll_no": roll,
-                    "email": email,
-                    "error": f"Invalid email format: {email}"
+                    "error": f"Invalid academic year '{yr_raw}'. Expected 1, 2, 3, or 4."
                 })
                 continue
                 
@@ -974,44 +981,55 @@ def upload_students_csv():
                 skipped_count += 1
                 errors.append({
                     "row": idx,
+                    "student_name": name,
                     "roll_no": roll,
-                    "email": email,
                     "error": f"Duplicate student roll number skipped: {roll}"
                 })
                 continue
                 
-            if email in existing_emails or email in seen_csv_emails:
-                skipped_count += 1
-                errors.append({
-                    "row": idx,
-                    "roll_no": roll,
-                    "email": email,
-                    "error": f"Duplicate email address skipped: {email}"
-                })
-                continue
+            norm_br = normalize_branch(br_raw)
+            
+            # Determine semester from year
+            year_to_sem = {"1st Year": 1, "2nd Year": 3, "3rd Year": 5, "4th Year": 7}
+            sem = year_to_sem.get(norm_yr, 1)
+            
+            # Check for optional extra columns or use clean defaults
+            def get_extra(k):
+                for rk, rv in row.items():
+                    if rk and re.sub(r'[\s_]+', '', str(rk).strip().lower()) == re.sub(r'[\s_]+', '', k.lower()):
+                        if rv is not None and str(rv).strip() != "":
+                            return str(rv).strip()
+                return ""
                 
-            # Parse optional scores or defaults
-            def get_float(k, default_v):
-                try:
-                    val = row.get(k)
-                    return float(val) if val is not None and str(val).strip() != "" else default_v
-                except Exception:
-                    return default_v
+            email = get_extra("email") or f"{roll.lower()}@student.apedu.ac.in"
+            pwd = get_extra("password") or f"{roll.lower()}"
+            
+            if email.lower() in existing_emails:
+                email = f"{roll.lower()}@student.apedu.ac.in"
+                
+            def get_float_extra(k, default_v):
+                val = get_extra(k)
+                if val:
+                    try:
+                        return float(val)
+                    except Exception:
+                        return default_v
+                return default_v
 
-            attendance = get_float("attendance", 75.0)
-            m_score = get_float("mathematics_score", 65.0)
-            p_score = get_float("physics_score", 65.0)
-            pr_score = get_float("programming_score", 65.0)
-            ds_score = get_float("data_structures_score", 65.0)
-            db_score = get_float("database_score", 65.0)
-            comm_score = get_float("communication_score", 70.0)
-            asg_score = get_float("assignment_score", 70.0)
-            qz_score = get_float("quiz_score", 65.0)
-            ex_score = get_float("exam_score", 65.0)
-            st_hours = get_float("study_hours", 8.0)
-            activity = get_float("learning_activity", 60.0)
-            prev_perf = get_float("previous_performance", 65.0)
-            progress = get_float("overall_progress", 0.0)
+            attendance = get_float_extra("attendance", 75.0)
+            m_score = get_float_extra("mathematics_score", 65.0)
+            p_score = get_float_extra("physics_score", 65.0)
+            pr_score = get_float_extra("programming_score", 65.0)
+            ds_score = get_float_extra("data_structures_score", 65.0)
+            db_score = get_float_extra("database_score", 65.0)
+            comm_score = get_float_extra("communication_score", 70.0)
+            asg_score = get_float_extra("assignment_score", 70.0)
+            qz_score = get_float_extra("quiz_score", 65.0)
+            ex_score = get_float_extra("exam_score", 65.0)
+            st_hours = get_float_extra("study_hours", 8.0)
+            activity = get_float_extra("learning_activity", 60.0)
+            prev_perf = get_float_extra("previous_performance", 65.0)
+            progress = get_float_extra("overall_progress", 50.0)
             
             # Securely hash password using Werkzeug
             pwd_hash = generate_password_hash(pwd)
@@ -1019,7 +1037,7 @@ def upload_students_csv():
             cursor.execute("""
             INSERT INTO users (email, password_hash, role, full_name)
             VALUES (?, ?, 'student', ?)
-            """, (email, pwd_hash, name))
+            """, (email.lower(), pwd_hash, name))
             new_user_id = cursor.lastrowid
             
             cursor.execute("""
@@ -1037,15 +1055,14 @@ def upload_students_csv():
                 ?, ?, ?, 3
             )
             """, (
-                new_user_id, name, roll, email, yr, br, sec, sem,
+                new_user_id, name, roll, email.lower(), norm_yr, norm_br, sec, sem,
                 attendance, m_score, p_score, pr_score, ds_score, db_score, comm_score,
                 asg_score, qz_score, ex_score, st_hours, activity, prev_perf, progress
             ))
             
             seen_csv_rolls.add(roll)
-            seen_csv_emails.add(email)
             existing_rolls.add(roll)
-            existing_emails.add(email)
+            existing_emails.add(email.lower())
             imported_count += 1
             
         # Record import history

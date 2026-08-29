@@ -46,7 +46,12 @@
 
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" class="form-control" placeholder="••••••••" required value="student123">
+          <div class="password-input-wrapper">
+            <input type="password" id="password" class="form-control" placeholder="••••••••" required value="student123" autocomplete="current-password">
+            <button type="button" id="togglePasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('password', 'togglePasswordBtn')" aria-label="Show password" title="Show password">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
 
         <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.95rem; margin-top: 0.5rem;">
@@ -71,6 +76,21 @@
   </div>
 
   <script>
+    function togglePasswordVisibility(inputId, btnId) {
+      const input = document.getElementById(inputId);
+      const btn = document.getElementById(btnId);
+      if (!input || !btn) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      const icon = btn.querySelector('i');
+      if (icon) {
+        icon.className = isPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+      }
+      const label = isPassword ? 'Hide password' : 'Show password';
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('title', label);
+    }
+
     function fillDemo(email, pass) {
       document.getElementById('email').value = email;
       document.getElementById('password').value = pass;

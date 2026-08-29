@@ -456,6 +456,47 @@ a:hover {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
 }
 
+/* Password Input with Visibility Toggle */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper .form-control {
+  padding-right: 2.75rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s ease, transform 0.15s ease;
+  z-index: 2;
+}
+
+.password-toggle-btn:hover {
+  color: var(--text-main);
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid var(--primary-light);
+  color: var(--primary-light);
+}
+
 /* Data Tables */
 .table-responsive {
   width: 100%;
