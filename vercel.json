@@ -41,7 +41,7 @@
     },
     {
       "source": "/api/:match*",
-      "destination": "https://ap-adaptive-personalised-learning.onrender.com/api/:match*"
+      "destination": "https://ap-adapative-personalised-learning-2.onrender.com/api/:match*"
     },
     {
       "source": "/:path((?!frontend/).*)",
