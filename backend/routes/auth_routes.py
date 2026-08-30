@@ -22,9 +22,9 @@ def login_student():
     password = data.get("password", "")
     
     if not email:
-        return jsonify({"success": False, "message": "Please enter your email."}), 400
+        return jsonify({"success": False, "message": "Please enter your email.", "error": "Please enter your email."}), 400
     if not password:
-        return jsonify({"success": False, "message": "Please enter your password."}), 400
+        return jsonify({"success": False, "message": "Please enter your password.", "error": "Please enter your password."}), 400
         
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -36,7 +36,7 @@ def login_student():
     # Verify user exists, password hash matches, AND role is 'student'
     if not user or not check_password_hash(user["password_hash"], password) or user["role"] != "student":
         conn.close()
-        return jsonify({"success": False, "message": "Invalid student email or password."}), 401
+        return jsonify({"success": False, "message": "Invalid student email or password.", "error": "Invalid student email or password."}), 401
         
     # Retrieve student record
     cursor.execute("SELECT * FROM students WHERE user_id = ? OR LOWER(email) = ?", (user["id"], email))
@@ -71,9 +71,9 @@ def login_teacher():
     password = data.get("password", "")
     
     if not email:
-        return jsonify({"success": False, "message": "Please enter your email."}), 400
+        return jsonify({"success": False, "message": "Please enter your email.", "error": "Please enter your email."}), 400
     if not password:
-        return jsonify({"success": False, "message": "Please enter your password."}), 400
+        return jsonify({"success": False, "message": "Please enter your password.", "error": "Please enter your password."}), 400
         
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -85,7 +85,7 @@ def login_teacher():
     # Verify user exists, password hash matches, AND role is 'teacher'
     if not user or not check_password_hash(user["password_hash"], password) or user["role"] != "teacher":
         conn.close()
-        return jsonify({"success": False, "message": "Invalid teacher email or password."}), 401
+        return jsonify({"success": False, "message": "Invalid teacher email or password.", "error": "Invalid teacher email or password."}), 401
         
     # Retrieve teacher metadata if exists
     cursor.execute("SELECT * FROM teachers WHERE user_id = ? OR LOWER(email) = ?", (user["id"], email))

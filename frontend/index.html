@@ -3,114 +3,652 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AP Adaptive Personalised Learning Platform | Quantum ML Education Suite</title>
+  <title>Adaptive & Personalised Learning with Quantum ML | AP Technical Education</title>
+  <meta name="description" content="AI-powered learning paths that adapt to every student's needs. Analyse student performance, engagement and learning patterns to identify risks and recommend personalised learning interventions.">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Hero Visual Workflow Pipeline */
+    .hero-pipeline-box {
+      margin-top: 2.75rem;
+      width: 100%;
+      max-width: 1060px;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 1.5rem;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-md);
+    }
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .pipeline-node {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      transition: all 0.2s ease;
+    }
+    .pipeline-node:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+    .pipeline-arrow {
+      color: var(--secondary);
+      font-size: 1.1rem;
+    }
+    @media (max-width: 768px) {
+      .pipeline-flow {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .pipeline-arrow {
+        text-align: center;
+        transform: rotate(90deg);
+        margin: 0.25rem 0;
+      }
+    }
+    /* Section Headings */
+    .section-header {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 3rem auto;
+    }
+    .section-header h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.75rem;
+    }
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    /* Quantum Circuit Visual Box */
+    .qml-box {
+      background: linear-gradient(135deg, rgba(26, 34, 52, 0.95), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      margin-bottom: 2rem;
+    }
+    .qubit-lane {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-surface);
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.6rem;
+      font-size: 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .qubit-badge {
+      font-family: monospace;
+      font-weight: 700;
+      background: rgba(139, 92, 246, 0.2);
+      color: #c084fc;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-sm);
+    }
+    /* Impact Cards */
+    .impact-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .impact-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--secondary);
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.2);
+    }
+    .ecosystem-pillar {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+    .ecosystem-pillar:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary-light);
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="navbar">
+  <!-- Top Navigation Bar -->
+  <nav class="navbar" id="topNavbar">
     <div class="nav-brand">
-      <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i>
-      <span>AP Adaptive Personalised Learning</span>
+      <a href="/">
+        <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light); font-size: 1.4rem;"></i>
+        <span>AP Adaptive & Personalised Learning</span>
+      </a>
       <span class="badge-tag">Quantum ML</span>
     </div>
     <div class="nav-links">
-      <a href="/" class="nav-link active"><i class="fa-solid fa-house"></i> Home</a>
-      <a href="/login" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Sign In / Register</a>
+      <a href="#hero" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="#how-it-works" class="nav-link"><i class="fa-solid fa-diagram-project"></i> How It Works</a>
+      <a href="#quantum-ml" class="nav-link"><i class="fa-solid fa-atom"></i> Quantum ML</a>
+      <a href="#architecture" class="nav-link"><i class="fa-solid fa-layer-group"></i> Architecture</a>
+      <a href="#ap-impact" class="nav-link"><i class="fa-solid fa-landmark"></i> AP Impact</a>
       <a href="/ml-performance" class="nav-link"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
+    </div>
+    <div class="nav-user">
+      <a href="/student-login" class="btn btn-secondary btn-sm">
+        <i class="fa-solid fa-user-graduate"></i> Student Login
+      </a>
+      <a href="/teacher-login" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-chalkboard-user"></i> Teacher Login
+      </a>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <main class="main-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 1.5rem 3rem;">
-    <div class="badge badge-primary" style="margin-bottom: 1.5rem; font-size: 0.85rem; padding: 0.4rem 1rem;">
-      <i class="fa-solid fa-atom"></i> Quantum Machine Learning Driven Personalization
+  <header id="hero" class="main-container" style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 4.5rem 1.5rem 3.5rem;">
+    
+    <div class="badge badge-primary" style="margin-bottom: 1.5rem; font-size: 0.85rem; padding: 0.45rem 1.15rem; gap: 0.5rem;">
+      <i class="fa-solid fa-atom" style="color: var(--secondary-light);"></i>
+      Next-Gen Adaptive Learning & Academic Early-Warning System
     </div>
     
-    <h1 style="font-size: 3rem; max-width: 900px; line-height: 1.2; margin-bottom: 1.25rem;">
-      Empowering <span style="background: linear-gradient(135deg, var(--primary-light), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">B.Tech Engineering</span> Students in Andhra Pradesh
+    <h1 style="font-size: 3.1rem; max-width: 960px; line-height: 1.18; margin-bottom: 1.25rem;">
+      Adaptive & Personalised Learning with <span style="background: linear-gradient(135deg, var(--primary-light), var(--secondary-light)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Quantum ML</span>
     </h1>
     
-    <p style="font-size: 1.15rem; color: var(--text-muted); max-width: 760px; margin-bottom: 2.5rem;">
-      AP Adaptive Personalised Learning Platform uses quantum machine learning models to analyze multi-dimensional student performance, predict academic risk early, identify learning gaps, and deliver individualized learning pathways.
+    <p style="font-size: 1.25rem; font-weight: 500; color: #ffffff; max-width: 820px; margin-bottom: 0.75rem;">
+      AI-powered learning paths that adapt to every student's needs.
     </p>
 
-    <!-- Role CTAs -->
-    <div style="display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem;">
-      <a href="/login" class="btn btn-primary" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
-        <i class="fa-solid fa-right-to-bracket"></i> Open Platform Portal (Student & Faculty)
+    <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 780px; margin-bottom: 2.25rem; line-height: 1.6;">
+      Analyse student performance, engagement and learning patterns to identify risks and recommend personalised learning interventions.
+    </p>
+
+    <!-- Two Main Role CTAs + Demo Mode -->
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+      <a href="/student-login" class="btn btn-primary btn-lg" id="btnStudentHero">
+        <i class="fa-solid fa-user-graduate"></i> Student Login
       </a>
-      <a href="/ml-performance" class="btn btn-outline" style="padding: 0.85rem 1.5rem; font-size: 1rem;">
-        <i class="fa-solid fa-chart-pie"></i> View ML Models & Explainability
+      <a href="/teacher-login" class="btn btn-outline-cyan btn-lg" id="btnTeacherHero">
+        <i class="fa-solid fa-chalkboard-user"></i> Teacher Login
+      </a>
+      <a href="/teacher-dashboard" class="btn btn-secondary btn-lg" onclick="sessionStorage.setItem('demo_mode', 'true')">
+        <i class="fa-solid fa-laptop-code" style="color: #fbbf24;"></i> Open Live Demo
       </a>
     </div>
 
-    <!-- Key Architecture Pillars -->
-    <div class="grid-4" style="text-align: left; width: 100%; margin-top: 1rem;">
-      <div class="card">
-        <div style="font-size: 2rem; color: var(--secondary); margin-bottom: 1rem;">
-          <i class="fa-solid fa-chart-simple"></i>
+    <!-- Visual Representation: Student Data -> AI/ML -> Quantum ML -> Personalised Learning -->
+    <div class="hero-pipeline-box">
+      <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; text-align: left; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fa-solid fa-network-wired" style="color: var(--secondary);"></i> End-to-End Educational Intelligence Pipeline
+      </div>
+      <div class="pipeline-flow">
+        <div class="pipeline-node">
+          <i class="fa-solid fa-database" style="color: #38bdf8;"></i>
+          <span>Student Data</span>
         </div>
-        <h3 style="margin-bottom: 0.5rem;">Classical ML Risk Prediction</h3>
-        <p style="color: var(--text-muted); font-size: 0.875rem;">
-          Trained on 5,000+ realistic engineering student profiles across branches. Dynamically categorizes Low, Medium, and High academic risk.
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node">
+          <i class="fa-solid fa-brain" style="color: #818cf8;"></i>
+          <span>AI / ML Diagnostics</span>
+        </div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node">
+          <i class="fa-solid fa-atom" style="color: #c084fc;"></i>
+          <span>Quantum ML Engine</span>
+        </div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node" style="border-color: var(--risk-low-border); background: var(--risk-low-bg);">
+          <i class="fa-solid fa-route" style="color: #34d399;"></i>
+          <span style="color: #34d399;">Personalised Learning</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section 2: "How It Works" 6-Step Workflow -->
+  <section id="how-it-works" class="main-container" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+    <div class="section-header">
+      <div class="badge badge-cyan" style="margin-bottom: 0.75rem;"><i class="fa-solid fa-diagram-project"></i> Systematic Methodology</div>
+      <h2>How It Works</h2>
+      <p>A closed-loop 6-step intelligent workflow transforming raw multi-modal student data into dynamic adaptive curriculum progression.</p>
+    </div>
+
+    <div class="workflow-container">
+      
+      <!-- Step 1 -->
+      <div class="workflow-step">
+        <div class="workflow-step-num">Step 01</div>
+        <div class="workflow-step-title">
+          <i class="fa-solid fa-chart-pie" style="color: var(--secondary);"></i>
+          Student Data
+        </div>
+        <div class="workflow-step-desc">
+          Collect multi-dimensional learner parameters continuously:
+        </div>
+        <div class="workflow-step-tags">
+          <span class="workflow-tag">Marks</span>
+          <span class="workflow-tag">Attendance</span>
+          <span class="workflow-tag">Quiz Scores</span>
+          <span class="workflow-tag">Learning Activity</span>
+          <span class="workflow-tag">Engagement</span>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="workflow-step">
+        <div class="workflow-step-num">Step 02</div>
+        <div class="workflow-step-title">
+          <i class="fa-solid fa-filter" style="color: #38bdf8;"></i>
+          Data Processing
+        </div>
+        <div class="workflow-step-desc">
+          Clean, sanitize, and preprocess learner data. Remove anomalies, resolve missing values, and normalize distributions.
+        </div>
+        <div class="workflow-step-tags">
+          <span class="workflow-tag">Imputation</span>
+          <span class="workflow-tag">Outlier Detection</span>
+          <span class="workflow-tag">Normalization</span>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="workflow-step">
+        <div class="workflow-step-num">Step 03</div>
+        <div class="workflow-step-title">
+          <i class="fa-solid fa-sliders" style="color: #818cf8;"></i>
+          Feature Engineering
+        </div>
+        <div class="workflow-step-desc">
+          Generate meaningful learner feature vectors capturing performance velocity, topic mastery gaps, and study consistency.
+        </div>
+        <div class="workflow-step-tags">
+          <span class="workflow-tag">Feature Vectors</span>
+          <span class="workflow-tag">Temporal Drift</span>
+          <span class="workflow-tag">Angle Scaling</span>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="workflow-step">
+        <div class="workflow-step-num">Step 04</div>
+        <div class="workflow-step-title">
+          <i class="fa-solid fa-atom" style="color: #c084fc;"></i>
+          ML / Quantum ML
+        </div>
+        <div class="workflow-step-desc">
+          Analyse complex multi-variate learner patterns and predict academic risk (Low, Medium, High) with confidence scoring.
+        </div>
+        <div class="workflow-step-tags">
+          <span class="workflow-tag">Gradient Boosting</span>
+          <span class="workflow-tag">PennyLane VQC</span>
+          <span class="workflow-tag">Risk Model</span>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="workflow-step">
+        <div class="workflow-step-num">Step 05</div>
+        <div class="workflow-step-title">
+          <i class="fa-solid fa-lightbulb" style="color: #fbbf24;"></i>
+          Personalised Recommendation
+        </div>
+        <div class="workflow-step-desc">
+          Recommend tailored remedial and enrichment interventions:
+        </div>
+        <div class="workflow-step-tags">
+          <span class="workflow-tag">Weak Topics</span>
+          <span class="workflow-tag">Video Drills</span>
+          <span class="workflow-tag">Adaptive Quizzes</span>
+          <span class="workflow-tag">Interventions</span>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="workflow-step">
+        <div class="workflow-step-num">Step 06</div>
+        <div class="workflow-step-title">
+          <i class="fa-solid fa-route" style="color: #34d399;"></i>
+          Adaptive Learning Path
+        </div>
+        <div class="workflow-step-desc">
+          Dynamically adjust what the student should learn next, enforcing prerequisites and auto-advancing on mastery.
+        </div>
+        <div class="workflow-step-tags">
+          <span class="workflow-tag">Dynamic Prereqs</span>
+          <span class="workflow-tag">Milestone Sequencing</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section 3: Quantum ML Engine Section -->
+  <section id="quantum-ml" class="main-container" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+    <div class="section-header">
+      <div class="badge badge-purple" style="margin-bottom: 0.75rem;"><i class="fa-solid fa-atom"></i> Research & Computational Innovation</div>
+      <h2>⚛️ Quantum ML Engine</h2>
+      <p>Exploring Variational Quantum Circuits (VQC) for non-linear student behavior representation and risk pattern classification.</p>
+    </div>
+
+    <div class="qml-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem;">
+        <div>
+          <h3 style="font-size: 1.4rem; color: #fff;">Quantum Machine Learning Conceptual Architecture</h3>
+          <span class="badge badge-purple" style="margin-top: 0.4rem;">QML Prototype / Research Module</span>
+        </div>
+        <div style="text-align: right; font-size: 0.85rem; color: var(--text-muted);">
+          Framework: <strong>PennyLane v0.39</strong> &bull; Simulator: <strong>default.qubit</strong> (5 Qubits, 2 Parametric Layers)
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.75rem; background: rgba(15, 23, 42, 0.6); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border);">
+        <p style="font-size: 0.95rem; color: var(--text-main); line-height: 1.6;">
+          <em>“Quantum Machine Learning can be explored for analysing complex learner patterns and supporting prediction and personalised recommendations.”</em>
         </p>
       </div>
 
+      <!-- Quantum Pipeline Flow Diagram -->
+      <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <i class="fa-solid fa-arrows-split-up-and-left" style="color: var(--secondary);"></i> Quantum Circuit Execution Flow:
+      </div>
+
+      <div class="pipeline-flow" style="margin-bottom: 2rem;">
+        <div class="pipeline-node"><i class="fa-solid fa-database" style="color: #38bdf8;"></i> Student Data</div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node"><i class="fa-solid fa-sliders" style="color: #818cf8;"></i> Feature Engineering</div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node"><i class="fa-solid fa-atom" style="color: #c084fc;"></i> Quantum Feature Encoding</div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node"><i class="fa-solid fa-microchip" style="color: #ec4899;"></i> Variational Quantum Circuit</div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node"><i class="fa-solid fa-chart-line" style="color: #fbbf24;"></i> QML Prediction</div>
+        <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        <div class="pipeline-node" style="border-color: var(--risk-low-border); background: var(--risk-low-bg);"><i class="fa-solid fa-bullseye" style="color: #34d399;"></i> Risk Classification & Recommendation</div>
+      </div>
+
+      <!-- 5-Qubit Mapping Grid -->
+      <div class="grid-2">
+        <div>
+          <h4 style="margin-bottom: 0.75rem; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-microchip" style="color: var(--secondary);"></i> 5-Qubit State Vector Mapping
+          </h4>
+          <div class="qubit-lane">
+            <span class="qubit-badge">|q0⟩</span>
+            <span>Class Attendance Rate (%) &rarr; Angle Rotation RY(θ0)</span>
+          </div>
+          <div class="qubit-lane">
+            <span class="qubit-badge">|q1⟩</span>
+            <span>Mathematics Assessment Score &rarr; Angle Rotation RY(θ1)</span>
+          </div>
+          <div class="qubit-lane">
+            <span class="qubit-badge">|q2⟩</span>
+            <span>Physics Core Subject Score &rarr; Angle Rotation RY(θ2)</span>
+          </div>
+          <div class="qubit-lane">
+            <span class="qubit-badge">|q3⟩</span>
+            <span>Programming Lab & Coding Score &rarr; Angle Rotation RY(θ3)</span>
+          </div>
+          <div class="qubit-lane">
+            <span class="qubit-badge">|q4⟩</span>
+            <span>Assignment & Homework Metric &rarr; Angle Rotation RY(θ4)</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="margin-bottom: 0.75rem; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-circle-nodes" style="color: #c084fc;"></i> Variational Circuit Architecture
+          </h4>
+          <div class="card" style="background: var(--bg-surface); padding: 1.25rem; font-size: 0.85rem; line-height: 1.6;">
+            <p style="color: var(--text-muted); margin-bottom: 0.75rem;">
+              <strong>1. AngleEmbedding:</strong> Maps normalized student continuous values into quantum state amplitudes on 5 Hilbert space wires.
+            </p>
+            <p style="color: var(--text-muted); margin-bottom: 0.75rem;">
+              <strong>2. Parameterized Ansatz:</strong> 2 layers of 3-axis Euler Rotations (`Rot(phi, theta, omega)`) parameterized by trained weight tensors.
+            </p>
+            <p style="color: var(--text-muted);">
+              <strong>3. CNOT Ring Entanglement:</strong> Inter-qubit circular entanglement capturing correlations between attendance, math, and programming abilities.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section 4: AI / ML Architecture Section -->
+  <section id="architecture" class="main-container" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+    <div class="section-header">
+      <div class="badge badge-primary" style="margin-bottom: 0.75rem;"><i class="fa-solid fa-layer-group"></i> Full-Stack Engineering</div>
+      <h2>Production Technology Stack & Architecture</h2>
+      <p>Clean, modular, and reliable architecture connecting database storage, machine learning pipelines, and responsive dashboards.</p>
+    </div>
+
+    <div class="grid-3">
+      <!-- Frontend -->
       <div class="card">
-        <div style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-brands fa-html5" style="color: #f97316;"></i> Frontend Layer
+          </div>
+          <span class="badge badge-success">Implemented</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+          Clean HTML5, Vanilla JavaScript, CSS3 design tokens, and Chart.js for real-time visual analytics.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          <span class="badge badge-neutral">HTML5</span>
+          <span class="badge badge-neutral">Vanilla JS</span>
+          <span class="badge badge-neutral">CSS3 Tokens</span>
+          <span class="badge badge-neutral">Chart.js 4</span>
+        </div>
+      </div>
+
+      <!-- Backend & API -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-brands fa-python" style="color: #38bdf8;"></i> Backend REST API
+          </div>
+          <span class="badge badge-success">Implemented</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+          Python Flask server with modular Blueprints for Auth, Student Portal, Faculty Portal, and ML Diagnostics.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          <span class="badge badge-neutral">Python 3</span>
+          <span class="badge badge-neutral">Flask 3.0</span>
+          <span class="badge badge-neutral">RESTful APIs</span>
+          <span class="badge badge-neutral">Werkzeug Security</span>
+        </div>
+      </div>
+
+      <!-- Database -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-database" style="color: #10b981;"></i> Database Storage
+          </div>
+          <span class="badge badge-success">Implemented</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+          Relational SQLite database with ACID transactions for students, subjects, quizzes, lessons, labs, and faculty notes.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          <span class="badge badge-neutral">SQLite 3</span>
+          <span class="badge badge-neutral">Relational Schema</span>
+          <span class="badge badge-neutral">Transaction Safety</span>
+        </div>
+      </div>
+
+      <!-- Data Processing -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-gears" style="color: #f59e0b;"></i> Data Pipeline
+          </div>
+          <span class="badge badge-success">Implemented</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+          NumPy and Scikit-Learn data cleaning, MinMax scaling, and feature extraction pipeline.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          <span class="badge badge-neutral">NumPy</span>
+          <span class="badge badge-neutral">Scikit-Learn</span>
+          <span class="badge badge-neutral">MinMax Scaler</span>
+        </div>
+      </div>
+
+      <!-- ML & QML -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-atom" style="color: #c084fc;"></i> ML / QML Engine
+          </div>
+          <span class="badge badge-purple">PennyLane QML</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+          Gradient Boosting classical classifier + PennyLane 5-qubit Variational Quantum Circuit model.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          <span class="badge badge-neutral">PennyLane</span>
+          <span class="badge badge-neutral">Gradient Boosting</span>
+          <span class="badge badge-neutral">Random Forest</span>
+        </div>
+      </div>
+
+      <!-- Recommendation Engine -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-route" style="color: #ec4899;"></i> Adaptive Paths
+          </div>
+          <span class="badge badge-success">Implemented</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+          Rule-guided multi-factor remediation engine delivering dynamic topic sequencing and milestone adjustments.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          <span class="badge badge-neutral">Dynamic Prereqs</span>
+          <span class="badge badge-neutral">Diagnostic Rules</span>
+          <span class="badge badge-neutral">Why Inspector</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: AP Education Impact Section -->
+  <section id="ap-impact" class="main-container" style="padding-top: 3.5rem; padding-bottom: 4.5rem;">
+    <div class="section-header">
+      <div class="badge badge-cyan" style="margin-bottom: 0.75rem;"><i class="fa-solid fa-landmark"></i> Regional Alignment</div>
+      <h2>Designed for Andhra Pradesh's Education Ecosystem</h2>
+      <p style="max-width: 820px; margin: 0 auto;">
+        “Large and diverse student populations require personalised learning paths. Our platform aims to support educators by identifying learner needs early and recommending targeted interventions.”
+      </p>
+    </div>
+
+    <!-- 4 Education Sectors in AP -->
+    <div class="grid-4" style="margin-bottom: 3rem;">
+      <div class="ecosystem-pillar">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🏫</div>
+        <h4 style="margin-bottom: 0.35rem;">Schools & Jr. Colleges</h4>
+        <p style="color: var(--text-muted); font-size: 0.825rem;">Foundational diagnostic assessment and STEM readiness.</p>
+      </div>
+
+      <div class="ecosystem-pillar">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🎓</div>
+        <h4 style="margin-bottom: 0.35rem;">Higher Education</h4>
+        <p style="color: var(--text-muted); font-size: 0.825rem;">B.Tech engineering programs across JNTU, AU, & SVU affiliated colleges.</p>
+      </div>
+
+      <div class="ecosystem-pillar">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">💻</div>
+        <h4 style="margin-bottom: 0.35rem;">EdTech Platforms</h4>
+        <p style="color: var(--text-muted); font-size: 0.825rem;">Automated adaptive learning recommendation integration.</p>
+      </div>
+
+      <div class="ecosystem-pillar">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🧑‍💻</div>
+        <h4 style="margin-bottom: 0.35rem;">Skilling Platforms</h4>
+        <p style="color: var(--text-muted); font-size: 0.825rem;">APSSDC technical programs & employability skill pathways.</p>
+      </div>
+    </div>
+
+    <!-- 5 Key Impact Pillars -->
+    <div class="grid-3">
+      <div class="impact-card">
+        <div style="font-size: 1.8rem; color: var(--primary-light); margin-bottom: 0.85rem;">
           <i class="fa-solid fa-route"></i>
         </div>
-        <h3 style="margin-bottom: 0.5rem;">Adaptive Learning Paths</h3>
-        <p style="color: var(--text-muted); font-size: 0.875rem;">
-          Generates prerequisite-aware sequence of modules prioritizing weak subject remediation before advancing to honors capstones.
+        <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Personalised Learning</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">
+          Every student learns at their own pace with tailored remedial drills, quizzes, and milestone recommendations based on individual diagnostic data.
         </p>
       </div>
 
-      <div class="card">
-        <div style="font-size: 2rem; color: #f59e0b; margin-bottom: 1rem;">
-          <i class="fa-solid fa-magnifying-glass-chart"></i>
+      <div class="impact-card">
+        <div style="font-size: 1.8rem; color: #ef4444; margin-bottom: 0.85rem;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
-        <h3 style="margin-bottom: 0.5rem;">Explainable AI Diagnosis</h3>
-        <p style="color: var(--text-muted); font-size: 0.875rem;">
-          Transparent feature attribution clarifies exactly why a student was classified into a risk tier with actionable metric deviations.
+        <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Early Risk Detection</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">
+          Identifies struggling learners weeks before mid-term or semester exams by analyzing attendance drop-offs, quiz dips, and submission delays.
         </p>
       </div>
 
-      <div class="card">
-        <div style="font-size: 2rem; color: #ec4899; margin-bottom: 1rem;">
-          <i class="fa-solid fa-hand-holding-hand"></i>
+      <div class="impact-card">
+        <div style="font-size: 1.8rem; color: var(--secondary); margin-bottom: 0.85rem;">
+          <i class="fa-solid fa-chalkboard-user"></i>
         </div>
-        <h3 style="margin-bottom: 0.5rem;">Early Teacher Intervention</h3>
-        <p style="color: var(--text-muted); font-size: 0.875rem;">
-          Synthesizes student diagnosis into targeted remedial plans, peer-study pairing, attendance warnings, and faculty advisories.
+        <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Teacher Decision Support</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">
+          Empowers faculty with actionable student cohorts, feature attribution breakdowns, and quick intervention logging to support large classrooms.
+        </p>
+      </div>
+
+      <div class="impact-card">
+        <div style="font-size: 1.8rem; color: #10b981; margin-bottom: 0.85rem;">
+          <i class="fa-solid fa-bridge"></i>
+        </div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Reduced Learning Gaps</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">
+          Guarantees prerequisite concepts are mastered before advancing to honors and advanced topics, reducing dropout rates and backlogs.
+        </p>
+      </div>
+
+      <div class="impact-card">
+        <div style="font-size: 1.8rem; color: #f59e0b; margin-bottom: 0.85rem;">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Scalable Education Analytics</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">
+          Equips educational institutions and state bodies with high-level cohort telemetry, attendance correlations, and curriculum effectiveness metrics.
         </p>
       </div>
     </div>
 
-    <!-- Supported Engineering Disciplines -->
-    <div class="card" style="width: 100%; margin-top: 1.5rem; text-align: left;">
-      <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fa-solid fa-microchip" style="color: var(--primary-light);"></i>
-        Supported B.Tech Engineering Branches (Andhra Pradesh Curriculum)
-      </h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
-        <span class="badge badge-neutral">CSE - Computer Science & Engineering</span>
-        <span class="badge badge-neutral">CSE (AI & ML)</span>
-        <span class="badge badge-neutral">CSE (Data Science)</span>
-        <span class="badge badge-neutral">ECE - Electronics & Communication</span>
-        <span class="badge badge-neutral">EEE - Electrical & Electronics</span>
-        <span class="badge badge-neutral">Mechanical Engineering</span>
-        <span class="badge badge-neutral">Civil Engineering</span>
-        <span class="badge badge-neutral">Information Technology</span>
-      </div>
-    </div>
-  </main>
+  </section>
 
+  <!-- Footer -->
   <footer>
-    <p>AP Adaptive Personalised Learning Platform &bull; Quantum Machine Learning Personalized Education System &bull; B.Tech AP Technical Education</p>
+    <p>
+      <strong>AP Adaptive & Personalised Learning Platform with Quantum ML</strong> &bull; B.Tech AP Technical Education &bull; Production-Ready Intelligent Learning Suite
+    </p>
   </footer>
 
 </body>

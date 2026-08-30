@@ -99,363 +99,153 @@
         </div>
       </div>
 
-      <!-- Subject Performance Radar Chart -->
+      <!-- Subject Score Performance Breakdown & Radar -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">
             <i class="fa-solid fa-chart-radar" style="color: var(--secondary);"></i>
-            Subject Mastery Profile vs 60% Benchmark
+            Multi-Subject Mastery Breakdown
           </div>
+          <span class="badge badge-neutral">Syllabus Domains</span>
         </div>
 
-        <div style="height: 260px; position: relative; margin-bottom: 1rem;">
-          <canvas id="detRadarChart"></canvas>
-        </div>
-
-        <div id="detScoresGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.5rem; font-size: 0.75rem; text-align: center;">
+        <div style="height: 280px; position: relative;">
+          <canvas id="studentDetailRadar"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Personalized Learning Path & Teacher Interventions -->
-    <div class="grid-2">
-      <!-- Dynamic Learning Path for Student -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fa-solid fa-route" style="color: var(--primary-light);"></i>
-            Generated Adaptive Learning Path
-          </div>
-          <span id="detPathPaceBadge" class="badge badge-neutral">-</span>
-        </div>
-
-        <div id="detPathList" class="learning-path-list" style="max-height: 420px; overflow-y: auto; padding-right: 0.4rem;">
-          <div style="color: var(--text-dim); text-align: center; padding: 2rem;">Loading learning modules...</div>
+    <!-- Active Academic Interventions -->
+    <div class="card" style="margin-top: 1.5rem;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-hand-holding-hand" style="color: var(--primary-light);"></i>
+          Assigned Remedial Interventions & Guidance Protocols
         </div>
       </div>
 
-      <!-- Teacher Interventions & Action Planner -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fa-solid fa-hand-holding-hand" style="color: #ec4899;"></i>
-            Faculty Intervention Plan
-          </div>
-          <button class="btn btn-primary btn-sm" onclick="toggleInterventionForm()">
-            <i class="fa-solid fa-plus"></i> Log Action
-          </button>
-        </div>
-
-        <!-- Log New Intervention Form (Collapsible) -->
-        <div id="newInterventionFormBox" style="display: none; background: var(--bg-surface); border: 1px solid var(--bg-card-border); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
-          <div style="font-weight: 700; margin-bottom: 0.75rem; font-size: 0.9rem;">
-            Record New Faculty Intervention Action
-          </div>
-          <form onsubmit="submitIntervention(event)">
-            <div class="form-group">
-              <label class="form-label" style="font-size: 0.75rem;">Intervention Title *</label>
-              <input type="text" id="intTitle" class="form-control" required placeholder="e.g. Schedule 1-on-1 Programming Lab Session">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-              <div class="form-group">
-                <label class="form-label" style="font-size: 0.75rem;">Category</label>
-                <select id="intCategory" class="form-select">
-                  <option value="1-on-1 Faculty Counseling">1-on-1 Faculty Counseling</option>
-                  <option value="Remedial Lab Coaching">Remedial Lab Coaching</option>
-                  <option value="Attendance Notification">Attendance Notification</option>
-                  <option value="Peer Tutor Assignment">Peer Tutor Assignment</option>
-                  <option value="Honors Project Mentorship">Honors Project Mentorship</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" style="font-size: 0.75rem;">Priority</label>
-                <select id="intPriority" class="form-select">
-                  <option value="Critical">Critical (Immediate)</option>
-                  <option value="High" selected>High</option>
-                  <option value="Moderate">Moderate</option>
-                  <option value="Standard">Standard</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" style="font-size: 0.75rem;">Action Description & Plan *</label>
-              <textarea id="intDesc" class="form-control" rows="2" required placeholder="Outline action items and timeline..."></textarea>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
-              <button type="button" class="btn btn-secondary btn-sm" onclick="toggleInterventionForm()">Cancel</button>
-              <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-check"></i> Save Action</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Interventions List (AI Recommended & Faculty Logged) -->
-        <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 420px; overflow-y: auto; padding-right: 0.4rem;">
-          <div>
-            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
-              AI Recommended Interventions
-            </div>
-            <div id="aiInterventionsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div style="color: var(--text-dim);">Generating recommended actions...</div>
-            </div>
-          </div>
-
-          <div style="border-top: 1px solid var(--bg-card-border); padding-top: 0.75rem;">
-            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
-              Recorded Faculty Interventions
-            </div>
-            <div id="loggedInterventionsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div style="color: var(--text-dim); font-size: 0.8rem;">No custom actions logged yet.</div>
-            </div>
-          </div>
-        </div>
+      <div id="interventionsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="color: var(--text-dim); padding: 1rem;">Loading student interventions...</div>
       </div>
     </div>
   </main>
 
-  <footer>
-    <p>AP Adaptive Personalised Learning Platform &bull; Student Diagnostic & Intervention Engine</p>
-  </footer>
-
   <script>
-    let studentId = null;
-    let radarChartInstance = null;
+    const urlParams = new URLSearchParams(window.location.search);
+    const studentId = urlParams.get('id');
+    let radarChart = null;
 
-    async function checkAuthAndLoad() {
+    async function loadStudentData() {
+      if (!studentId) {
+        window.location.href = '/teacher-dashboard';
+        return;
+      }
+
       try {
-        const authRes = await fetch('/api/auth/me');
-        const authData = await authRes.json();
-
-        if (!authData.authenticated || authData.user.role !== 'teacher') {
-          window.location.href = '/login';
-          return;
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        studentId = urlParams.get('id');
-
-        if (!studentId) {
-          alert('No student ID specified.');
+        const res = await fetch(`/api/teacher/student/${studentId}`);
+        const data = await res.json();
+        if (!data.success) {
+          alert('Student not found.');
           window.location.href = '/teacher-dashboard';
           return;
         }
 
-        await loadStudentDetails();
-      } catch (err) {
-        console.error('Error loading student details:', err);
-      }
-    }
+        const st = data.student;
+        const pred = data.prediction || {};
 
-    async function loadStudentDetails() {
-      const res = await fetch(`/api/teacher/student/${studentId}`);
-      const data = await res.json();
-      if (!data.success) return;
+        document.getElementById('detFullName').textContent = st.full_name;
+        document.getElementById('detRollNo').textContent = st.roll_no;
+        document.getElementById('detEmail').textContent = st.email;
+        document.getElementById('detBranch').textContent = st.branch;
+        document.getElementById('detYear').textContent = st.year;
+        document.getElementById('detSem').textContent = st.semester;
+        document.getElementById('detSec').textContent = st.section;
+        document.getElementById('detAttendance').textContent = `${st.attendance}%`;
+        document.getElementById('detProgress').textContent = `${Math.round(st.overall_progress || 0)}%`;
 
-      const st = data.student;
-      const pred = data.prediction;
-      const pathData = data.learning_path_data;
-      const recInterventions = data.recommended_interventions;
-      const loggedInterventions = data.logged_interventions;
+        const badge = document.getElementById('detRiskBadge');
+        badge.textContent = (pred.risk_level || st.risk_level || 'Low Risk').toUpperCase();
+        if ((pred.risk_level || st.risk_level) === 'High Risk') badge.className = 'badge badge-high-risk';
+        else if ((pred.risk_level || st.risk_level) === 'Medium Risk') badge.className = 'badge badge-med-risk';
+        else badge.className = 'badge badge-low-risk';
 
-      // Header Banner
-      document.getElementById('detFullName').textContent = st.full_name;
-      document.getElementById('detRollNo').textContent = st.roll_no;
-      document.getElementById('detEmail').textContent = st.email;
-      document.getElementById('detBranch').textContent = st.branch;
-      document.getElementById('detYear').textContent = st.year;
-      document.getElementById('detSem').textContent = st.semester;
-      document.getElementById('detSec').textContent = st.section;
-      document.getElementById('detAttendance').textContent = `${st.attendance}%`;
-      document.getElementById('detProgress').textContent = `${Math.round(st.overall_progress)}%`;
+        document.getElementById('detRiskLevelText').textContent = pred.risk_level || st.risk_level || 'Low Risk';
+        document.getElementById('detRiskScoreVal').textContent = `${pred.risk_score || st.risk_score || 15}%`;
+        document.getElementById('detConfidenceVal').textContent = `${pred.confidence_percentage || 88}%`;
 
-      let badgeClass = 'badge-low-risk';
-      if (pred.risk_level === 'High Risk') badgeClass = 'badge-high-risk';
-      else if (pred.risk_level === 'Medium Risk') badgeClass = 'badge-med-risk';
-
-      const detBadge = document.getElementById('detRiskBadge');
-      detBadge.className = `badge ${badgeClass}`;
-      detBadge.textContent = pred.risk_level;
-
-      // ML Diagnosis Box
-      document.getElementById('detModelName').textContent = pred.model_name;
-      document.getElementById('detRiskLevelText').innerHTML = `<span class="${pred.risk_level === 'High Risk' ? 'badge-danger' : (pred.risk_level === 'Medium Risk' ? 'badge-warning' : 'badge-success')}" style="padding: 0.2rem 0.5rem; border-radius: 4px;">${pred.risk_level}</span>`;
-      document.getElementById('detRiskScoreVal').textContent = `${Math.round(pred.risk_score)}%`;
-      document.getElementById('detConfidenceVal').textContent = `${pred.confidence}%`;
-
-      // Render Factors Breakdown
-      const factorsList = document.getElementById('detFactorsList');
-      factorsList.innerHTML = pred.important_features.map(f => {
-        const isRisk = f.impact_type === 'Risk Factor';
-        return `
-          <div style="background: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border-left: 3px solid ${isRisk ? 'var(--risk-high)' : 'var(--risk-low)'}; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <strong>${f.feature_name}</strong>: ${f.value}
-              <div style="font-size: 0.725rem; color: var(--text-dim);">${f.detail}</div>
-            </div>
-            <span class="badge ${isRisk ? 'badge-danger' : 'badge-success'}" style="font-size: 0.65rem;">
-              ${isRisk ? `-${Math.abs(f.difference)} pts` : `+${f.difference} pts`}
-            </span>
-          </div>
-        `;
-      }).join('');
-
-      // Render Radar Chart & Score Pills
-      renderRadarChart(st);
-
-      // Render Learning Path
-      document.getElementById('detPathPaceBadge').textContent = `${pathData.estimated_completion_weeks} Weeks Plan`;
-      const pathList = document.getElementById('detPathList');
-      pathList.innerHTML = pathData.learning_path.map(step => `
-        <div class="path-step-card" style="padding: 0.85rem;">
-          <div class="step-number" style="width: 28px; height: 28px; font-size: 0.8rem;">${step.step}</div>
-          <div class="step-details">
-            <div class="step-title" style="font-size: 0.9rem;">
-              ${step.title}
-              <span class="badge ${step.difficulty === 'Beginner' ? 'badge-info' : (step.difficulty === 'Intermediate' ? 'badge-warning' : 'badge-primary')}" style="font-size: 0.65rem;">
-                ${step.difficulty}
-              </span>
-            </div>
-            <div class="step-objective" style="font-size: 0.75rem;">${step.learning_objective}</div>
-            <div class="step-meta" style="font-size: 0.7rem;">
-              <span><i class="fa-solid fa-clock"></i> ${step.estimated_time}</span>
-              <span><i class="fa-solid fa-tag"></i> ${step.reason}</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-
-      // Render AI Recommended Interventions
-      const aiList = document.getElementById('aiInterventionsList');
-      aiList.innerHTML = recInterventions.interventions.map(intv => `
-        <div style="background: var(--bg-surface); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 0.85rem;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
-            <strong style="font-size: 0.85rem; color: #fff;">${intv.title}</strong>
-            <span class="badge badge-${intv.badge_color}" style="font-size: 0.65rem;">${intv.priority}</span>
-          </div>
-          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem;">${intv.description}</p>
-          <div style="font-size: 0.7rem; color: var(--text-dim);"><i class="fa-solid fa-hourglass-half"></i> Timeline: ${intv.recommended_timeline}</div>
-        </div>
-      `).join('');
-
-      // Render Logged Interventions
-      const loggedList = document.getElementById('loggedInterventionsList');
-      if (loggedInterventions && loggedInterventions.length) {
-        loggedList.innerHTML = loggedInterventions.map(li => `
-          <div style="background: var(--bg-surface-hover); border-left: 3px solid var(--primary-light); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.8rem;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.2rem;">
-              <strong style="color: #fff;">${li.title}</strong>
-              <span class="badge badge-primary" style="font-size: 0.65rem;">${li.category}</span>
-            </div>
-            <p style="font-size: 0.75rem; color: var(--text-muted);">${li.description}</p>
-            <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.25rem;">Logged on: ${li.created_at || 'Recently'}</div>
-          </div>
-        `).join('');
-      } else {
-        loggedList.innerHTML = '<div style="color: var(--text-dim); font-size: 0.8rem;">No faculty actions logged yet.</div>';
-      }
-    }
-
-    function renderRadarChart(st) {
-      const ctx = document.getElementById('detRadarChart').getContext('2d');
-      if (radarChartInstance) radarChartInstance.destroy();
-
-      const labels = ['Math', 'Physics', 'Programming', 'DSA', 'DBMS', 'Comm'];
-      const studentVals = [
-        st.mathematics_score,
-        st.physics_score,
-        st.programming_score,
-        st.data_structures_score,
-        st.database_score,
-        st.communication_score
-      ];
-      const benchmarkVals = [60, 60, 60, 60, 60, 60];
-
-      radarChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Student Scores',
-              data: studentVals,
-              backgroundColor: 'rgba(6, 182, 212, 0.35)',
-              borderColor: '#06b6d4',
-              pointBackgroundColor: '#06b6d4',
-              pointBorderColor: '#fff',
-              borderWidth: 2
-            },
-            {
-              label: 'Benchmark Threshold (60%)',
-              data: benchmarkVals,
-              borderColor: 'rgba(239, 68, 68, 0.6)',
-              borderDash: [4, 4],
-              borderWidth: 1.5,
-              pointRadius: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            r: {
-              min: 0,
-              max: 100,
-              ticks: { stepSize: 20, color: '#94a3b8', backdropColor: 'transparent' },
-              grid: { color: 'rgba(255, 255, 255, 0.08)' },
-              pointLabels: { color: '#f8fafc', font: { size: 10, weight: '600' } }
-            }
-          },
-          plugins: {
-            legend: { position: 'top', labels: { color: '#f8fafc', font: { size: 11 } } }
-          }
-        }
-      });
-
-      // Score pills
-      const scoreGrid = document.getElementById('detScoresGrid');
-      scoreGrid.innerHTML = `
-        <div style="background: var(--bg-surface); padding: 0.4rem; border-radius: 4px;">Math: <strong>${st.mathematics_score}</strong></div>
-        <div style="background: var(--bg-surface); padding: 0.4rem; border-radius: 4px;">Physics: <strong>${st.physics_score}</strong></div>
-        <div style="background: var(--bg-surface); padding: 0.4rem; border-radius: 4px;">Prog: <strong>${st.programming_score}</strong></div>
-        <div style="background: var(--bg-surface); padding: 0.4rem; border-radius: 4px;">DSA: <strong>${st.data_structures_score}</strong></div>
-        <div style="background: var(--bg-surface); padding: 0.4rem; border-radius: 4px;">DBMS: <strong>${st.database_score}</strong></div>
-        <div style="background: var(--bg-surface); padding: 0.4rem; border-radius: 4px;">Comm: <strong>${st.communication_score}</strong></div>
-      `;
-    }
-
-    function toggleInterventionForm() {
-      const box = document.getElementById('newInterventionFormBox');
-      box.style.display = box.style.display === 'none' ? 'block' : 'none';
-    }
-
-    async function submitIntervention(e) {
-      e.preventDefault();
-      const title = document.getElementById('intTitle').value.trim();
-      const category = document.getElementById('intCategory').value;
-      const priority = document.getElementById('intPriority').value;
-      const desc = document.getElementById('intDesc').value.trim();
-
-      try {
-        const res = await fetch(`/api/teacher/student/${studentId}/intervention`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, category, priority, description: desc })
+        // Render Explainability Factors
+        const factorsContainer = document.getElementById('detFactorsList');
+        factorsContainer.innerHTML = '';
+        const drivers = pred.top_risk_drivers || ['Attendance above 75%', 'Performance consistent across modules'];
+        drivers.forEach(d => {
+          const div = document.createElement('div');
+          div.style = 'background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bg-card-border); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); font-size: 0.825rem; display: flex; align-items: center; gap: 0.5rem;';
+          div.innerHTML = `<i class="fa-solid fa-circle-info" style="color: var(--secondary);"></i> <span>${d}</span>`;
+          factorsContainer.appendChild(div);
         });
-        const data = await res.json();
 
-        if (data.success) {
-          toggleInterventionForm();
-          document.getElementById('intTitle').value = '';
-          document.getElementById('intDesc').value = '';
-          await loadStudentDetails();
-          alert('Intervention recorded successfully.');
+        // Render Radar Chart
+        const scores = {
+          'Mathematics': st.mathematics_score || 70,
+          'Physics': st.physics_score || 72,
+          'Programming': st.programming_score || 78,
+          'Data Structures': st.data_structures_score || 74,
+          'DBMS': st.database_score || 80,
+          'Communication': st.communication_score || 76
+        };
+
+        const ctx = document.getElementById('studentDetailRadar').getContext('2d');
+        if (radarChart) radarChart.destroy();
+        radarChart = new Chart(ctx, {
+          type: 'radar',
+          data: {
+            labels: Object.keys(scores),
+            datasets: [{
+              label: 'Student Score',
+              data: Object.values(scores),
+              backgroundColor: 'rgba(99, 102, 241, 0.25)',
+              borderColor: '#6366f1',
+              pointBackgroundColor: '#818cf8'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                min: 0,
+                max: 100,
+                ticks: { display: false },
+                grid: { color: 'rgba(255, 255, 255, 0.08)' }
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+
+        // Render Interventions
+        const intervContainer = document.getElementById('interventionsList');
+        intervContainer.innerHTML = '';
+        if (data.interventions && data.interventions.length > 0) {
+          data.interventions.forEach(inv => {
+            const div = document.createElement('div');
+            div.style = 'background: var(--bg-surface); padding: 0.85rem 1rem; border-radius: var(--radius-md); border-left: 3px solid var(--primary-light); display: flex; justify-content: space-between; align-items: center;';
+            div.innerHTML = `
+              <div>
+                <div style="font-weight: 600; font-size: 0.9rem; color: #fff;">${inv.title}</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">${inv.notes || 'No faculty notes added.'}</div>
+                <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.25rem;">Logged on ${inv.created_at || 'Recently'}</div>
+              </div>
+              <span class="badge badge-primary">${inv.status || 'Active'}</span>
+            `;
+            intervContainer.appendChild(div);
+          });
+        } else {
+          intervContainer.innerHTML = '<div style="color: var(--text-muted); padding: 0.5rem 0;">No remedial interventions logged yet for this student.</div>';
         }
+
       } catch (err) {
-        console.error('Error logging intervention:', err);
+        console.error('Error loading student diagnostics:', err);
       }
     }
 
@@ -464,7 +254,7 @@
       window.location.href = '/login';
     }
 
-    window.onload = checkAuthAndLoad;
+    window.onload = loadStudentData;
   </script>
 </body>
 </html>

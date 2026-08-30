@@ -82,11 +82,20 @@ def create_app():
     
     # Frontend HTML Page Routes
     @app.route("/")
+    def index_page():
+        return send_from_directory(frontend_dir, "index.html")
+
     @app.route("/login")
-    @app.route("/student-login")
-    @app.route("/teacher-login")
     def login_page():
         return send_from_directory(frontend_dir, "login.html")
+
+    @app.route("/student-login")
+    def student_login_page():
+        return send_from_directory(frontend_dir, "student-login.html")
+
+    @app.route("/teacher-login")
+    def teacher_login_page():
+        return send_from_directory(frontend_dir, "teacher-login.html")
         
     @app.route("/student-dashboard")
     def student_dashboard_page():
@@ -114,7 +123,7 @@ def create_app():
     def serve_static(path):
         if os.path.exists(os.path.join(frontend_dir, path)):
             return send_from_directory(frontend_dir, path)
-        return send_from_directory(frontend_dir, "login.html")
+        return send_from_directory(frontend_dir, "index.html")
         
     # Production Error Handlers
     @app.errorhandler(404)

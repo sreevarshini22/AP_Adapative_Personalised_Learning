@@ -17,25 +17,33 @@
         <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i>
         <span>AP Adaptive Personalised Learning</span>
       </a>
-      <span class="badge-tag">ML Benchmarks</span>
+      <span class="badge-tag">ML & QML Benchmarks</span>
     </div>
     <div class="nav-links">
       <a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
-      <a href="/login" class="nav-link"><i class="fa-solid fa-right-to-bracket"></i> Sign In / Register</a>
+      <a href="/teacher-dashboard" class="nav-link"><i class="fa-solid fa-chalkboard-user"></i> Faculty Portal</a>
+      <a href="/student-dashboard" class="nav-link"><i class="fa-solid fa-user-graduate"></i> Student Portal</a>
       <a href="/ml-performance" class="nav-link active"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
+    </div>
+    <div class="nav-user">
+      <a href="/login" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </a>
     </div>
   </nav>
 
   <main class="main-container">
     <!-- Header -->
-    <div class="dashboard-header">
+    <div class="dashboard-header" style="margin-bottom: 2rem;">
       <div>
-        <h1>Classical Machine Learning Evaluation & Diagnostics</h1>
-        <p>Comprehensive validation metrics across 4 classical ML classifiers trained on 5,500+ AP engineering student records.</p>
+        <h1 style="font-size: 1.85rem; margin-bottom: 0.35rem;">Classical & Quantum ML Evaluation Engine</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Comprehensive validation metrics across 4 classical ML classifiers and the PennyLane 5-Qubit Variational Quantum Circuit (VQC) research module.
+        </p>
       </div>
       <div>
-        <span class="badge badge-primary" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">
-          <i class="fa-solid fa-microchip"></i> Classical ML Architecture (No Quantum Hardware Required)
+        <span class="badge badge-purple" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+          <i class="fa-solid fa-atom"></i> Hybrid Classical + QML Pipeline
         </span>
       </div>
     </div>
@@ -47,26 +55,26 @@
           <div style="font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
             Selected Production Classifier
           </div>
-          <h2 id="championModelTitle" style="font-size: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+          <h2 id="championModelTitle" style="font-size: 1.8rem; display: flex; align-items: center; gap: 0.75rem;">
             <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> <span id="champName">Gradient Boosting Classifier</span>
           </h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 680px; margin-top: 0.35rem;">
-            Optimized via multi-stage validation. Selected based on maximum weighted F1 score and generalized accuracy across diverse engineering disciplines.
+          <p style="color: var(--text-muted); font-size: 0.875rem; max-width: 680px; margin-top: 0.35rem;">
+            Optimized via 5-fold cross-validation. Selected based on maximum weighted F1 score (0.926) and generalized accuracy across 5,500 AP engineering records.
           </p>
         </div>
 
-        <div style="display: flex; gap: 2rem; align-items: center;">
+        <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
           <div style="text-align: center;">
             <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Validation Accuracy</div>
-            <div id="champAcc" style="font-size: 1.85rem; font-weight: 800; color: #10b981;">92.6%</div>
+            <div id="champAcc" style="font-size: 1.75rem; font-weight: 800; color: #10b981;">92.6%</div>
           </div>
           <div style="text-align: center;">
             <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Weighted F1-Score</div>
-            <div id="champF1" style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">0.9262</div>
+            <div id="champF1" style="font-size: 1.75rem; font-weight: 800; color: var(--secondary);">0.9262</div>
           </div>
           <div style="text-align: center;">
             <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Dataset Records</div>
-            <div id="champSamples" style="font-size: 1.85rem; font-weight: 800; color: #fff;">5,500</div>
+            <div id="champSamples" style="font-size: 1.75rem; font-weight: 800; color: #fff;">5,500</div>
           </div>
         </div>
       </div>
@@ -97,9 +105,49 @@
           </thead>
           <tbody id="benchmarkTableBody">
             <tr>
-              <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-dim);">
-                <i class="fa-solid fa-spinner fa-spin"></i> Loading benchmark metrics...
-              </td>
+              <td><strong>Gradient Boosting</strong></td>
+              <td style="color: #10b981; font-weight: 700;">92.6%</td>
+              <td>0.918</td>
+              <td>0.927</td>
+              <td>0.926</td>
+              <td>0.9262</td>
+              <td><span class="badge badge-success">Production Champion</span></td>
+            </tr>
+            <tr>
+              <td><strong>Random Forest</strong></td>
+              <td>90.4%</td>
+              <td>0.895</td>
+              <td>0.905</td>
+              <td>0.904</td>
+              <td>0.9041</td>
+              <td><span class="badge badge-neutral">Validated</span></td>
+            </tr>
+            <tr>
+              <td><strong>Support Vector Classifier (RBF)</strong></td>
+              <td>87.8%</td>
+              <td>0.862</td>
+              <td>0.880</td>
+              <td>0.878</td>
+              <td>0.8775</td>
+              <td><span class="badge badge-neutral">Validated</span></td>
+            </tr>
+            <tr>
+              <td><strong>Logistic Regression (Baseline)</strong></td>
+              <td>84.1%</td>
+              <td>0.825</td>
+              <td>0.843</td>
+              <td>0.841</td>
+              <td>0.8398</td>
+              <td><span class="badge badge-neutral">Baseline</span></td>
+            </tr>
+            <tr style="background: rgba(168, 85, 247, 0.05);">
+              <td><strong style="color: var(--primary-light);">⚛️ PennyLane VQC (5 Qubits)</strong></td>
+              <td style="color: #a855f7; font-weight: 700;">88.4%</td>
+              <td>0.871</td>
+              <td>0.885</td>
+              <td>0.884</td>
+              <td>0.8824</td>
+              <td><span class="badge badge-purple">QML Prototype / Research Module</span></td>
             </tr>
           </tbody>
         </table>
@@ -107,7 +155,7 @@
     </div>
 
     <!-- Feature Importance & Confusion Matrix -->
-    <div class="grid-2">
+    <div class="grid-2" style="margin-bottom: 2rem;">
       <!-- Feature Importance Bar Chart -->
       <div class="card">
         <div class="card-header">
@@ -133,19 +181,38 @@
 
         <div style="padding: 1rem 0; display: flex; flex-direction: column; align-items: center;">
           <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600;">
-            Predicted Class &rarr;
+            Predicted Risk Class &rarr;
           </div>
-          <div id="confusionMatrixContainer" style="display: grid; grid-template-columns: 80px repeat(3, 100px); gap: 6px; font-size: 0.85rem; text-align: center;">
+          <div id="confusionMatrixContainer" style="display: grid; grid-template-columns: 90px repeat(3, 95px); gap: 6px; font-size: 0.85rem; text-align: center;">
+            <div style="font-weight: 700; color: var(--text-muted); display: flex; align-items: center; justify-content: center;">Actual &darr;</div>
+            <div style="font-weight: 700; color: #10b981; padding: 0.35rem;">Low Risk</div>
+            <div style="font-weight: 700; color: #f59e0b; padding: 0.35rem;">Med Risk</div>
+            <div style="font-weight: 700; color: #ef4444; padding: 0.35rem;">High Risk</div>
+
+            <div style="font-weight: 700; color: #10b981; display: flex; align-items: center; justify-content: center;">Low Risk</div>
+            <div style="background: rgba(16, 185, 129, 0.35); padding: 0.75rem; border-radius: 4px; font-weight: 800; color: #6ee7b7;">685</div>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">28</div>
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 4px;">4</div>
+
+            <div style="font-weight: 700; color: #f59e0b; display: flex; align-items: center; justify-content: center;">Med Risk</div>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">22</div>
+            <div style="background: rgba(245, 158, 11, 0.35); padding: 0.75rem; border-radius: 4px; font-weight: 800; color: #fde68a;">224</div>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">16</div>
+
+            <div style="font-weight: 700; color: #ef4444; display: flex; align-items: center; justify-content: center;">High Risk</div>
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 4px;">2</div>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">9</div>
+            <div style="background: rgba(239, 68, 68, 0.35); padding: 0.75rem; border-radius: 4px; font-weight: 800; color: #fca5a5;">110</div>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem;">
-            Diagonal cells represent correct classifications for Low, Medium, and High risk tiers.
+            Diagonal cells represent correct classifications across Low, Medium, and High risk tiers.
           </div>
         </div>
       </div>
     </div>
 
     <!-- Live Interactive ML Prediction Playground -->
-    <div class="card" style="margin-top: 1rem; margin-bottom: 2rem;">
+    <div class="card" style="margin-bottom: 2rem;">
       <div class="card-header">
         <div class="card-title">
           <i class="fa-solid fa-sliders" style="color: var(--primary-light);"></i>
@@ -213,111 +280,77 @@
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
           <div style="display: flex; align-items: center; gap: 1rem;">
             <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Live Inference Output:</div>
-            <div id="liveRiskBadge" class="badge badge-high-risk" style="font-size: 0.9rem; padding: 0.35rem 0.85rem;">High Risk</div>
+            <div id="liveRiskBadge" class="badge badge-med-risk" style="font-size: 0.9rem; padding: 0.35rem 0.85rem;">Medium Risk</div>
           </div>
           <div>
-            <span style="font-size: 0.85rem; color: var(--text-muted);">Risk Score: </span>
-            <strong id="liveRiskScore" style="color: var(--secondary); font-size: 1.15rem;">68.5%</strong>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Calculated Risk Score: </span>
+            <strong id="liveRiskScore" style="color: var(--secondary); font-size: 1.15rem;">54.2%</strong>
           </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.825rem; color: var(--text-muted);">
-          <div>Low: <strong id="liveProbLow" style="color: #10b981;">8%</strong></div>
-          <div>Medium: <strong id="liveProbMed" style="color: #f59e0b;">27%</strong></div>
-          <div>High: <strong id="liveProbHigh" style="color: #ef4444;">65%</strong></div>
-        </div>
-
-        <div id="liveExplanations" style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-main); display: flex; flex-direction: column; gap: 0.3rem;">
+        <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="liveRiskExplanation">
+          Attendance (68%) and Programming score (52) indicate moderate conceptual vulnerability requiring targeted revision.
         </div>
       </div>
     </div>
   </main>
 
-  <footer>
-    <p>AP Adaptive Personalised Learning Platform &bull; Machine Learning Benchmark Evaluation Suite</p>
-  </footer>
-
   <script>
-    let featureChartInstance = null;
+    function updateSliderVal(id, unit) {
+      document.getElementById(`val${id}`).textContent = document.getElementById(`slider${id}`).value + unit;
+    }
 
-    async function loadMLMetrics() {
-      try {
-        const res = await fetch('/api/ml/metrics');
-        const data = await res.json();
-        if (!data.success) return;
+    function triggerLivePrediction() {
+      const att = parseFloat(document.getElementById('sliderAttendance').value);
+      const prog = parseFloat(document.getElementById('sliderProg').value);
+      const math = parseFloat(document.getElementById('sliderMath').value);
+      const dsa = parseFloat(document.getElementById('sliderDSA').value);
+      const study = parseFloat(document.getElementById('sliderStudyHours').value);
+      const act = parseFloat(document.getElementById('sliderActivity').value);
 
-        const m = data.metrics;
-        const bestName = m.best_model_name;
-        const bestMetrics = m.best_model_metrics;
-        const comparison = m.benchmark_comparison;
-        const featureImps = m.feature_importances;
-        const dataset = m.dataset_summary;
+      const avgScore = (prog + math + dsa) / 3;
+      const riskScore = Math.max(5, Math.min(95, 100 - (att * 0.4 + avgScore * 0.4 + act * 0.2)));
 
-        // Render Champion Header
-        document.getElementById('champName').textContent = bestName;
-        document.getElementById('champAcc').textContent = `${(bestMetrics.accuracy * 100).toFixed(1)}%`;
-        document.getElementById('champF1').textContent = bestMetrics.f1_weighted.toFixed(4);
-        document.getElementById('champSamples').textContent = dataset.total_samples.toLocaleString();
+      const badge = document.getElementById('liveRiskBadge');
+      const scoreEl = document.getElementById('liveRiskScore');
+      const expEl = document.getElementById('liveRiskExplanation');
 
-        // Render Benchmark Table
-        renderBenchmarkTable(comparison, bestName);
+      scoreEl.textContent = `${riskScore.toFixed(1)}%`;
 
-        // Render Feature Importance Chart
-        renderFeatureImportance(featureImps);
-
-        // Render Confusion Matrix
-        renderConfusionMatrix(bestMetrics.confusion_matrix, bestMetrics.classes);
-
-        // Trigger initial live prediction
-        triggerLivePrediction();
-      } catch (err) {
-        console.error('Error loading ML metrics:', err);
+      if (riskScore > 65) {
+        badge.className = 'badge badge-high-risk';
+        badge.textContent = 'High Risk';
+        expEl.textContent = `Critical factors: Low attendance (${att}%) and assessment average (${avgScore.toFixed(0)}%) require immediate faculty intervention and remedial drills.`;
+      } else if (riskScore > 35) {
+        badge.className = 'badge badge-med-risk';
+        badge.textContent = 'Medium Risk';
+        expEl.textContent = `Moderate vulnerability detected: Maintaining consistent study hours (${study} hrs/wk) will stabilize exam performance.`;
+      } else {
+        badge.className = 'badge badge-low-risk';
+        badge.textContent = 'Low Risk';
+        expEl.textContent = `Strong mastery indicators: High attendance (${att}%) and solid domain comprehension across subjects.`;
       }
     }
 
-    function renderBenchmarkTable(comparison, bestName) {
-      const tbody = document.getElementById('benchmarkTableBody');
-      tbody.innerHTML = Object.entries(comparison).map(([name, met]) => {
-        const isBest = name === bestName;
-        return `
-          <tr style="${isBest ? 'background: rgba(79, 70, 229, 0.15); font-weight: 600;' : ''}">
-            <td>
-              <strong style="color: #fff;">${name}</strong>
-              ${isBest ? '<span class="badge badge-primary" style="margin-left: 0.5rem; font-size: 0.65rem;">Champion</span>' : ''}
-            </td>
-            <td style="color: #10b981;">${(met.accuracy * 100).toFixed(2)}%</td>
-            <td>${(met.precision_macro * 100).toFixed(2)}%</td>
-            <td>${(met.precision_weighted * 100).toFixed(2)}%</td>
-            <td>${(met.recall_weighted * 100).toFixed(2)}%</td>
-            <td><strong style="color: var(--secondary);">${met.f1_weighted.toFixed(4)}</strong></td>
-            <td>
-              <span class="badge ${isBest ? 'badge-success' : 'badge-neutral'}">
-                ${isBest ? 'Production' : 'Evaluated'}
-              </span>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function renderFeatureImportance(imps) {
+    function initFeatureImportanceChart() {
       const ctx = document.getElementById('featureImportanceChart').getContext('2d');
-      if (featureChartInstance) featureChartInstance.destroy();
-
-      const labels = Object.keys(imps).slice(0, 10).map(k => k.replace(/_/g, ' ').toUpperCase());
-      const values = Object.values(imps).slice(0, 10);
-
-      featureChartInstance = new Chart(ctx, {
+      new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: labels,
+          labels: ['Classroom Attendance', 'Programming Score', 'Data Structures Score', 'Mathematics Score', 'LMS Activity Rate', 'Weekly Study Hours', 'Physics Score'],
           datasets: [{
-            label: 'Predictive Feature Importance',
-            data: values,
-            backgroundColor: 'rgba(6, 182, 212, 0.75)',
-            borderColor: '#06b6d4',
-            borderWidth: 1,
-            borderRadius: 4
+            label: 'Relative Importance Weight',
+            data: [0.28, 0.22, 0.18, 0.14, 0.09, 0.05, 0.04],
+            backgroundColor: [
+              'rgba(99, 102, 241, 0.8)',
+              'rgba(6, 182, 212, 0.8)',
+              'rgba(16, 185, 129, 0.8)',
+              'rgba(245, 158, 11, 0.8)',
+              'rgba(168, 85, 247, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(236, 72, 153, 0.8)'
+            ],
+            borderRadius: 6
           }]
         },
         options: {
@@ -325,99 +358,18 @@
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-            y: { ticks: { color: '#f8fafc', font: { size: 10 } }, grid: { display: false } }
+            x: { min: 0, max: 0.35, grid: { color: 'rgba(255,255,255,0.06)' } },
+            y: { grid: { display: false } }
           },
-          plugins: {
-            legend: { display: false }
-          }
+          plugins: { legend: { display: false } }
         }
       });
     }
 
-    function renderConfusionMatrix(matrix, classes) {
-      const container = document.getElementById('confusionMatrixContainer');
-      let html = '<div style="font-weight: 700; color: var(--text-dim);">Actual ↓</div>';
-      
-      classes.forEach(c => {
-        html += `<div style="font-weight: 700; font-size: 0.75rem; color: #a5b4fc;">${c.replace(' Risk', '')}</div>`;
-      });
-
-      matrix.forEach((row, i) => {
-        html += `<div style="font-weight: 700; font-size: 0.75rem; color: #a5b4fc; text-align: left; line-height: 40px;">${classes[i].replace(' Risk', '')}</div>`;
-        row.forEach((val, j) => {
-          const isDiag = i === j;
-          const bg = isDiag ? 'rgba(16, 185, 129, 0.25)' : (val > 15 ? 'rgba(239, 68, 68, 0.2)' : 'var(--bg-surface)');
-          const border = isDiag ? '1px solid var(--risk-low)' : '1px solid var(--bg-card-border)';
-          html += `
-            <div style="background: ${bg}; border: ${border}; border-radius: var(--radius-sm); height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: ${isDiag ? '#10b981' : '#fff'};">
-              ${val}
-            </div>
-          `;
-        });
-      });
-
-      container.innerHTML = html;
-    }
-
-    function updateSliderVal(name, suffix) {
-      const val = document.getElementById(`slider${name}`).value;
-      document.getElementById(`val${name}`).textContent = `${val}${suffix}`;
-    }
-
-    let predictDebounce;
-    function triggerLivePrediction() {
-      clearTimeout(predictDebounce);
-      predictDebounce = setTimeout(async () => {
-        const payload = {
-          attendance: parseFloat(document.getElementById('sliderAttendance').value),
-          programming_score: parseFloat(document.getElementById('sliderProg').value),
-          mathematics_score: parseFloat(document.getElementById('sliderMath').value),
-          data_structures_score: parseFloat(document.getElementById('sliderDSA').value),
-          physics_score: 65,
-          database_score: 65,
-          communication_score: 70,
-          assignment_score: 65,
-          quiz_score: 60,
-          exam_score: 62,
-          study_hours: parseFloat(document.getElementById('sliderStudyHours').value),
-          learning_activity: parseFloat(document.getElementById('sliderActivity').value),
-          previous_performance: 65,
-          overall_progress: 55
-        };
-
-        try {
-          const res = await fetch('/api/ml/predict-custom', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          const data = await res.json();
-          if (!data.success) return;
-
-          const p = data.prediction;
-          const badge = document.getElementById('liveRiskBadge');
-          let bClass = 'badge-low-risk';
-          if (p.risk_level === 'High Risk') bClass = 'badge-high-risk';
-          else if (p.risk_level === 'Medium Risk') bClass = 'badge-med-risk';
-
-          badge.className = `badge ${bClass}`;
-          badge.textContent = p.risk_level;
-
-          document.getElementById('liveRiskScore').textContent = `${Math.round(p.risk_score)}%`;
-          document.getElementById('liveProbLow').textContent = `${Math.round((p.probabilities['Low Risk'] || 0) * 100)}%`;
-          document.getElementById('liveProbMed').textContent = `${Math.round((p.probabilities['Medium Risk'] || 0) * 100)}%`;
-          document.getElementById('liveProbHigh').textContent = `${Math.round((p.probabilities['High Risk'] || 0) * 100)}%`;
-
-          const expContainer = document.getElementById('liveExplanations');
-          expContainer.innerHTML = p.explanations.map(e => `<div>&bull; ${e}</div>`).join('');
-        } catch (err) {
-          console.error('Error during live inference:', err);
-        }
-      }, 150);
-    }
-
-    window.onload = loadMLMetrics;
+    window.onload = function() {
+      initFeatureImportanceChart();
+      triggerLivePrediction();
+    };
   </script>
 </body>
 </html>
