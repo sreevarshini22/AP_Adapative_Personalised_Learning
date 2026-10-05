@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institution Admin Portal | AP Adaptive Personalised Learning Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .admin-container {
+      max-width: 1380px;
+      width: 100%;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.25rem;
+    }
+    .inst-header-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .inst-header-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary-light), var(--secondary));
+    }
+    .inst-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(79, 70, 229, 0.15);
+      border: 1px solid rgba(79, 70, 229, 0.3);
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      color: #c7d2fe;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--bg-card-border);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+    .admin-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+    }
+    .admin-tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .admin-tab-btn.active {
+      color: var(--primary-light);
+      border-bottom-color: var(--primary-light);
+      background: rgba(79, 70, 229, 0.08);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .upload-zone {
+      border: 2px dashed rgba(99, 102, 241, 0.4);
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .upload-zone:hover {
+      border-color: var(--primary-light);
+      background: rgba(79, 70, 229, 0.08);
+    }
+    .preview-table-container {
+      max-height: 380px;
+      overflow-y: auto;
+      margin-top: 1.25rem;
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+    }
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    .preview-table th {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    .preview-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+    }
+    .preview-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .hierarchy-tree {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .tree-node {
+      margin-left: 1.25rem;
+      position: relative;
+      padding: 0.35rem 0;
+    }
+    .tree-node-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.875rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tree-node-header:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div style="display: flex; align-items: center; gap: 0.6rem; color: #fff;">
+        <i class="fa-solid fa-building-columns" style="color: var(--primary-light);"></i>
+        <span>AP Adaptive Platform &bull; Institution Admin</span>
+      </div>
+      <span class="badge-tag" id="navInstTag">Institution Tier</span>
+    </div>
+    <div class="nav-links" style="display: flex; align-items: center; gap: 1rem;">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+        <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+      </button>
+      <a href="/ml-performance" class="btn btn-secondary" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-atom"></i> Quantum vs Classical ML
+      </a>
+      <span id="userDisplayName" style="color: var(--text-muted); font-size: 0.85rem;">Admin</span>
+      <button onclick="logout()" class="btn btn-secondary" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </nav>
+
+  <main class="admin-container">
+
+    <!-- Institution Header Banner -->
+    <section class="inst-header-banner">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+          <h1 id="instName" style="font-size: 1.65rem; margin: 0;">Loading Institution...</h1>
+          <span class="inst-meta-badge" id="instCodeBadge"><i class="fa-solid fa-hashtag"></i> Code</span>
+          <span class="badge badge-low" id="instTypeBadge">Autonomous University</span>
+        </div>
+        <p id="instSubtitle" style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+          Curriculum Agnostic Multi-Tenancy &bull; Dynamic Hierarchy Management
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button onclick="refreshData()" class="btn btn-secondary" style="padding: 0.6rem 1rem;">
+          <i class="fa-solid fa-rotate"></i> Refresh State
+        </button>
+        <button onclick="openCurriculumUploadModal()" class="btn btn-primary" style="padding: 0.6rem 1.15rem;">
+          <i class="fa-solid fa-file-arrow-up"></i> Upload Syllabus
+        </button>
+      </div>
+    </section>
+
+    <!-- Institution KPIs -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(79, 70, 229, 0.15); color: var(--primary-light);">
+          <i class="fa-solid fa-sitemap"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Active Programs</div>
+          <div id="statPrograms" style="font-size: 1.6rem; font-weight: 700; color: #fff;">--</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--secondary);">
+          <i class="fa-solid fa-book-bookmark"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Configured Subjects</div>
+          <div id="statSubjects" style="font-size: 1.6rem; font-weight: 700; color: #fff;">--</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-quantum);">
+          <i class="fa-solid fa-chalkboard-user"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Faculty Members</div>
+          <div id="statTeachers" style="font-size: 1.6rem; font-weight: 700; color: #fff;">--</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--risk-low);">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Enrolled Students</div>
+          <div id="statStudents" style="font-size: 1.6rem; font-weight: 700; color: #fff;">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" onclick="switchTab('curriculumTab', this)">
+        <i class="fa-solid fa-diagram-project"></i> Dynamic Curriculum
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('resourcesTab', this)">
+        <i class="fa-solid fa-file-shield"></i> Authorized Resources
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('facultyTab', this)">
+        <i class="fa-solid fa-user-tie"></i> Faculty & Classes
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('studentsTab', this)">
+        <i class="fa-solid fa-user-graduate"></i> Student Cohorts
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('analyticsTab', this)">
+        <i class="fa-solid fa-chart-line"></i> Institution Analytics
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('deanTab', this)">
+        <i class="fa-solid fa-building-user"></i> Dean Executive Analytics
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('masterDatasetTab', this)">
+        <i class="fa-solid fa-database"></i> Institution Master Dataset
+      </button>
+      <button class="admin-tab-btn" onclick="switchTab('auditTab', this)">
+        <i class="fa-solid fa-clipboard-check"></i> Audit Logs
+      </button>
+    </div>
+
+    <!-- TAB 1: DYNAMIC CURRICULUM -->
+    <section id="curriculumTab" class="tab-content active">
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem;">
+        
+        <!-- Left: Programs & Regulations -->
+        <div class="card" style="height: fit-content;">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3><i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i> Programs</h3>
+            <button onclick="openProgramModal()" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem;">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </div>
+          <div id="programsList" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Loading programs...</div>
+          </div>
+        </div>
+
+        <!-- Right: Dynamic Hierarchy Tree View -->
+        <div class="card">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <h3><i class="fa-solid fa-sitemap" style="color: var(--secondary);"></i> Official Curriculum Hierarchy</h3>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Program &rarr; Year &rarr; Semester &rarr; Subject &rarr; Module &rarr; Topic &rarr; LOs</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <select id="curriculumProgramSelect" class="form-select" style="padding: 0.4rem 0.75rem; font-size: 0.85rem;" onchange="loadCurriculumHierarchy()">
+                <option value="">Select Program</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="hierarchyContainer" style="margin-top: 1.25rem;">
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+              <i class="fa-solid fa-folder-tree" style="font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.4;"></i>
+              <p>Select a program or upload a curriculum package to view the hierarchy structure.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: AUTHORIZED RESOURCES -->
+    <section id="resourcesTab" class="tab-content">
+      <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3><i class="fa-solid fa-shield-halved" style="color: var(--risk-low);"></i> Authorized Institution Learning Resources</h3>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Textbooks, lecture notes, lab manuals with statutory copyright verification</p>
+          </div>
+          <button onclick="openResourceUploadModal()" class="btn btn-primary" style="padding: 0.5rem 1rem;">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Authorized Material
+          </button>
+        </div>
+
+        <div id="resourcesListContainer" style="margin-top: 1.25rem;">
+          <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading authorized resources...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: FACULTY & CLASSES -->
+    <section id="facultyTab" class="tab-content">
+      <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--secondary);"></i> Institution Faculty Directory</h3>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Manage teaching assignments across curriculum subjects</p>
+          </div>
+        </div>
+        <div id="facultyListContainer" style="margin-top: 1.25rem; overflow-x: auto;">
+          <div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">Loading faculty...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: STUDENTS -->
+    <section id="studentsTab" class="tab-content">
+      <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3><i class="fa-solid fa-user-graduate" style="color: var(--primary-light);"></i> Enrolled Students</h3>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Assigned curriculum regulations, cohorts, and semesters</p>
+          </div>
+        </div>
+        <div id="studentsListContainer" style="margin-top: 1.25rem; overflow-x: auto;">
+          <div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">Loading students...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: INSTITUTION ANALYTICS -->
+    <section id="analyticsTab" class="tab-content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--risk-med);"></i> Student Risk Distribution</h3>
+          </div>
+          <div id="riskDistributionChart" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Calculating distribution...</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-brain" style="color: var(--accent-quantum);"></i> Top Learning Gaps (Topic Mastery &lt; 50%)</h3>
+          </div>
+          <div id="learningGapsContainer" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Analyzing mastery telemetry...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: AUDIT LOGS -->
+    <section id="auditTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-list-check" style="color: var(--secondary);"></i> Institutional Audit Trail</h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Immutable record of curriculum changes, approvals, and resource uploads</p>
+        </div>
+        <div id="auditLogsContainer" style="margin-top: 1.25rem; overflow-x: auto;">
+          <div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">Loading audit logs...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: DEAN EXECUTIVE ANALYTICS -->
+    <section id="deanTab" class="tab-content">
+      <!-- Executive Health Banner -->
+      <div class="card" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(129, 140, 248, 0.35); margin-bottom: 1.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+          <div>
+            <span class="badge" style="background: rgba(79, 70, 229, 0.25); color: var(--primary-light); margin-bottom: 0.4rem;">
+              <i class="fa-solid fa-building-user"></i> Academic Dean & Executive Intelligence
+            </span>
+            <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 0.35rem;">Institutional Quality & Student Retention Digest</h2>
+            <p style="font-size: 0.85rem; color: #cbd5e1; margin: 0;">
+              Cross-departmental pass-rate heatmaps, attrition early warning, and faculty remedial intervention velocity.
+            </p>
+          </div>
+          <div style="text-align: right; background: rgba(15, 23, 42, 0.6); padding: 1rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--bg-card-border);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Composite Health Score</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #34d399;" id="deanHealthScore">84.5</div>
+            <span class="badge badge-low" style="font-size: 0.7rem;">ACADEMIC EXCELLENCE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Department Pass-Rate & Performance Heatmaps -->
+      <div class="card" style="margin-bottom: 1.75rem;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <div>
+            <h3><i class="fa-solid fa-chart-column" style="color: var(--secondary);"></i> Department-wise Performance & Estimated Pass-Rates</h3>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Live comparative analysis across engineering branches</p>
+          </div>
+          <span class="badge badge-primary">Active Branches</span>
+        </div>
+        <div id="deanDeptHeatmapContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.25rem;">
+          <div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">Loading department telemetry...</div>
+        </div>
+      </div>
+
+      <!-- Year-Level Attrition & Faculty Intervention Velocity -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.75rem;">
+        <!-- Year-Level Attrition -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-users-between-lines" style="color: #f59e0b;"></i> Cohort Attrition Vulnerability</h3>
+          </div>
+          <div id="deanYearAttritionContainer" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Faculty Intervention Velocity -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-bolt" style="color: #38bdf8;"></i> Faculty Remedial Intervention Velocity</h3>
+          </div>
+          <div id="deanInterventionsContainer" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Strategic Directives for Academic Dean -->
+      <div class="card" style="border-left: 4px solid #10b981;">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-lightbulb" style="color: #10b981;"></i> Executive Directives & Dean Action Items</h3>
+        </div>
+        <div id="deanDirectivesContainer" style="display: flex; flex-direction: column; gap: 0.75rem; padding: 1rem;">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: INSTITUTION MASTER DATASET & AISHE VERSIONING -->
+    <section id="masterDatasetTab" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.6rem;">
+            <i class="fa-solid fa-database" style="color: var(--primary-light);"></i> Institution Master Database & AISHE Registry
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+            Secure versioned dataset repository with formula injection protection, duplicate AISHE detection, and zero student PII storage.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button onclick="openMasterDatasetUploadModal()" class="btn btn-primary" style="padding: 0.55rem 1rem;">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Ingest New Dataset
+          </button>
+        </div>
+      </div>
+
+      <!-- Dataset Versioning & Security Status Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="stat-card" style="border-left: 3px solid #10b981;">
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i class="fa-solid fa-circle-check"></i></div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Active Dataset Version</div>
+            <div id="activeVersionTag" style="font-size: 1.25rem; font-weight: 700; color: #fff;">v1.0.0 (AISHE)</div>
+            <div style="font-size: 0.75rem; color: #34d399;" id="activeVersionStatus">● Active & Serving</div>
+          </div>
+        </div>
+
+        <div class="stat-card" style="border-left: 3px solid var(--secondary);">
+          <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--secondary);"><i class="fa-solid fa-building-columns"></i></div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Master Records</div>
+            <div id="masterTotalInstitutions" style="font-size: 1.3rem; font-weight: 700; color: #fff;">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Indexed & Parameterized</div>
+          </div>
+        </div>
+
+        <div class="stat-card" style="border-left: 3px solid #8b5cf6;">
+          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;"><i class="fa-solid fa-shield-virus"></i></div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Security Enforcement</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: #c084fc;">Formula Cleaned</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Transactions + Rollback</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Search & Filtering Toolbar -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 0.75rem; align-items: center;">
+          <div>
+            <input type="text" id="masterSearchInput" class="form-control" placeholder="Search by institution name, AISHE code, or university..." oninput="debounceMasterSearch()">
+          </div>
+          <div>
+            <select id="masterStateFilter" class="form-select" onchange="onMasterStateFilterChange()">
+              <option value="">All States</option>
+            </select>
+          </div>
+          <div>
+            <select id="masterDistrictFilter" class="form-select" onchange="loadMasterInstitutionsTable(1)">
+              <option value="">All Districts</option>
+            </select>
+          </div>
+          <div>
+            <button class="btn btn-secondary" onclick="loadMasterInstitutionsTable(1)">
+              <i class="fa-solid fa-filter"></i> Apply
+            </button>
+          </div>
+        </div>
+
+        <!-- Master Institutions Table -->
+        <div style="overflow-x: auto; margin-top: 1.25rem;">
+          <table class="preview-table" style="font-size: 0.85rem;">
+            <thead>
+              <tr>
+                <th style="width: 110px;">AISHE Code</th>
+                <th>Institution Name</th>
+                <th>Type</th>
+                <th>Affiliated University</th>
+                <th>District</th>
+                <th>State</th>
+                <th style="text-align: center;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="masterInstitutionsTableBody">
+              <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading institutions from master database...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          <span id="masterPageInfo">Showing page 1 of 1</span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="masterPrevPageBtn" class="btn btn-secondary btn-sm" onclick="changeMasterPage(-1)" disabled>
+              <i class="fa-solid fa-chevron-left"></i> Previous
+            </button>
+            <button id="masterNextPageBtn" class="btn btn-secondary btn-sm" onclick="changeMasterPage(1)" disabled>
+              Next <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dataset Version History Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-clock-rotate-left" style="color: var(--secondary);"></i> Dataset Version Audit Trail & Failover History</h3>
+        </div>
+        <div style="overflow-x: auto; padding: 1rem;">
+          <table class="preview-table" style="font-size: 0.8rem;">
+            <thead>
+              <tr>
+                <th>Version Tag</th>
+                <th>File Name</th>
+                <th>Source</th>
+                <th>Rows</th>
+                <th>Valid</th>
+                <th>Duplicates</th>
+                <th>Invalid</th>
+                <th>Imported At</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="datasetVersionsTableBody">
+              <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Loading version history...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= UPLOAD MASTER DATASET MODAL ================= -->
+  <div id="masterDatasetUploadModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-database" style="color: var(--primary-light);"></i>
+          Import Institution Master Dataset
+        </h3>
+        <button class="close-btn" onclick="closeMasterDatasetUploadModal()">&times;</button>
+      </div>
+
+      <form id="masterDatasetForm" onsubmit="handleMasterDatasetUpload(event)">
+        <div class="modal-body">
+          <div style="background: rgba(79, 70, 229, 0.08); border: 1px solid rgba(79, 70, 229, 0.25); padding: 0.85rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; font-size: 0.825rem; color: #c7d2fe;">
+            <i class="fa-solid fa-shield-halved"></i> <strong>Production-Ready Ingestion:</strong> Supports CSV, XLSX, and JSON. All records undergo server-side formula injection sanitization, schema validation, duplicate AISHE detection, and transactional rollback on failure.
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div class="form-group">
+              <label class="form-label">Source Identifier</label>
+              <input type="text" id="datasetSourceInput" class="form-control" value="AISHE_PORTAL" placeholder="e.g. AISHE_PORTAL">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Version Tag</label>
+              <input type="text" id="datasetVersionTagInput" class="form-control" placeholder="e.g. v2024.1">
+            </div>
+          </div>
+
+          <div class="upload-zone" onclick="document.getElementById('masterDatasetFileInput').click()">
+            <i class="fa-solid fa-file-csv" style="font-size: 2.5rem; color: var(--primary-light); margin-bottom: 0.75rem;"></i>
+            <h4 id="masterUploadZoneTitle" style="margin-bottom: 0.25rem;">Click to select dataset file</h4>
+            <p style="color: var(--text-muted); font-size: 0.8rem;">Supports .csv, .xlsx, .json (max 15MB)</p>
+            <input type="file" id="masterDatasetFileInput" accept=".csv,.xlsx,.json" style="display: none;" onchange="onMasterFileSelected(event)">
+          </div>
+
+          <div id="masterUploadAlert" class="alert-box alert-error" style="margin-top: 1rem; display: none;"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeMasterDatasetUploadModal()">Cancel</button>
+          <button type="submit" id="masterDatasetSubmitBtn" class="btn btn-primary" disabled>
+            <i class="fa-solid fa-upload"></i> Process & Ingest Master Dataset
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= UPLOAD CURRICULUM MODAL ================= -->
+  <div id="curriculumUploadModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 780px;">
+      <div class="modal-header">
+        <h3 style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-file-arrow-up" style="color: var(--primary-light);"></i>
+          Upload Official Institution Curriculum
+        </h3>
+        <button class="close-btn" onclick="closeCurriculumUploadModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: rgba(79, 70, 229, 0.08); border: 1px solid rgba(79, 70, 229, 0.2); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; font-size: 0.85rem; color: #c7d2fe;">
+          <i class="fa-solid fa-circle-info"></i> <strong>Syllabus as Source of Truth:</strong> Upload a structured curriculum file (CSV or JSON). Supported hierarchy: <code>Program &rarr; Year &rarr; Semester &rarr; Subject Code &rarr; Subject Name &rarr; Module &rarr; Topic &rarr; Learning Objective</code>.
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="form-group">
+            <label class="form-label">Program / Branch *</label>
+            <select id="uploadProgSelect" class="form-select" required>
+              <option value="">Select Program</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Regulation / Curriculum Version *</label>
+            <input type="text" id="uploadRegulation" class="form-control" placeholder="e.g. R24 Regulation" value="R24 Regulation" required>
+          </div>
+        </div>
+
+        <div class="upload-zone" onclick="document.getElementById('curriculumFileInput').click()">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--primary-light); margin-bottom: 0.75rem;"></i>
+          <h4 id="uploadZoneTitle" style="margin-bottom: 0.25rem;">Click to select curriculum file</h4>
+          <p style="color: var(--text-muted); font-size: 0.8rem;">Supports .csv, .json, .xlsx syllabus matrices</p>
+          <input type="file" id="curriculumFileInput" accept=".csv,.json,.xlsx" style="display: none;" onchange="handleCurriculumFileSelect(event)">
+        </div>
+
+        <!-- Preview & Validation Area -->
+        <div id="curriculumPreviewSection" style="display: none; margin-top: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="font-size: 0.95rem; color: #fff;"><i class="fa-solid fa-magnifying-glass"></i> Validation & Ingestion Preview</h4>
+            <span id="previewRecordCount" class="badge badge-low">0 rows</span>
+          </div>
+
+          <div class="preview-table-container">
+            <table class="preview-table">
+              <thead>
+                <tr>
+                  <th>Sem</th>
+                  <th>Code</th>
+                  <th>Subject</th>
+                  <th>Module</th>
+                  <th>Topic</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="previewTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeCurriculumUploadModal()">Cancel</button>
+        <button type="button" id="publishCurriculumBtn" class="btn btn-primary" onclick="confirmPublishCurriculum()" disabled>
+          <i class="fa-solid fa-check-double"></i> Approve & Publish Curriculum
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= UPLOAD RESOURCE MODAL ================= -->
+  <div id="resourceUploadModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3 style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-shield-halved" style="color: var(--risk-low);"></i>
+          Upload Authorized Learning Resource
+        </h3>
+        <button class="close-btn" onclick="closeResourceUploadModal()">&times;</button>
+      </div>
+
+      <form onsubmit="handleResourceUploadSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Associated Subject *</label>
+            <select id="resSubjectSelect" class="form-select" required onchange="loadTopicsForResourceSubject()">
+              <option value="">Select Subject</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Associated Topic (Optional)</label>
+            <select id="resTopicSelect" class="form-select">
+              <option value="">All Topics in Subject</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Resource Title *</label>
+              <input type="text" id="resTitle" class="form-control" placeholder="e.g. Machine Learning Reference Textbook" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Resource Type *</label>
+              <select id="resType" class="form-select" required>
+                <option value="textbook">Textbook / Standard Reference</option>
+                <option value="lecture_notes">Lecture Notes / Slide Deck</option>
+                <option value="lab_manual">Lab Manual / Practical Guide</option>
+                <option value="syllabus_extract">Official Syllabus Extract</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Resource Text / Document Extract *</label>
+            <textarea id="resContent" class="form-control" rows="5" placeholder="Paste the verified text, syllabus units, or document extract to be ingested and chunked for grounded AI learning..." required></textarea>
+          </div>
+
+          <!-- Copyright & Statutory Authorization Declaration -->
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); padding: 0.85rem; margin-top: 1rem;">
+            <label style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.825rem; color: #a7f3d0; cursor: pointer;">
+              <input type="checkbox" id="copyrightConfirm" required style="margin-top: 0.2rem;">
+              <span><strong>Copyright & Institutional Authorization Confirmation:</strong> I confirm that this institution is legally authorized to utilize, extract, and ground educational assessments on this material under academic fair use or institutional licensing.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeResourceUploadModal()">Cancel</button>
+          <button type="submit" id="saveResourceBtn" class="btn btn-primary">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Ingest & Chunk Resource
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="theme-switcher.js"></script>
+  <script>
+    let currentInstitution = null;
+    let institutionPrograms = [];
+    let parsedCurriculumData = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkAuthAndLoad();
+    });
+
+    async function checkAuthAndLoad() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          window.location.href = '/login';
+          return;
+        }
+        const data = await res.json();
+        if (data.role !== 'institution_admin' && data.role !== 'state_admin') {
+          alert("Access restricted to Institution and State Administrators.");
+          window.location.href = '/login';
+          return;
+        }
+
+        document.getElementById('userDisplayName').textContent = data.full_name || data.email;
+        await loadInstitutionProfile();
+        await loadPrograms();
+        await loadFaculty();
+        await loadStudents();
+        await loadResources();
+        await loadAnalytics();
+        await loadDeanAnalytics();
+        await loadAuditLogs();
+      } catch (err) {
+        console.error("Auth check failed", err);
+        window.location.href = '/login';
+      }
+    }
+
+    async function loadInstitutionProfile() {
+      try {
+        const res = await fetch('/api/institution-admin/profile');
+        if (!res.ok) return;
+        const inst = await res.json();
+        currentInstitution = inst;
+
+        document.getElementById('instName').textContent = inst.name || "Institution Portal";
+        document.getElementById('instCodeBadge').innerHTML = `<i class="fa-solid fa-hashtag"></i> ${inst.code || 'INST'}`;
+        document.getElementById('navInstTag').textContent = inst.code || 'INST';
+        document.getElementById('instTypeBadge').textContent = `${inst.type || 'University'} • ${inst.district || 'State Tier'}`;
+      } catch (err) {
+        console.error("Profile load failed", err);
+      }
+    }
+
+    async function loadPrograms() {
+      try {
+        const res = await fetch('/api/institution-admin/programs');
+        if (!res.ok) return;
+        institutionPrograms = await res.json();
+        
+        document.getElementById('statPrograms').textContent = institutionPrograms.length;
+
+        // Render in curriculum tab
+        const listEl = document.getElementById('programsList');
+        const selEl = document.getElementById('curriculumProgramSelect');
+        const uploadSel = document.getElementById('uploadProgSelect');
+
+        selEl.innerHTML = '<option value="">-- Select Program --</option>';
+        uploadSel.innerHTML = '<option value="">-- Select Program --</option>';
+
+        if (institutionPrograms.length === 0) {
+          listEl.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No programs configured yet.</div>';
+          return;
+        }
+
+        let html = '';
+        institutionPrograms.forEach(p => {
+          html += `
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border); padding: 0.85rem; border-radius: var(--radius-md);">
+              <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">${p.name} (${p.code})</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+                ${p.degree || 'B.Tech'} &bull; ${p.total_semesters || 8} Semesters &bull; ${p.duration_years || 4} Years
+              </div>
+            </div>
+          `;
+          selEl.innerHTML += `<option value="${p.id}">${p.name} (${p.code})</option>`;
+          uploadSel.innerHTML += `<option value="${p.id}">${p.name} (${p.code})</option>`;
+        });
+        listEl.innerHTML = html;
+
+        if (institutionPrograms.length > 0) {
+          selEl.value = institutionPrograms[0].id;
+          await loadCurriculumHierarchy();
+        }
+      } catch (err) {
+        console.error("Programs load failed", err);
+      }
+    }
+
+    async function loadCurriculumHierarchy() {
+      const progId = document.getElementById('curriculumProgramSelect').value;
+      const container = document.getElementById('hierarchyContainer');
+      if (!progId) {
+        container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Please select a program.</div>';
+        return;
+      }
+
+      container.innerHTML = '<div style="text-align: center; padding: 1.5rem; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Loading hierarchy...</div>';
+
+      try {
+        const res = await fetch(`/api/institution-admin/curriculum/hierarchy?program_id=${progId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const subjects = data.subjects || [];
+
+        document.getElementById('statSubjects').textContent = subjects.length;
+
+        if (subjects.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+              <p>No subjects found for this program.</p>
+              <button onclick="openCurriculumUploadModal()" class="btn btn-primary" style="margin-top: 0.75rem; font-size: 0.85rem;">
+                <i class="fa-solid fa-file-arrow-up"></i> Upload Curriculum for this Program
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '<div class="hierarchy-tree">';
+        subjects.forEach(subj => {
+          html += `
+            <div style="margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+              <div class="tree-node-header" style="background: rgba(79, 70, 229, 0.12); border-color: rgba(79, 70, 229, 0.3);">
+                <i class="fa-solid fa-book" style="color: var(--primary-light);"></i>
+                <strong>${subj.name}</strong>
+                <span class="badge badge-low" style="font-size: 0.7rem;">${subj.code}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Year ${subj.year} &bull; Sem ${subj.semester}</span>
+              </div>
+              <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          `;
+
+          if (subj.modules && subj.modules.length > 0) {
+            subj.modules.forEach(mod => {
+              html += `
+                <div class="tree-node">
+                  <div class="tree-node-header" style="background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.2);">
+                    <i class="fa-solid fa-layer-group" style="color: var(--secondary); font-size: 0.8rem;"></i>
+                    <span><strong>Module ${mod.module_number}:</strong> ${mod.module_name}</span>
+                  </div>
+                  <div style="margin-left: 1.5rem; margin-top: 0.35rem;">
+              `;
+
+              if (mod.topics && mod.topics.length > 0) {
+                mod.topics.forEach(top => {
+                  html += `
+                    <div style="margin-top: 0.25rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.825rem; color: #cbd5e1;">
+                      <i class="fa-solid fa-circle-dot" style="color: var(--accent-quantum); font-size: 0.5rem;"></i>
+                      <span>${top.topic_name}</span>
+                      <span style="font-size: 0.7rem; color: var(--text-muted); background: rgba(255,255,255,0.04); padding: 0.1rem 0.4rem; border-radius: 4px;">${top.difficulty || 'Medium'}</span>
+                    </div>
+                  `;
+                });
+              } else {
+                html += '<div style="font-size: 0.75rem; color: var(--text-dim); margin-left: 0.5rem;">No topics linked</div>';
+              }
+
+              html += `</div></div>`;
+            });
+          } else {
+            html += '<div style="font-size: 0.75rem; color: var(--text-dim); margin-left: 0.5rem;">No modules linked</div>';
+          }
+
+          html += `</div></div>`;
+        });
+        html += '</div>';
+
+        container.innerHTML = html;
+      } catch (err) {
+        console.error("Hierarchy load failed", err);
+      }
+    }
+
+    async function loadResources() {
+      const container = document.getElementById('resourcesListContainer');
+      try {
+        const res = await fetch('/api/institution-admin/resources');
+        if (!res.ok) return;
+        const resources = await res.json();
+
+        // Populate modal select
+        const subjSel = document.getElementById('resSubjectSelect');
+        subjSel.innerHTML = '<option value="">-- Select Subject --</option>';
+
+        if (resources.length === 0) {
+          container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No authorized resources uploaded yet.</div>';
+          return;
+        }
+
+        let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">';
+        resources.forEach(r => {
+          html += `
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                <span class="badge badge-low"><i class="fa-solid fa-circle-check"></i> ${r.authorization_status || 'Authorized'}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">${r.resource_type || 'Textbook'}</span>
+              </div>
+              <h4 style="color: #fff; font-size: 0.95rem; margin-bottom: 0.35rem;">${r.title || r.file_name}</h4>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.75rem;">Subject: <strong>${r.subject_name || r.subject_code || 'General'}</strong></p>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem;">
+                <span>${r.chunks_count || 1} Document Chunks</span>
+                <span>Verified Legal</span>
+              </div>
+            </div>
+          `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+
+        // Populate subjects in select
+        const progId = document.getElementById('curriculumProgramSelect').value;
+        if (progId) {
+          const subRes = await fetch(`/api/institution-admin/curriculum/hierarchy?program_id=${progId}`);
+          if (subRes.ok) {
+            const data = await subRes.json();
+            (data.subjects || []).forEach(s => {
+              subjSel.innerHTML += `<option value="${s.id}">${s.name} (${s.code})</option>`;
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Resources load failed", err);
+      }
+    }
+
+    async function loadFaculty() {
+      const container = document.getElementById('facultyListContainer');
+      try {
+        const res = await fetch('/api/institution-admin/teachers');
+        if (!res.ok) return;
+        const teachers = await res.json();
+        document.getElementById('statTeachers').textContent = teachers.length;
+
+        if (teachers.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">No faculty members registered yet.</div>';
+          return;
+        }
+
+        let html = `
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Faculty Name</th>
+                <th>Email</th>
+                <th>Department / Branch</th>
+                <th>Designation</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        teachers.forEach(t => {
+          html += `
+            <tr>
+              <td><strong>${t.full_name}</strong></td>
+              <td>${t.email}</td>
+              <td>${t.department || t.branch || 'Engineering'}</td>
+              <td><span class="badge" style="background: rgba(6, 182, 212, 0.15); color: var(--secondary);">${t.designation || 'Faculty'}</span></td>
+            </tr>
+          `;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (err) {
+        console.error("Faculty load failed", err);
+      }
+    }
+
+    async function loadStudents() {
+      const container = document.getElementById('studentsListContainer');
+      try {
+        const res = await fetch('/api/institution-admin/students');
+        if (!res.ok) return;
+        const students = await res.json();
+        document.getElementById('statStudents').textContent = students.length;
+
+        if (students.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">No students enrolled yet.</div>';
+          return;
+        }
+
+        let html = `
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Roll No</th>
+                <th>Student Name</th>
+                <th>Program / Branch</th>
+                <th>Year / Sem</th>
+                <th>Section</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        students.forEach(s => {
+          html += `
+            <tr>
+              <td><code>${s.roll_number || s.roll_no}</code></td>
+              <td><strong>${s.name || s.full_name}</strong></td>
+              <td>${s.program_name || s.branch || 'Engineering'}</td>
+              <td>${s.year || '3rd Year'} (Sem ${s.semester || 1})</td>
+              <td>${s.section || 'A'}</td>
+            </tr>
+          `;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (err) {
+        console.error("Students load failed", err);
+      }
+    }
+
+    async function loadAnalytics() {
+      try {
+        const res = await fetch('/api/institution-admin/analytics');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // Risk distribution
+        const riskEl = document.getElementById('riskDistributionChart');
+        const low = data.risk_distribution?.low || 0;
+        const med = data.risk_distribution?.medium || 0;
+        const high = data.risk_distribution?.high || 0;
+        const total = (low + med + high) || 1;
+
+        riskEl.innerHTML = `
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
+              <span style="color: var(--risk-low);"><i class="fa-solid fa-circle-check"></i> Low Academic Risk</span>
+              <span><strong>${low}</strong> (${Math.round(low/total*100)}%)</span>
+            </div>
+            <div style="height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;">
+              <div style="height: 100%; width: ${Math.round(low/total*100)}%; background: var(--risk-low);"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
+              <span style="color: var(--risk-med);"><i class="fa-solid fa-triangle-exclamation"></i> Medium Risk</span>
+              <span><strong>${med}</strong> (${Math.round(med/total*100)}%)</span>
+            </div>
+            <div style="height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;">
+              <div style="height: 100%; width: ${Math.round(med/total*100)}%; background: var(--risk-med);"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
+              <span style="color: var(--risk-high);"><i class="fa-solid fa-circle-exclamation"></i> High Risk (Needs Intervention)</span>
+              <span><strong>${high}</strong> (${Math.round(high/total*100)}%)</span>
+            </div>
+            <div style="height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden;">
+              <div style="height: 100%; width: ${Math.round(high/total*100)}%; background: var(--risk-high);"></div>
+            </div>
+          </div>
+        `;
+
+        // Learning gaps
+        const gapsEl = document.getElementById('learningGapsContainer');
+        const gaps = data.learning_gaps || [];
+        if (gaps.length === 0) {
+          gapsEl.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No severe learning gaps recorded. Overall cohort mastery is healthy.</div>';
+        } else {
+          let html = '';
+          gaps.forEach(g => {
+            html += `
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem 1rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 600; color: #fff; font-size: 0.875rem;">${g.topic_name}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">${g.subject_name || 'Subject'}</div>
+                </div>
+                <div style="text-align: right;">
+                  <span class="badge badge-high">${Math.round(g.avg_mastery || 42)}% Mastery</span>
+                  <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.2rem;">${g.students_count || 3} students struggling</div>
+                </div>
+              </div>
+            `;
+          });
+          gapsEl.innerHTML = html;
+        }
+      } catch (err) {
+        console.error("Analytics load failed", err);
+      }
+    }
+
+    async function loadAuditLogs() {
+      const container = document.getElementById('auditLogsContainer');
+      try {
+        const res = await fetch('/api/institution-admin/audit-logs');
+        if (!res.ok) return;
+        const logs = await res.json();
+
+        if (logs.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted); padding: 1.5rem; text-align: center;">No audit logs available.</div>';
+          return;
+        }
+
+        let html = `
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Operator</th>
+                <th>Action</th>
+                <th>Entity</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        logs.forEach(l => {
+          html += `
+            <tr>
+              <td style="color: var(--text-dim); font-size: 0.8rem;">${new Date(l.created_at || Date.now()).toLocaleString()}</td>
+              <td>${l.user_email || 'System'}</td>
+              <td><span class="badge" style="background: rgba(79, 70, 229, 0.15); color: var(--primary-light);">${l.action}</span></td>
+              <td>${l.entity_type || '--'}</td>
+              <td style="font-size: 0.8rem; color: var(--text-muted);">${l.details || ''}</td>
+            </tr>
+          `;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (err) {
+        console.error("Audit load failed", err);
+      }
+    }
+
+    async function loadDeanAnalytics() {
+      try {
+        const res = await fetch('/api/institution-admin/dean-analytics');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success) return;
+
+        // Health Score
+        const healthEl = document.getElementById('deanHealthScore');
+        if (healthEl) healthEl.textContent = data.kpis?.institutional_health_score || 84.5;
+
+        // Department Heatmaps
+        const deptContainer = document.getElementById('deanDeptHeatmapContainer');
+        const depts = data.department_heatmaps || [];
+        if (deptContainer) {
+          if (depts.length === 0) {
+            deptContainer.innerHTML = '<div style="color: var(--text-muted); padding: 1rem;">No department performance records found.</div>';
+          } else {
+            deptContainer.innerHTML = depts.map(d => `
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--bg-card-border); border-radius: var(--radius-lg); padding: 1.25rem; border-top: 3px solid ${d.estimated_pass_rate >= 75 ? '#10b981' : (d.estimated_pass_rate >= 60 ? '#f59e0b' : '#ef4444')};">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                  <div>
+                    <h4 style="color: #fff; font-size: 1rem; margin: 0 0 0.2rem 0;">${d.department}</h4>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">${d.student_count} Enrolled Students</span>
+                  </div>
+                  <span class="badge ${d.estimated_pass_rate >= 75 ? 'badge-low' : (d.estimated_pass_rate >= 60 ? 'badge-med-risk' : 'badge-high')}">${d.estimated_pass_rate}% Pass Rate</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem; margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: var(--radius-sm);">
+                  <div>Avg Attendance: <strong style="color: #38bdf8;">${d.avg_attendance}%</strong></div>
+                  <div>Avg Progress: <strong style="color: #c084fc;">${d.avg_progress}%</strong></div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8;">
+                  <span>🔴 High Risk: <strong>${d.high_risk_count}</strong></span>
+                  <span>🟡 Med: <strong>${d.medium_risk_count}</strong></span>
+                  <span>🟢 Low: <strong>${d.low_risk_count}</strong></span>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Year Level Attrition
+        const yrContainer = document.getElementById('deanYearAttritionContainer');
+        const years = data.year_level_attrition || [];
+        if (yrContainer) {
+          yrContainer.innerHTML = years.map(y => `
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--bg-card-border); padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">
+                <span style="color: #fff;">${y.academic_year} (${y.student_count} Students)</span>
+                <span style="color: ${y.attrition_vulnerability_percentage > 25 ? '#ef4444' : '#10b981'};">${y.attrition_vulnerability_percentage}% Attrition Risk</span>
+              </div>
+              <div class="progress-bar-container" style="height: 6px; background: rgba(0,0,0,0.3);">
+                <div class="progress-bar-fill" style="width: ${y.attrition_vulnerability_percentage}%; background: ${y.attrition_vulnerability_percentage > 25 ? '#ef4444' : '#f59e0b'};"></div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Interventions Velocity
+        const itContainer = document.getElementById('deanInterventionsContainer');
+        const it = data.interventions_analytics || {};
+        if (itContainer) {
+          itContainer.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+                <div style="font-size: 0.7rem; color: #6ee7b7; text-transform: uppercase;">Resolution Rate</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: #34d399;">${it.resolution_rate_percentage || 85}%</div>
+              </div>
+              <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); padding: 0.75rem; border-radius: var(--radius-md); text-align: center;">
+                <div style="font-size: 0.7rem; color: #7dd3fc; text-transform: uppercase;">Total Remedial Actions</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: #38bdf8;">${it.total_dispatched || 0}</div>
+              </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              Active Pending: <strong style="color: #f59e0b;">${it.active_pending || 0}</strong> &bull; Urgent Interventions: <strong style="color: #ef4444;">${it.urgent_pending || 0}</strong>
+            </div>
+          `;
+        }
+
+        // Directives
+        const dirContainer = document.getElementById('deanDirectivesContainer');
+        const dirs = data.executive_dean_recommendations || [];
+        if (dirContainer) {
+          dirContainer.innerHTML = dirs.map((dr, idx) => `
+            <div style="display: flex; gap: 0.75rem; background: rgba(15, 23, 42, 0.6); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border);">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem;">
+                ${idx + 1}
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="color: #fff; font-size: 0.85rem;">${dr.department} Directive</strong>
+                  <span class="badge ${dr.priority === 'High' ? 'badge-high' : 'badge-primary'}" style="font-size: 0.65rem;">${dr.priority} Priority</span>
+                </div>
+                <p style="font-size: 0.8rem; color: #cbd5e1; margin: 0.2rem 0 0 0;">${dr.action}</p>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error("Dean analytics load failed", err);
+      }
+    }
+
+    // ================= MODAL & UPLOAD LOGIC =================
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function openCurriculumUploadModal() {
+      document.getElementById('curriculumUploadModal').classList.add('show');
+    }
+
+    function closeCurriculumUploadModal() {
+      document.getElementById('curriculumUploadModal').classList.remove('show');
+    }
+
+    function openResourceUploadModal() {
+      document.getElementById('resourceUploadModal').classList.add('show');
+    }
+
+    function closeResourceUploadModal() {
+      document.getElementById('resourceUploadModal').classList.remove('show');
+    }
+
+    function handleCurriculumFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      document.getElementById('uploadZoneTitle').textContent = `Selected: ${file.name}`;
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          const content = e.target.result;
+          if (file.name.endsWith('.json')) {
+            parsedCurriculumData = JSON.parse(content);
+          } else {
+            // CSV Parsing
+            const lines = content.split('\n').filter(l => l.trim().length > 0);
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            const rows = [];
+
+            for (let i = 1; i < lines.length; i++) {
+              const parts = lines[i].split(',').map(p => p.trim());
+              if (parts.length >= 4) {
+                rows.push({
+                  semester: parts[0] || 1,
+                  subject_code: parts[1] || 'SUBJ101',
+                  subject_name: parts[2] || 'Subject',
+                  module_name: parts[3] || 'Module 1',
+                  topic_name: parts[4] || 'Topic 1'
+                });
+              }
+            }
+            parsedCurriculumData = rows;
+          }
+
+          renderCurriculumPreview(parsedCurriculumData);
+        } catch (err) {
+          alert("Error parsing file: " + err.message);
+        }
+      };
+
+      reader.readAsText(file);
+    }
+
+    function renderCurriculumPreview(data) {
+      const previewSec = document.getElementById('curriculumPreviewSection');
+      const tableBody = document.getElementById('previewTableBody');
+      const publishBtn = document.getElementById('publishCurriculumBtn');
+      const countBadge = document.getElementById('previewRecordCount');
+
+      const items = Array.isArray(data) ? data : (data.subjects || []);
+      countBadge.textContent = `${items.length} records verified`;
+      tableBody.innerHTML = '';
+
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>Sem ${item.semester || 1}</td>
+          <td><code>${item.subject_code || item.code}</code></td>
+          <td><strong>${item.subject_name || item.name}</strong></td>
+          <td>${item.module_name || 'Unit 1'}</td>
+          <td>${item.topic_name || item.topics?.[0]?.name || 'Intro'}</td>
+          <td><span class="badge badge-low"><i class="fa-solid fa-check"></i> Valid</span></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      previewSec.style.display = 'block';
+      publishBtn.disabled = false;
+    }
+
+    async function confirmPublishCurriculum() {
+      const progId = document.getElementById('uploadProgSelect').value;
+      const regulation = document.getElementById('uploadRegulation').value;
+      const btn = document.getElementById('publishCurriculumBtn');
+
+      if (!progId) {
+        alert("Please select a Program.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ingesting & Publishing...';
+
+      try {
+        const res = await fetch('/api/institution-admin/curriculum/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            program_id: progId,
+            regulation: regulation,
+            curriculum_data: parsedCurriculumData
+          })
+        });
+        const result = await res.json();
+
+        if (res.ok && result.success) {
+          alert(`Curriculum successfully published! Ingested ${result.subjects_count || 0} subjects, ${result.modules_count || 0} modules, and ${result.topics_count || 0} topics.`);
+          closeCurriculumUploadModal();
+          await loadCurriculumHierarchy();
+          await loadAuditLogs();
+        } else {
+          alert("Curriculum import failed: " + (result.message || result.error));
+        }
+      } catch (err) {
+        alert("Server error during import: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Approve & Publish Curriculum';
+      }
+    }
+
+    async function handleResourceUploadSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('saveResourceBtn');
+      const subjectId = document.getElementById('resSubjectSelect').value;
+      const topicId = document.getElementById('resTopicSelect').value;
+      const title = document.getElementById('resTitle').value;
+      const resourceType = document.getElementById('resType').value;
+      const content = document.getElementById('resContent').value;
+      const confirmed = document.getElementById('copyrightConfirm').checked;
+
+      if (!confirmed) {
+        alert("You must confirm statutory copyright authorization before uploading.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ingesting...';
+
+      try {
+        const res = await fetch('/api/institution-admin/resources/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject_id: subjectId,
+            topic_id: topicId || null,
+            title: title,
+            resource_type: resourceType,
+            content: content,
+            confirmed_authorized: true
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          alert("Resource authorized, securely ingested, and chunked for grounded AI assessments.");
+          closeResourceUploadModal();
+          await loadResources();
+          await loadAuditLogs();
+        } else {
+          alert("Resource upload failed: " + (data.message || data.error));
+        }
+      } catch (err) {
+        alert("Server error: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Ingest & Chunk Resource';
+      }
+    }
+
+    // ================= MASTER DATASET & AISHE LOGIC =================
+    let currentMasterPage = 1;
+    let totalMasterPages = 1;
+    let masterSearchTimer = null;
+    let selectedMasterFile = null;
+
+    async function loadDatasetVersions() {
+      try {
+        const res = await fetch('/api/admin/institutions/datasets');
+        const data = await res.json();
+        const tbody = document.getElementById('datasetVersionsTableBody');
+        if (data.success && data.versions && data.versions.length > 0) {
+          const activeVer = data.versions.find(v => v.status === 'active') || data.versions[0];
+          document.getElementById('activeVersionTag').textContent = `${activeVer.version} (${activeVer.filename})`;
+          document.getElementById('activeVersionStatus').textContent = `● Active (${activeVer.valid_count} institutions)`;
+
+          tbody.innerHTML = data.versions.map(v => `
+            <tr>
+              <td><strong>${v.version}</strong></td>
+              <td><code>${v.filename}</code></td>
+              <td><span class="badge badge-primary">${v.source}</span></td>
+              <td>${v.row_count}</td>
+              <td style="color: #34d399; font-weight: 600;">${v.valid_count}</td>
+              <td style="color: #fbbf24;">${v.duplicate_count}</td>
+              <td style="color: ${v.invalid_count > 0 ? '#ef4444' : 'var(--text-muted)'};">${v.invalid_count}</td>
+              <td style="font-size: 0.75rem; color: var(--text-muted);">${v.imported_at}</td>
+              <td>
+                <span class="badge ${v.status === 'active' ? 'badge-low' : 'badge-neutral'}">${v.status.toUpperCase()}</span>
+                ${v.status !== 'active' ? `<button class="btn btn-secondary btn-sm" style="padding: 2px 6px; font-size: 0.7rem; margin-left: 4px;" onclick="activateDatasetVersion(${v.id})">Activate</button>` : ''}
+              </td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted);">No dataset versions found.</td></tr>';
+        }
+      } catch (err) {
+        console.warn("Error loading dataset versions:", err);
+      }
+    }
+
+    async function activateDatasetVersion(vId) {
+      if (!confirm("Are you sure you want to activate this dataset version?")) return;
+      try {
+        const res = await fetch(`/api/admin/institutions/datasets/${vId}/activate`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          await loadDatasetVersions();
+          await loadMasterInstitutionsTable(1);
+        } else {
+          alert("Activation failed: " + data.message);
+        }
+      } catch (err) {
+        alert("Server error: " + err.message);
+      }
+    }
+
+    async function loadMasterStateFilter() {
+      try {
+        const res = await fetch('/api/institutions/states');
+        const data = await res.json();
+        const select = document.getElementById('masterStateFilter');
+        if (data.success && data.states) {
+          select.innerHTML = '<option value="">All States</option>' + 
+            data.states.map(s => `<option value="${s}">${s}</option>`).join('');
+        }
+      } catch (e) {}
+    }
+
+    async function onMasterStateFilterChange() {
+      const state = document.getElementById('masterStateFilter').value;
+      const distSelect = document.getElementById('masterDistrictFilter');
+      distSelect.innerHTML = '<option value="">All Districts</option>';
+      if (state) {
+        try {
+          const res = await fetch(`/api/institutions/districts?state=${encodeURIComponent(state)}`);
+          const data = await res.json();
+          if (data.success && data.districts) {
+            distSelect.innerHTML = '<option value="">All Districts</option>' + 
+              data.districts.map(d => `<option value="${d}">${d}</option>`).join('');
+          }
+        } catch (e) {}
+      }
+      await loadMasterInstitutionsTable(1);
+    }
+
+    function debounceMasterSearch() {
+      clearTimeout(masterSearchTimer);
+      masterSearchTimer = setTimeout(() => loadMasterInstitutionsTable(1), 300);
+    }
+
+    async function loadMasterInstitutionsTable(page = 1) {
+      currentMasterPage = page;
+      const search = document.getElementById('masterSearchInput')?.value.trim() || '';
+      const state = document.getElementById('masterStateFilter')?.value || '';
+      const district = document.getElementById('masterDistrictFilter')?.value || '';
+      const tbody = document.getElementById('masterInstitutionsTableBody');
+
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;"><i class="fa-solid fa-spinner fa-spin"></i> Querying Master Institutions...</td></tr>';
+
+      try {
+        let url = `/api/institutions?page=${page}&per_page=15`;
+        if (search) url += `&search=${encodeURIComponent(search)}`;
+        if (state) url += `&state=${encodeURIComponent(state)}`;
+        if (district) url += `&district=${encodeURIComponent(district)}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.success && data.institutions) {
+          totalMasterPages = data.total_pages || 1;
+          document.getElementById('masterTotalInstitutions').textContent = `${data.total} Institutions`;
+          document.getElementById('masterPageInfo').textContent = `Showing page ${data.page} of ${data.total_pages} (${data.total} total institutions)`;
+          document.getElementById('masterPrevPageBtn').disabled = data.page <= 1;
+          document.getElementById('masterNextPageBtn').disabled = data.page >= data.total_pages;
+
+          if (data.institutions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No institutions match query parameters.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = data.institutions.map(inst => `
+            <tr>
+              <td><span class="badge" style="background: rgba(16,185,129,0.15); color: #34d399; font-family: monospace; font-weight: 700;">${inst.aishe_code}</span></td>
+              <td>
+                <strong style="color: #fff;">${inst.institution_name}</strong>
+                ${inst.website ? `<br><a href="${inst.website}" target="_blank" style="font-size: 0.75rem; color: var(--primary-light); text-decoration: none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Official Website</a>` : ''}
+              </td>
+              <td><span class="badge badge-primary">${inst.institution_type}</span></td>
+              <td style="color: #cbd5e1;">${inst.university_name || '-'}</td>
+              <td>${inst.district || '-'}</td>
+              <td>${inst.state || '-'}</td>
+              <td style="text-align: center;"><span class="badge badge-low">ACTIVE</span></td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ef4444;">Error loading institutions: ${err.message}</td></tr>`;
+      }
+    }
+
+    function changeMasterPage(delta) {
+      const newPage = currentMasterPage + delta;
+      if (newPage >= 1 && newPage <= totalMasterPages) {
+        loadMasterInstitutionsTable(newPage);
+      }
+    }
+
+    function openMasterDatasetUploadModal() {
+      document.getElementById('masterUploadAlert').style.display = 'none';
+      document.getElementById('masterDatasetUploadModal').classList.add('show');
+    }
+
+    function closeMasterDatasetUploadModal() {
+      document.getElementById('masterDatasetUploadModal').classList.remove('show');
+    }
+
+    function onMasterFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedMasterFile = file;
+      document.getElementById('masterUploadZoneTitle').textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      document.getElementById('masterDatasetSubmitBtn').disabled = false;
+    }
+
+    async function handleMasterDatasetUpload(e) {
+      e.preventDefault();
+      if (!selectedMasterFile) return;
+
+      const btn = document.getElementById('masterDatasetSubmitBtn');
+      const alertBox = document.getElementById('masterUploadAlert');
+      alertBox.style.display = 'none';
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing & Ingesting...';
+
+      const formData = new FormData();
+      formData.append('file', selectedMasterFile);
+      formData.append('source', document.getElementById('datasetSourceInput').value || 'AISHE_PORTAL');
+      formData.append('version_tag', document.getElementById('datasetVersionTagInput').value || '');
+
+      try {
+        const res = await fetch('/api/admin/institutions/import', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          alert(`Dataset Imported Successfully!\n\nTotal Records: ${data.total_records}\nValid Records: ${data.valid_records}\nDuplicates Handled: ${data.duplicate_records}\nInvalid: ${data.invalid_records}`);
+          closeMasterDatasetUploadModal();
+          await loadDatasetVersions();
+          await loadMasterInstitutionsTable(1);
+          await loadAuditLogs();
+        } else {
+          alertBox.textContent = data.message || "Failed to process master dataset.";
+          alertBox.style.display = 'block';
+        }
+      } catch (err) {
+        alertBox.textContent = "Server error: " + err.message;
+        alertBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-upload"></i> Process & Ingest Master Dataset';
+      }
+    }
+
+    async function refreshData() {
+      await loadPrograms();
+      await loadFaculty();
+      await loadStudents();
+      await loadResources();
+      await loadAnalytics();
+      await loadAuditLogs();
+      await loadDatasetVersions();
+      await loadMasterStateFilter();
+      await loadMasterInstitutionsTable(1);
+    }
+
+    async function logout() {
+      try {
+        await fetch('/api/logout', { method: 'POST' });
+      } catch (e) {}
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>

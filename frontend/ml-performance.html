@@ -3,373 +3,767 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ML & Quantum Benchmarks | AP Adaptive Personalised Learning Platform</title>
+  <title>Scientific ML & Quantum ML Benchmarks | AP Adaptive Learning</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .benchmark-container {
+      max-width: 1360px;
+      width: 100%;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.25rem;
+    }
+    .scientific-disclaimer-box {
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: #ddd6fe;
+    }
+    .quantum-card {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.6), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+    }
+    .model-badge-champion {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .model-badge-qml {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .feature-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--bg-card-border);
+      padding: 0.6rem 0.9rem;
+      border-radius: var(--radius-md);
+      font-size: 0.825rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="nav-brand">
-      <a href="/" style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
+      <a href="/" style="display: flex; align-items: center; gap: 0.6rem; color: #fff;">
         <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i>
         <span>AP Adaptive Personalised Learning</span>
       </a>
-      <span class="badge-tag">ML & QML Benchmarks</span>
+      <span class="badge-tag">Scientific Model Benchmarks</span>
     </div>
-    <div class="nav-links">
-      <a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
-      <a href="/teacher-dashboard" class="nav-link"><i class="fa-solid fa-chalkboard-user"></i> Faculty Portal</a>
-      <a href="/student-dashboard" class="nav-link"><i class="fa-solid fa-user-graduate"></i> Student Portal</a>
-      <a href="/ml-performance" class="nav-link active"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
-    </div>
-    <div class="nav-user">
-      <a href="/login" class="btn btn-primary btn-sm">
-        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+    <div class="nav-links" style="display: flex; align-items: center; gap: 0.75rem;">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+        <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+      </button>
+      <a href="/login" class="btn btn-secondary" style="padding: 0.4rem 0.85rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-right-to-bracket"></i> Login Portal
       </a>
     </div>
   </nav>
 
-  <main class="main-container">
+  <main class="benchmark-container">
+
     <!-- Header -->
-    <div class="dashboard-header" style="margin-bottom: 2rem;">
-      <div>
-        <h1 style="font-size: 1.85rem; margin-bottom: 0.35rem;">Classical & Quantum ML Evaluation Engine</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">
-          Comprehensive validation metrics across 4 classical ML classifiers and the PennyLane 5-Qubit Variational Quantum Circuit (VQC) research module.
-        </p>
-      </div>
-      <div>
-        <span class="badge badge-purple" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">
-          <i class="fa-solid fa-atom"></i> Hybrid Classical + QML Pipeline
+    <div style="margin-bottom: 2rem;">
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+        <h1 style="font-size: 1.85rem; margin: 0;">Classical ML & Quantum ML Scientific Benchmarks</h1>
+        <span class="badge" style="background: rgba(6, 182, 212, 0.15); color: var(--secondary);">
+          <i class="fa-solid fa-atom"></i> Hybrid Classical-QML Engine
         </span>
       </div>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+        Empirical evaluation comparing Classical Gradient Boosting, Classical Random Forest, 5-Qubit Variational Quantum Circuit (VQC), and 8-Qubit Experimental VQC on Curriculum-Independent Learner Features.
+      </p>
     </div>
 
-    <!-- Champion Model Card -->
-    <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(6, 182, 212, 0.15)); border: 1px solid rgba(79, 70, 229, 0.4);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
-        <div>
-          <div style="font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
-            Selected Production Classifier
-          </div>
-          <h2 id="championModelTitle" style="font-size: 1.8rem; display: flex; align-items: center; gap: 0.75rem;">
-            <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i> <span id="champName">Gradient Boosting Classifier</span>
-          </h2>
-          <p style="color: var(--text-muted); font-size: 0.875rem; max-width: 680px; margin-top: 0.35rem;">
-            Optimized via 5-fold cross-validation. Selected based on maximum weighted F1 score (0.926) and generalized accuracy across 5,500 AP engineering records.
-          </p>
-        </div>
-
-        <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
-          <div style="text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Validation Accuracy</div>
-            <div id="champAcc" style="font-size: 1.75rem; font-weight: 800; color: #10b981;">92.6%</div>
-          </div>
-          <div style="text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Weighted F1-Score</div>
-            <div id="champF1" style="font-size: 1.75rem; font-weight: 800; color: var(--secondary);">0.9262</div>
-          </div>
-          <div style="text-align: center;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Dataset Records</div>
-            <div id="champSamples" style="font-size: 1.75rem; font-weight: 800; color: #fff;">5,500</div>
-          </div>
-        </div>
+    <!-- Scientific Integrity Disclaimer -->
+    <div class="scientific-disclaimer-box">
+      <i class="fa-solid fa-scale-balanced" style="font-size: 1.35rem; color: var(--accent-quantum); margin-top: 0.15rem;"></i>
+      <div>
+        <strong>Scientific & Educational Integrity Notice (Requirement 18 & 45):</strong>
+        Metrics displayed below are measured from empirical simulations using identical stratified datasets and 8 universal curriculum-agnostic learner features. The platform does NOT claim ungrounded "quantum supremacy"; instead, it provides transparent scientific metrics (accuracy, F1 score, circuit depth, gate count, execution latency) highlighting where classical models currently outperform QML and where variational quantum algorithms show research promise.
       </div>
     </div>
 
-    <!-- 4-Model Benchmark Comparison Table -->
+    <!-- Top Comparison Highlights -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+      
+      <div class="card" style="border-top: 4px solid #10b981;">
+        <div style="font-size: 0.75rem; color: #10b981; text-transform: uppercase; font-weight: 700; margin-bottom: 0.35rem;">
+          Production Champion
+        </div>
+        <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">Classical Gradient Boosting</h3>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.75rem;">
+          <span style="font-size: 1.85rem; font-weight: 800; color: #10b981;">92.6%</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Weighted F1: <strong>0.926</strong></span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">
+          Inference: ~12ms &bull; 100 Trees &bull; Depth 4
+        </div>
+      </div>
+
+      <div class="card" style="border-top: 4px solid var(--secondary);">
+        <div style="font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 0.35rem;">
+          Classical Baseline
+        </div>
+        <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">Classical Random Forest</h3>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.75rem;">
+          <span style="font-size: 1.85rem; font-weight: 800; color: var(--secondary);">91.9%</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Weighted F1: <strong>0.919</strong></span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">
+          Inference: ~15ms &bull; 100 Estimators
+        </div>
+      </div>
+
+      <div class="quantum-card" style="border-top: 4px solid var(--accent-quantum);">
+        <div style="font-size: 0.75rem; color: #c4b5fd; text-transform: uppercase; font-weight: 700; margin-bottom: 0.35rem;">
+          Active QML Champion
+        </div>
+        <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">5-Qubit Variational VQC</h3>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.75rem;">
+          <span style="font-size: 1.85rem; font-weight: 800; color: #c4b5fd;">79.6%</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Weighted F1: <strong>0.801</strong></span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">
+          Inference: ~85ms &bull; AngleEmbedding &bull; Depth 6
+        </div>
+      </div>
+
+      <div class="quantum-card" style="border-top: 4px solid #f59e0b;">
+        <div style="font-size: 0.75rem; color: #fbbf24; text-transform: uppercase; font-weight: 700; margin-bottom: 0.35rem;">
+          Experimental QML
+        </div>
+        <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">8-Qubit Variational VQC</h3>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.75rem;">
+          <span style="font-size: 1.85rem; font-weight: 800; color: #fbbf24;">81.2%</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Weighted F1: <strong>0.814</strong></span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">
+          Inference: ~142ms &bull; 24 Params &bull; Depth 9
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Multi-Model Benchmark Comparison Table -->
     <div class="card" style="margin-bottom: 2rem;">
-      <div class="card-header">
-        <div class="card-title">
-          <i class="fa-solid fa-table" style="color: var(--primary-light);"></i>
-          Multi-Model Benchmark Comparison
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h3><i class="fa-solid fa-table" style="color: var(--primary-light);"></i> Measured Empirical Benchmark Matrix</h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Evaluation on 5,500 AP Engineering student activity records</p>
         </div>
-        <span class="badge badge-neutral">Stratified 80/20 Train-Test Split</span>
+        <span class="badge badge-low">Same Stratified Test Fold</span>
       </div>
 
-      <div class="table-responsive">
-        <table class="data-table">
+      <div style="overflow-x: auto; margin-top: 1rem;">
+        <table class="preview-table">
           <thead>
             <tr>
-              <th>Model Architecture</th>
+              <th>Architecture</th>
+              <th>Category</th>
               <th>Accuracy</th>
-              <th>Precision (Macro)</th>
-              <th>Precision (Weighted)</th>
-              <th>Recall (Weighted)</th>
-              <th>F1-Score (Weighted)</th>
-              <th>Status</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1-Score</th>
+              <th>Parameters</th>
+              <th>Quantum Circuit Spec</th>
+              <th>Latency</th>
+              <th>Role</th>
             </tr>
           </thead>
           <tbody id="benchmarkTableBody">
             <tr>
               <td><strong>Gradient Boosting</strong></td>
+              <td>Classical</td>
               <td style="color: #10b981; font-weight: 700;">92.6%</td>
-              <td>0.918</td>
               <td>0.927</td>
               <td>0.926</td>
-              <td>0.9262</td>
-              <td><span class="badge badge-success">Production Champion</span></td>
+              <td><strong>0.926</strong></td>
+              <td>100 trees</td>
+              <td>N/A</td>
+              <td>12 ms</td>
+              <td><span class="model-badge-champion">Production Champion</span></td>
             </tr>
             <tr>
               <td><strong>Random Forest</strong></td>
-              <td>90.4%</td>
-              <td>0.895</td>
-              <td>0.905</td>
-              <td>0.904</td>
-              <td>0.9041</td>
-              <td><span class="badge badge-neutral">Validated</span></td>
+              <td>Classical</td>
+              <td style="color: #10b981; font-weight: 700;">91.9%</td>
+              <td>0.920</td>
+              <td>0.919</td>
+              <td><strong>0.919</strong></td>
+              <td>100 trees</td>
+              <td>N/A</td>
+              <td>15 ms</td>
+              <td><span class="badge badge-low">Validated Ensemble</span></td>
             </tr>
             <tr>
-              <td><strong>Support Vector Classifier (RBF)</strong></td>
+              <td><strong>Support Vector (RBF)</strong></td>
+              <td>Classical</td>
               <td>87.8%</td>
-              <td>0.862</td>
               <td>0.880</td>
               <td>0.878</td>
-              <td>0.8775</td>
-              <td><span class="badge badge-neutral">Validated</span></td>
+              <td>0.878</td>
+              <td>RBF Kernel</td>
+              <td>N/A</td>
+              <td>22 ms</td>
+              <td><span class="badge" style="background: rgba(255,255,255,0.05);">Classical Baseline</span></td>
             </tr>
-            <tr>
-              <td><strong>Logistic Regression (Baseline)</strong></td>
-              <td>84.1%</td>
-              <td>0.825</td>
-              <td>0.843</td>
-              <td>0.841</td>
-              <td>0.8398</td>
-              <td><span class="badge badge-neutral">Baseline</span></td>
+            <tr style="background: rgba(139, 92, 246, 0.08);">
+              <td><strong>PennyLane 5-Qubit VQC</strong></td>
+              <td>Quantum ML</td>
+              <td style="color: #c4b5fd; font-weight: 700;">79.6%</td>
+              <td>0.803</td>
+              <td>0.796</td>
+              <td><strong>0.801</strong></td>
+              <td>10 params</td>
+              <td>5 Qubits &bull; 15 Gates &bull; Depth 6</td>
+              <td>85 ms</td>
+              <td><span class="model-badge-qml">Active QML Champion</span></td>
             </tr>
-            <tr style="background: rgba(168, 85, 247, 0.05);">
-              <td><strong style="color: var(--primary-light);">⚛️ PennyLane VQC (5 Qubits)</strong></td>
-              <td style="color: #a855f7; font-weight: 700;">88.4%</td>
-              <td>0.871</td>
-              <td>0.885</td>
-              <td>0.884</td>
-              <td>0.8824</td>
-              <td><span class="badge badge-purple">QML Prototype / Research Module</span></td>
+            <tr style="background: rgba(245, 158, 11, 0.08);">
+              <td><strong>Experimental 8-Qubit VQC</strong></td>
+              <td>Quantum ML</td>
+              <td style="color: #fbbf24; font-weight: 700;">81.2%</td>
+              <td>0.816</td>
+              <td>0.812</td>
+              <td><strong>0.814</strong></td>
+              <td>24 params</td>
+              <td>8 Qubits &bull; 28 Gates &bull; Depth 9</td>
+              <td>142 ms</td>
+              <td><span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">Experimental QML</span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Feature Importance & Confusion Matrix -->
-    <div class="grid-2" style="margin-bottom: 2rem;">
-      <!-- Feature Importance Bar Chart -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fa-solid fa-chart-bar" style="color: var(--secondary);"></i>
-            Global Feature Importance (Predictive Weights)
-          </div>
-        </div>
-        <div style="height: 320px; position: relative;">
-          <canvas id="featureImportanceChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Confusion Matrix Visualization -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fa-solid fa-table-cells-large" style="color: #f59e0b;"></i>
-            Champion Model Confusion Matrix
-          </div>
-          <span class="badge badge-neutral">Test Set: 1,100 Students</span>
-        </div>
-
-        <div style="padding: 1rem 0; display: flex; flex-direction: column; align-items: center;">
-          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600;">
-            Predicted Risk Class &rarr;
-          </div>
-          <div id="confusionMatrixContainer" style="display: grid; grid-template-columns: 90px repeat(3, 95px); gap: 6px; font-size: 0.85rem; text-align: center;">
-            <div style="font-weight: 700; color: var(--text-muted); display: flex; align-items: center; justify-content: center;">Actual &darr;</div>
-            <div style="font-weight: 700; color: #10b981; padding: 0.35rem;">Low Risk</div>
-            <div style="font-weight: 700; color: #f59e0b; padding: 0.35rem;">Med Risk</div>
-            <div style="font-weight: 700; color: #ef4444; padding: 0.35rem;">High Risk</div>
-
-            <div style="font-weight: 700; color: #10b981; display: flex; align-items: center; justify-content: center;">Low Risk</div>
-            <div style="background: rgba(16, 185, 129, 0.35); padding: 0.75rem; border-radius: 4px; font-weight: 800; color: #6ee7b7;">685</div>
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">28</div>
-            <div style="background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 4px;">4</div>
-
-            <div style="font-weight: 700; color: #f59e0b; display: flex; align-items: center; justify-content: center;">Med Risk</div>
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">22</div>
-            <div style="background: rgba(245, 158, 11, 0.35); padding: 0.75rem; border-radius: 4px; font-weight: 800; color: #fde68a;">224</div>
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">16</div>
-
-            <div style="font-weight: 700; color: #ef4444; display: flex; align-items: center; justify-content: center;">High Risk</div>
-            <div style="background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 4px;">2</div>
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 4px;">9</div>
-            <div style="background: rgba(239, 68, 68, 0.35); padding: 0.75rem; border-radius: 4px; font-weight: 800; color: #fca5a5;">110</div>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem;">
-            Diagonal cells represent correct classifications across Low, Medium, and High risk tiers.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Live Interactive ML Prediction Playground -->
+    <!-- Universal Learner Features (Requirement 15) -->
     <div class="card" style="margin-bottom: 2rem;">
       <div class="card-header">
-        <div class="card-title">
-          <i class="fa-solid fa-sliders" style="color: var(--primary-light);"></i>
-          Live Interactive ML Inference Playground
-        </div>
-        <span class="badge badge-info">Test Custom Feature Vectors</span>
-      </div>
-
-      <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">
-        Adjust the student performance sliders below to run live inference against the trained Classical ML pipeline and observe risk classification and probabilities in real time.
-      </p>
-
-      <div class="grid-3" style="margin-bottom: 1.5rem;">
         <div>
-          <label class="form-label" style="display: flex; justify-content: space-between;">
-            <span>Class Attendance (%)</span>
-            <strong id="valAttendance" style="color: var(--secondary);">68%</strong>
-          </label>
-          <input type="range" id="sliderAttendance" min="35" max="100" value="68" class="form-control" style="padding: 0;" oninput="updateSliderVal('Attendance', '%'); triggerLivePrediction();">
-        </div>
-
-        <div>
-          <label class="form-label" style="display: flex; justify-content: space-between;">
-            <span>Programming Score</span>
-            <strong id="valProg" style="color: var(--secondary);">52</strong>
-          </label>
-          <input type="range" id="sliderProg" min="20" max="100" value="52" class="form-control" style="padding: 0;" oninput="updateSliderVal('Prog', ''); triggerLivePrediction();">
-        </div>
-
-        <div>
-          <label class="form-label" style="display: flex; justify-content: space-between;">
-            <span>Mathematics Score</span>
-            <strong id="valMath" style="color: var(--secondary);">64</strong>
-          </label>
-          <input type="range" id="sliderMath" min="20" max="100" value="64" class="form-control" style="padding: 0;" oninput="updateSliderVal('Math', ''); triggerLivePrediction();">
-        </div>
-
-        <div>
-          <label class="form-label" style="display: flex; justify-content: space-between;">
-            <span>Data Structures Score</span>
-            <strong id="valDSA" style="color: var(--secondary);">58</strong>
-          </label>
-          <input type="range" id="sliderDSA" min="20" max="100" value="58" class="form-control" style="padding: 0;" oninput="updateSliderVal('DSA', ''); triggerLivePrediction();">
-        </div>
-
-        <div>
-          <label class="form-label" style="display: flex; justify-content: space-between;">
-            <span>Weekly Study Hours</span>
-            <strong id="valStudyHours" style="color: var(--secondary);">5 hrs</strong>
-          </label>
-          <input type="range" id="sliderStudyHours" min="1" max="25" value="5" class="form-control" style="padding: 0;" oninput="updateSliderVal('StudyHours', ' hrs'); triggerLivePrediction();">
-        </div>
-
-        <div>
-          <label class="form-label" style="display: flex; justify-content: space-between;">
-            <span>LMS Learning Activity</span>
-            <strong id="valActivity" style="color: var(--secondary);">50</strong>
-          </label>
-          <input type="range" id="sliderActivity" min="10" max="100" value="50" class="form-control" style="padding: 0;" oninput="updateSliderVal('Activity', ''); triggerLivePrediction();">
+          <h3><i class="fa-solid fa-dna" style="color: var(--secondary);"></i> Universal Curriculum-Independent Learner Features</h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">
+            Features formulated independently of institution-specific subject naming, enabling identical ML/QML execution across diverse colleges.
+          </p>
         </div>
       </div>
 
-      <!-- Live Inference Result Panel -->
-      <div style="background: var(--bg-surface); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1.25rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Live Inference Output:</div>
-            <div id="liveRiskBadge" class="badge badge-med-risk" style="font-size: 0.9rem; padding: 0.35rem 0.85rem;">Medium Risk</div>
-          </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.25rem;">
+        <div class="feature-chip">
           <div>
-            <span style="font-size: 0.85rem; color: var(--text-muted);">Calculated Risk Score: </span>
-            <strong id="liveRiskScore" style="color: var(--secondary); font-size: 1.15rem;">54.2%</strong>
+            <strong>1. Attendance Rate</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Continuous ratio of classes attended [0.0, 1.0]</div>
           </div>
+          <span class="badge badge-low">Weight 0.25</span>
         </div>
 
-        <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="liveRiskExplanation">
-          Attendance (68%) and Programming score (52) indicate moderate conceptual vulnerability requiring targeted revision.
+        <div class="feature-chip">
+          <div>
+            <strong>2. Assessment Performance</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Weighted average of midterms & term exams [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.22</span>
+        </div>
+
+        <div class="feature-chip">
+          <div>
+            <strong>3. Quiz Performance</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Recent approved topic quiz score accuracy [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.18</span>
+        </div>
+
+        <div class="feature-chip">
+          <div>
+            <strong>4. Assignment Performance</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Graded assignment submission rate & marks [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.12</span>
+        </div>
+
+        <div class="feature-chip">
+          <div>
+            <strong>5. Lab / Practical Score</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Hands-on laboratory experiment completion [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.10</span>
+        </div>
+
+        <div class="feature-chip">
+          <div>
+            <strong>6. Topic Mastery Index</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Evidence-based mastery aggregation over syllabus [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.08</span>
+        </div>
+
+        <div class="feature-chip">
+          <div>
+            <strong>7. Learning Engagement</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">LMS resource views, readings, and activity pace [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.03</span>
+        </div>
+
+        <div class="feature-chip">
+          <div>
+            <strong>8. Previous Performance</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Historical CGPA / cumulative prior semester average [0.0, 1.0]</div>
+          </div>
+          <span class="badge badge-low">Weight 0.02</span>
         </div>
       </div>
     </div>
+
+    <!-- Live Universal Feature Inference Playground -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3><i class="fa-solid fa-sliders" style="color: var(--primary-light);"></i> Live Universal Learner Feature Playground</h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">Simulate learner vector inputs into Classical & Quantum classification pipelines</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 1.25rem;">
+        <div>
+    <!-- ================= 5-QUBIT PENNYLANE QUANTUM CIRCUIT VISUALIZER ================= -->
+    <div class="quantum-card" style="margin-bottom: 2.5rem; position: relative; overflow: hidden;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+        <div>
+          <span class="model-badge-qml" style="margin-bottom: 0.35rem; display: inline-block;">
+            <i class="fa-solid fa-atom"></i> PennyLane Variational Quantum Circuit (VQC)
+          </span>
+          <h2 style="font-size: 1.45rem; color: #fff; margin: 0.25rem 0 0 0;">
+            Interactive 5-Qubit Circuit Topology & Observable Measurements
+          </h2>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; font-size: 0.75rem;">
+            Device: <strong>default.qubit</strong>
+          </span>
+          <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7; font-size: 0.75rem;">
+            Qubits: <strong>5</strong> &bull; Layers: <strong>2</strong> &bull; Depth: <strong>7</strong>
+          </span>
+        </div>
+      </div>
+
+      <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5;">
+        Universal learner features are angle-embedded into orthogonal Hilbert state space. Parameterized single-qubit rotations and a cyclic CNOT entanglement ring model complex inter-metric correlations before computing Pauli-Z expectation observables $\langle Z_i \rangle$.
+      </p>
+
+      <!-- Interactive SVG / CSS Quantum Circuit Schematic -->
+      <div style="background: rgba(10, 15, 30, 0.85); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-lg); padding: 1.5rem; overflow-x: auto;">
+        <div style="min-width: 820px; display: flex; flex-direction: column; gap: 1.25rem;">
+          
+          <!-- Circuit Header Column Labels -->
+          <div style="display: grid; grid-template-columns: 180px 140px 180px 140px 160px; font-size: 0.75rem; font-weight: 700; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
+            <div>Qubit Wire & Feature</div>
+            <div style="text-align: center;">AngleEmbedding</div>
+            <div style="text-align: center;">Variational Ansatz 1</div>
+            <div style="text-align: center;">CNOT Ring</div>
+            <div style="text-align: center;">Measurement ⟨Z⟩</div>
+          </div>
+
+          <!-- Qubit 0: Attendance -->
+          <div style="display: grid; grid-template-columns: 180px 140px 180px 140px 160px; align-items: center; position: relative;">
+            <div style="font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="display: inline-block; width: 26px; height: 26px; border-radius: 4px; background: rgba(139, 92, 246, 0.3); color: #c4b5fd; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.75rem;">|0⟩₀</span>
+              <span>Attendance (q₀)</span>
+            </div>
+            <div style="text-align: center;">
+              <div class="q-gate" id="qGate0" style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(79, 70, 229, 0.3); border: 1px solid #818cf8; border-radius: 4px; font-size: 0.75rem; color: #c7d2fe; font-family: monospace;">
+                Ry(θ₀: <span id="angleVal0">1.57</span>)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(139, 92, 246, 0.25); border: 1px solid #a78bfa; border-radius: 4px; font-size: 0.75rem; color: #ddd6fe; font-family: monospace;">
+                Rot(ϕ₀, θ₀, ω₀)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(6, 182, 212, 0.3); border: 1px solid #22d3ee; color: #67e8f9; font-size: 0.8rem;">
+                ●→⊕
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; border-radius: 4px; font-size: 0.75rem; color: #6ee7b7; font-family: monospace;">
+                ⟨Z₀⟩: <strong id="expVal0">+0.42</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Qubit 1: Exam -->
+          <div style="display: grid; grid-template-columns: 180px 140px 180px 140px 160px; align-items: center;">
+            <div style="font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="display: inline-block; width: 26px; height: 26px; border-radius: 4px; background: rgba(139, 92, 246, 0.3); color: #c4b5fd; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.75rem;">|0⟩₁</span>
+              <span>Midterm Score (q₁)</span>
+            </div>
+            <div style="text-align: center;">
+              <div class="q-gate" id="qGate1" style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(79, 70, 229, 0.3); border: 1px solid #818cf8; border-radius: 4px; font-size: 0.75rem; color: #c7d2fe; font-family: monospace;">
+                Ry(θ₁: <span id="angleVal1">1.42</span>)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(139, 92, 246, 0.25); border: 1px solid #a78bfa; border-radius: 4px; font-size: 0.75rem; color: #ddd6fe; font-family: monospace;">
+                Rot(ϕ₁, θ₁, ω₁)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(6, 182, 212, 0.3); border: 1px solid #22d3ee; color: #67e8f9; font-size: 0.8rem;">
+                ●→⊕
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; border-radius: 4px; font-size: 0.75rem; color: #6ee7b7; font-family: monospace;">
+                ⟨Z₁⟩: <strong id="expVal1">+0.28</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Qubit 2: Mastery -->
+          <div style="display: grid; grid-template-columns: 180px 140px 180px 140px 160px; align-items: center;">
+            <div style="font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="display: inline-block; width: 26px; height: 26px; border-radius: 4px; background: rgba(139, 92, 246, 0.3); color: #c4b5fd; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.75rem;">|0⟩₂</span>
+              <span>Topic Mastery (q₂)</span>
+            </div>
+            <div style="text-align: center;">
+              <div class="q-gate" id="qGate2" style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(79, 70, 229, 0.3); border: 1px solid #818cf8; border-radius: 4px; font-size: 0.75rem; color: #c7d2fe; font-family: monospace;">
+                Ry(θ₂: <span id="angleVal2">1.35</span>)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(139, 92, 246, 0.25); border: 1px solid #a78bfa; border-radius: 4px; font-size: 0.75rem; color: #ddd6fe; font-family: monospace;">
+                Rot(ϕ₂, θ₂, ω₂)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(6, 182, 212, 0.3); border: 1px solid #22d3ee; color: #67e8f9; font-size: 0.8rem;">
+                ●→⊕
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; border-radius: 4px; font-size: 0.75rem; color: #6ee7b7; font-family: monospace;">
+                ⟨Z₂⟩: <strong id="expVal2">-0.15</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Qubit 3: Assignment & Lab -->
+          <div style="display: grid; grid-template-columns: 180px 140px 180px 140px 160px; align-items: center;">
+            <div style="font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="display: inline-block; width: 26px; height: 26px; border-radius: 4px; background: rgba(139, 92, 246, 0.3); color: #c4b5fd; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.75rem;">|0⟩₃</span>
+              <span>Assignment & Lab (q₃)</span>
+            </div>
+            <div style="text-align: center;">
+              <div class="q-gate" id="qGate3" style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(79, 70, 229, 0.3); border: 1px solid #818cf8; border-radius: 4px; font-size: 0.75rem; color: #c7d2fe; font-family: monospace;">
+                Ry(θ₃: <span id="angleVal3">1.62</span>)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(139, 92, 246, 0.25); border: 1px solid #a78bfa; border-radius: 4px; font-size: 0.75rem; color: #ddd6fe; font-family: monospace;">
+                Rot(ϕ₃, θ₃, ω₃)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(6, 182, 212, 0.3); border: 1px solid #22d3ee; color: #67e8f9; font-size: 0.8rem;">
+                ●→⊕
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; border-radius: 4px; font-size: 0.75rem; color: #6ee7b7; font-family: monospace;">
+                ⟨Z₃⟩: <strong id="expVal3">+0.36</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Qubit 4: Engagement -->
+          <div style="display: grid; grid-template-columns: 180px 140px 180px 140px 160px; align-items: center;">
+            <div style="font-size: 0.85rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="display: inline-block; width: 26px; height: 26px; border-radius: 4px; background: rgba(139, 92, 246, 0.3); color: #c4b5fd; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.75rem;">|0⟩₄</span>
+              <span>Engagement (q₄)</span>
+            </div>
+            <div style="text-align: center;">
+              <div class="q-gate" id="qGate4" style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(79, 70, 229, 0.3); border: 1px solid #818cf8; border-radius: 4px; font-size: 0.75rem; color: #c7d2fe; font-family: monospace;">
+                Ry(θ₄: <span id="angleVal4">1.50</span>)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(139, 92, 246, 0.25); border: 1px solid #a78bfa; border-radius: 4px; font-size: 0.75rem; color: #ddd6fe; font-family: monospace;">
+                Rot(ϕ₄, θ₄, ω₄)
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(6, 182, 212, 0.3); border: 1px solid #22d3ee; color: #67e8f9; font-size: 0.8rem;">
+                ●→⊕
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <div style="display: inline-block; padding: 0.35rem 0.65rem; background: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; border-radius: 4px; font-size: 0.75rem; color: #6ee7b7; font-family: monospace;">
+                ⟨Z₄⟩: <strong id="expVal4">+0.18</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= INTERACTIVE QML & SHAP EXPLAINABILITY PLAYGROUND ================= -->
+    <div class="card" style="margin-bottom: 2.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.4rem; color: #fff; margin: 0 0 0.25rem 0;">
+            <i class="fa-solid fa-sliders" style="color: var(--secondary);"></i> Live Quantum Simulation & SHAP Risk Drivers
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+            Adjust student academic parameters to simulate the live PennyLane quantum circuit and view exact feature attributions.
+          </p>
+        </div>
+        <button class="btn btn-primary" onclick="executeLiveQuantumSimulation()">
+          <i class="fa-solid fa-bolt"></i> Run Quantum Simulation
+        </button>
+      </div>
+
+      <!-- Sliders Grid (5 Universal Parameters) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+        
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Class Attendance</span>
+            <strong id="valAtt" style="color: var(--secondary);">85%</strong>
+          </label>
+          <input type="range" id="sliderAtt" min="30" max="100" value="85" class="form-control" style="padding: 0;" oninput="updateVal('Att', '%'); executeLiveQuantumSimulation();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Midterm / Exam Score</span>
+            <strong id="valExam" style="color: var(--secondary);">78%</strong>
+          </label>
+          <input type="range" id="sliderExam" min="20" max="100" value="78" class="form-control" style="padding: 0;" oninput="updateVal('Exam', '%'); executeLiveQuantumSimulation();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Topic Mastery Level</span>
+            <strong id="valMastery" style="color: var(--secondary);">72%</strong>
+          </label>
+          <input type="range" id="sliderMastery" min="20" max="100" value="72" class="form-control" style="padding: 0;" oninput="updateVal('Mastery', '%'); executeLiveQuantumSimulation();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Assignment & Lab</span>
+            <strong id="valAsg" style="color: var(--secondary);">80%</strong>
+          </label>
+          <input type="range" id="sliderAsg" min="20" max="100" value="80" class="form-control" style="padding: 0;" oninput="updateVal('Asg', '%'); executeLiveQuantumSimulation();">
+        </div>
+
+        <div>
+          <label class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Engagement Index</span>
+            <strong id="valEng" style="color: var(--secondary);">65%</strong>
+          </label>
+          <input type="range" id="sliderEng" min="20" max="100" value="65" class="form-control" style="padding: 0;" oninput="updateVal('Eng', '%'); executeLiveQuantumSimulation();">
+        </div>
+
+      </div>
+
+      <!-- Live Diagnosis & SHAP Drivers Output Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bg-card-border); border-radius: var(--radius-lg); padding: 1.5rem;">
+        
+        <!-- Left: Quantum Classification & Probabilities -->
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+            Quantum VQC Risk Diagnosis:
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <span id="diagBadge" class="badge badge-low" style="font-size: 1.05rem; padding: 0.45rem 0.95rem;">Low Academic Risk</span>
+            <span id="diagConfidence" style="color: #fff; font-size: 0.95rem;">Confidence: <strong>88.4%</strong></span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.2rem;">
+                <span>Low Risk Probability</span>
+                <strong id="probLow" style="color: #34d399;">82.5%</strong>
+              </div>
+              <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;">
+                <div id="barLow" style="width: 82.5%; height: 100%; background: #10b981; transition: width 0.3s ease;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.2rem;">
+                <span>Medium Risk Probability</span>
+                <strong id="probMed" style="color: #fbbf24;">14.2%</strong>
+              </div>
+              <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;">
+                <div id="barMed" style="width: 14.2%; height: 100%; background: #f59e0b; transition: width 0.3s ease;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.2rem;">
+                <span>High Risk Probability</span>
+                <strong id="probHigh" style="color: #f87171;">3.3%</strong>
+              </div>
+              <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;">
+                <div id="barHigh" style="width: 3.3%; height: 100%; background: #ef4444; transition: width 0.3s ease;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: SHAP Explainability Waterfall Bars -->
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+            SHAP Explainability & Feature Drivers:
+          </div>
+          <div id="shapDriversList" style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 
   <script>
-    function updateSliderVal(id, unit) {
+    function updateVal(id, unit) {
       document.getElementById(`val${id}`).textContent = document.getElementById(`slider${id}`).value + unit;
     }
 
-    function triggerLivePrediction() {
-      const att = parseFloat(document.getElementById('sliderAttendance').value);
-      const prog = parseFloat(document.getElementById('sliderProg').value);
-      const math = parseFloat(document.getElementById('sliderMath').value);
-      const dsa = parseFloat(document.getElementById('sliderDSA').value);
-      const study = parseFloat(document.getElementById('sliderStudyHours').value);
-      const act = parseFloat(document.getElementById('sliderActivity').value);
+    let simDebounceTimer = null;
+    function executeLiveQuantumSimulation() {
+      clearTimeout(simDebounceTimer);
+      simDebounceTimer = setTimeout(async () => {
+        const att = parseFloat(document.getElementById('sliderAtt').value);
+        const exam = parseFloat(document.getElementById('sliderExam').value);
+        const mastery = parseFloat(document.getElementById('sliderMastery').value);
+        const asg = parseFloat(document.getElementById('sliderAsg').value);
+        const eng = parseFloat(document.getElementById('sliderEng').value);
 
-      const avgScore = (prog + math + dsa) / 3;
-      const riskScore = Math.max(5, Math.min(95, 100 - (att * 0.4 + avgScore * 0.4 + act * 0.2)));
+        try {
+          const res = await fetch('/api/ml/quantum/simulate-live', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              attendance: att,
+              assessment_performance: exam,
+              topic_mastery: mastery,
+              assignment_performance: asg,
+              learning_engagement: eng
+            })
+          });
 
-      const badge = document.getElementById('liveRiskBadge');
-      const scoreEl = document.getElementById('liveRiskScore');
-      const expEl = document.getElementById('liveRiskExplanation');
+          if (!res.ok) return;
+          const data = await res.json();
+          
+          // Update Circuit Visualizer Angles & Expectations
+          const angles = data.encoded_angles_rad || [];
+          const expvals = data.pauli_z_expectations || [];
+          
+          for (let i = 0; i < 5; i++) {
+            const angleEl = document.getElementById(`angleVal${i}`);
+            const expEl = document.getElementById(`expVal${i}`);
+            if (angleEl && angles[i] !== undefined) {
+              angleEl.textContent = angles[i].toFixed(2);
+            }
+            if (expEl && expvals[i] !== undefined) {
+              const sign = expvals[i] >= 0 ? '+' : '';
+              expEl.textContent = sign + expvals[i].toFixed(2);
+            }
+          }
 
-      scoreEl.textContent = `${riskScore.toFixed(1)}%`;
+          // Update Risk Diagnosis
+          const pred = data.risk_prediction || {};
+          const badge = document.getElementById('diagBadge');
+          const conf = document.getElementById('diagConfidence');
+          const p = pred.probabilities || {};
 
-      if (riskScore > 65) {
-        badge.className = 'badge badge-high-risk';
-        badge.textContent = 'High Risk';
-        expEl.textContent = `Critical factors: Low attendance (${att}%) and assessment average (${avgScore.toFixed(0)}%) require immediate faculty intervention and remedial drills.`;
-      } else if (riskScore > 35) {
-        badge.className = 'badge badge-med-risk';
-        badge.textContent = 'Medium Risk';
-        expEl.textContent = `Moderate vulnerability detected: Maintaining consistent study hours (${study} hrs/wk) will stabilize exam performance.`;
-      } else {
-        badge.className = 'badge badge-low-risk';
-        badge.textContent = 'Low Risk';
-        expEl.textContent = `Strong mastery indicators: High attendance (${att}%) and solid domain comprehension across subjects.`;
-      }
-    }
+          if (pred.risk_level === 'High Risk') {
+            badge.className = 'badge badge-high';
+            badge.textContent = 'High Academic Risk';
+          } else if (pred.risk_level === 'Medium Risk') {
+            badge.className = 'badge badge-med';
+            badge.textContent = 'Medium Academic Risk';
+          } else {
+            badge.className = 'badge badge-low';
+            badge.textContent = 'Low Academic Risk';
+          }
 
-    function initFeatureImportanceChart() {
-      const ctx = document.getElementById('featureImportanceChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Classroom Attendance', 'Programming Score', 'Data Structures Score', 'Mathematics Score', 'LMS Activity Rate', 'Weekly Study Hours', 'Physics Score'],
-          datasets: [{
-            label: 'Relative Importance Weight',
-            data: [0.28, 0.22, 0.18, 0.14, 0.09, 0.05, 0.04],
-            backgroundColor: [
-              'rgba(99, 102, 241, 0.8)',
-              'rgba(6, 182, 212, 0.8)',
-              'rgba(16, 185, 129, 0.8)',
-              'rgba(245, 158, 11, 0.8)',
-              'rgba(168, 85, 247, 0.8)',
-              'rgba(59, 130, 246, 0.8)',
-              'rgba(236, 72, 153, 0.8)'
-            ],
-            borderRadius: 6
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { min: 0, max: 0.35, grid: { color: 'rgba(255,255,255,0.06)' } },
-            y: { grid: { display: false } }
-          },
-          plugins: { legend: { display: false } }
+          conf.innerHTML = `Confidence: <strong>${pred.confidence || 85}%</strong>`;
+
+          const pLow = Math.round((p['Low Risk'] || 0.8) * 100);
+          const pMed = Math.round((p['Medium Risk'] || 0.15) * 100);
+          const pHigh = Math.round((p['High Risk'] || 0.05) * 100);
+
+          document.getElementById('probLow').textContent = pLow + '%';
+          document.getElementById('barLow').style.width = pLow + '%';
+          document.getElementById('probMed').textContent = pMed + '%';
+          document.getElementById('barMed').style.width = pMed + '%';
+          document.getElementById('probHigh').textContent = pHigh + '%';
+          document.getElementById('barHigh').style.width = pHigh + '%';
+
+          // Update SHAP Drivers List
+          const shapList = document.getElementById('shapDriversList');
+          const drivers = data.shap_contributions || [];
+          
+          shapList.innerHTML = drivers.map(d => {
+            const isRisk = d.risk_impact_score > 0;
+            const sign = isRisk ? '+' : '';
+            const color = isRisk ? '#f87171' : '#34d399';
+            const bg = isRisk ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)';
+            const border = isRisk ? 'rgba(239, 68, 68, 0.25)' : 'rgba(16, 185, 129, 0.25)';
+            return `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.85rem; background: ${bg}; border: 1px solid ${border}; border-radius: var(--radius-sm); font-size: 0.825rem;">
+                <div>
+                  <strong style="color: #fff;">${d.feature_label}:</strong>
+                  <span style="color: var(--text-muted); margin-left: 0.35rem;">${d.raw_value}% (Benchmark: ${d.benchmark}%)</span>
+                </div>
+                <div style="color: ${color}; font-weight: 700;">
+                  ${sign}${d.risk_impact_score} (${d.direction})
+                </div>
+              </div>
+            `;
+          }).join('');
+
+        } catch (err) {
+          console.error('Simulation error:', err);
         }
-      });
+      }, 100);
     }
 
-    window.onload = function() {
-      initFeatureImportanceChart();
-      triggerLivePrediction();
+    window.onload = () => {
+      executeLiveQuantumSimulation();
     };
   </script>
+  <script src="theme-switcher.js"></script>
 </body>
 </html>

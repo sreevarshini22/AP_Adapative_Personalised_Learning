@@ -136,8 +136,14 @@ def _predict_classical_fallback(student_data):
     risk_factors = [f for f in important_features if f["impact_type"] == "Risk Factor"]
     risk_factors.sort(key=lambda x: (x["global_importance"] * abs(x["difference"])), reverse=True)
     
+    strength_buffers = [f for f in important_features if f["impact_type"] == "Strength Buffer"]
+    strength_buffers.sort(key=lambda x: (x["global_importance"] * abs(x["difference"])), reverse=True)
+    top_strengths = [sb["detail"] for sb in strength_buffers[:4]]
+    
     confidence = round(float(max(probabilities.values()) * 100), 1)
     risk_drivers = [rf["detail"] for rf in risk_factors[:4]]
+    
+    active_model_name = model_artifact.get("model_name", "Gradient Boosting")
     
     return {
         "risk_level": pred_class,
@@ -147,24 +153,64 @@ def _predict_classical_fallback(student_data):
         "confidence_percentage": confidence,
         "important_features": important_features,
         "top_risk_factors": risk_factors[:4],
-        "top_strengths": [],
+        "top_strengths": top_strengths,
         "risk_drivers": risk_drivers,
         "top_risk_drivers": risk_drivers,
         "explanations": explanations,
-        "model": "Classical ML fallback",
-        "model_name": "Classical ML fallback (Random Forest / Logistic Regression)"
+        "model": "Classical ML Ensemble",
+        "model_name": f"Champion Classical ML ({active_model_name})"
     }
 
 
-def predict_student_risk(student_data):
+def predict_student_risk(student_data, conn=None):
     """
     Primary Prediction Entrypoint:
     Executes PennyLane Quantum Machine Learning (QML) as the champion active production engine.
+    Consumes curriculum-independent universal learner features.
     Falls back gracefully to Classical ML if QML dependencies/weights are unavailable.
     """
+    result = None
     try:
         from ml.quantum_model import predict_learning_risk
-        return predict_learning_risk(student_data)
+        result = predict_learning_risk(student_data, conn=conn)
     except Exception as e:
         print(f"[!] QML Prediction failed or unavailable ({e}). Invoking Classical ML fallback.")
-        return _predict_classical_fallback(student_data)
+        result = _predict_classical_fallback(student_data)
+
+    # Log prediction history if student has a database ID
+    student_id = student_data.get("id")
+    if student_id and result:
+        try:
+            import json
+            from backend.database import get_db_connection
+            own_conn = False
+            active_conn = conn
+            if active_conn is None:
+                active_conn = get_db_connection()
+                own_conn = True
+                
+            cursor = active_conn.cursor()
+            cursor.execute("""
+            INSERT INTO model_predictions_history (
+                student_id, model_type, model_version, risk_level, risk_score, confidence,
+                features_json, probabilities_json, risk_drivers_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                student_id,
+                result.get("model", "Quantum ML"),
+                "v2.1-universal-vqc",
+                result.get("risk_level", "Low Risk"),
+                result.get("risk_score", 10.0),
+                result.get("confidence", 85.0),
+                json.dumps(result.get("universal_features", {})),
+                json.dumps(result.get("probabilities", {})),
+                json.dumps(result.get("top_risk_drivers", []))
+            ))
+            active_conn.commit()
+            if own_conn:
+                active_conn.close()
+        except Exception as err:
+            pass  # Non-blocking prediction history logging
+
+    return result
+

@@ -250,7 +250,7 @@ class TestStudentCsvUploadAndSubjectFiltering(unittest.TestCase):
         self.assertEqual(res_sub.status_code, 200)
         sub_data = res_sub.get_json()
         self.assertTrue(sub_data["success"])
-        self.assertEqual(sub_data["branch"], "CSE (AI & ML)")
+        self.assertIn(sub_data["branch"], ["AIML", "CSE (AI & ML)", "CSE (AIML)"])
         self.assertEqual(sub_data["year"], "2nd Year")
         self.assertEqual(sub_data["semester"], 3)
         

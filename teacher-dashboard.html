@@ -109,6 +109,119 @@
       background: var(--risk-low-bg);
       color: var(--risk-low);
     }
+    /* ================= OFFICIAL REPORT CARD PRINT & DOSSIER STYLES ================= */
+    .report-dossier-card {
+      background: #0f172a;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: #e2e8f0;
+      position: relative;
+    }
+    .report-dossier-header {
+      border-bottom: 2px solid rgba(129, 140, 248, 0.4);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    .report-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #93c5fd;
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      font-weight: 600;
+    }
+    .report-table td {
+      padding: 0.65rem 0.85rem;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+    }
+    .bloom-bar-container {
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 0.35rem;
+    }
+    .bloom-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #38bdf8);
+      border-radius: 999px;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #officialReportCardModal,
+      #officialReportCardModal .modal-container,
+      #officialReportCardModal .modal-body,
+      #officialReportCardModal #reportCardPrintArea,
+      #officialReportCardModal #reportCardPrintArea * {
+        visibility: visible !important;
+      }
+      #officialReportCardModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        display: block !important;
+        overflow: visible !important;
+      }
+      #officialReportCardModal .modal-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 0 !important;
+      }
+      #officialReportCardModal .modal-header,
+      #officialReportCardModal .modal-footer,
+      #officialReportCardModal .no-print {
+        display: none !important;
+      }
+      .report-dossier-card {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+      }
+      .report-dossier-header {
+        border-bottom: 2px solid #0284c7 !important;
+      }
+      .report-table th {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .report-table td {
+        color: #1e293b !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+      .bloom-bar-container {
+        background: #e2e8f0 !important;
+      }
+      .bloom-bar-fill {
+        background: #0284c7 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -124,11 +237,20 @@
     </div>
     <div class="nav-links">
       <a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
-      <a href="#roster-section" class="nav-link active"><i class="fa-solid fa-chalkboard-user"></i> Dashboard & Roster</a>
-      <a href="#analytics-section" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+      <a href="#roster-section" class="nav-link active" id="navRosterLink" onclick="switchTeacherTab('roster')"><i class="fa-solid fa-chalkboard-user"></i> Dashboard & Roster</a>
+      <a href="#interventions-section" class="nav-link" id="navInterventionsLink" onclick="switchTeacherTab('interventions')"><i class="fa-solid fa-bolt"></i> Remedial Interventions</a>
+      <a href="#assessments-section" class="nav-link" id="navAssessmentsLink" onclick="switchTeacherTab('assessments')"><i class="fa-solid fa-list-check"></i> Assessment Review</a>
+      <a href="#analytics-section" class="nav-link" id="navAnalyticsLink" onclick="switchTeacherTab('analytics')"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+      <a href="#messages-section" class="nav-link" id="navTeacherMessagesLink" onclick="switchTeacherTab('messages')">
+        <i class="fa-solid fa-comments"></i> Messages
+        <span id="navTeacherMsgBadge" class="nav-badge" style="display: none; background: var(--primary); color: #fff; font-size: 0.65rem; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem;">0</span>
+      </a>
       <a href="/ml-performance" class="nav-link"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
     </div>
     <div class="nav-user">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+        <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+      </button>
       <div class="user-pill">
         <div class="user-avatar" id="navTeacherAvatar">T</div>
         <span id="navTeacherName" style="font-weight: 600;">Faculty Advisor</span>
@@ -145,9 +267,12 @@
     <div class="teacher-topbar">
       <div>
         <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Faculty Academic Intelligence Portal</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.25rem;">
           Cohort monitoring, attendance telemetry, automated risk detection, and targeted interventions.
         </p>
+        <div id="teacherAssignedClassBadge" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--primary-light); font-weight: 600;">
+          <i class="fa-solid fa-chalkboard-user"></i> <span id="teacherCohortText">Assigned Class: CSE &bull; 3rd Year &bull; Sec A</span>
+        </div>
       </div>
 
       <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
@@ -232,11 +357,11 @@
       <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
         <div>
           <div class="card-title">
-            <i class="fa-solid fa-table-list" style="color: var(--primary-light);"></i>
-            Student Analytics & Cohort Roster
+            <i class="fa-solid fa-users-viewfinder" style="color: var(--primary-light);"></i>
+            My Students
           </div>
           <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;" id="tableRosterCount">
-            Showing all students
+            Showing assigned class students
           </div>
         </div>
 
@@ -326,6 +451,73 @@
       </div>
     </section>
 
+    <!-- ================= 1-CLICK REMEDIAL INTERVENTIONS SECTION ================= -->
+    <section id="interventions-section" class="card" style="margin-bottom: 2rem; border-left: 4px solid #f59e0b;">
+      <div class="card-header" style="flex-wrap: wrap; gap: 1rem; justify-content: space-between;">
+        <div>
+          <div class="card-title" style="display: flex; align-items: center; gap: 0.6rem;">
+            <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i>
+            Faculty Remedial Interventions & Academic Recovery Tracking
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.25rem 0 0 0;">
+            1-Click targeted remedial assignments, diagnostic drills, and live student intervention lifecycle.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.6rem; align-items: center;">
+          <button class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #f59e0b, #ef4444); border: none;" onclick="openBulkInterveneModal()">
+            <i class="fa-solid fa-users-gear"></i> 1-Click Bulk Intervene (At-Risk)
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="loadTeacherInterventions()">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Intervention KPI Summary -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem;">
+        <div style="background: var(--bg-surface); padding: 0.9rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Dispatched</div>
+          <div id="itKpiTotal" style="font-size: 1.4rem; font-weight: 700; color: #fff;">0</div>
+        </div>
+        <div style="background: var(--bg-surface); padding: 0.9rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Active / In Progress</div>
+          <div id="itKpiActive" style="font-size: 1.4rem; font-weight: 700; color: #f59e0b;">0</div>
+        </div>
+        <div style="background: var(--bg-surface); padding: 0.9rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Completed / Resolved</div>
+          <div id="itKpiCompleted" style="font-size: 1.4rem; font-weight: 700; color: #10b981;">0</div>
+        </div>
+        <div style="background: var(--bg-surface); padding: 0.9rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Urgent Priority</div>
+          <div id="itKpiUrgent" style="font-size: 1.4rem; font-weight: 700; color: #ef4444;">0</div>
+        </div>
+      </div>
+
+      <!-- Interventions Data Table -->
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student & Roll</th>
+              <th>Action Type & Title</th>
+              <th>Course / Subject</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Assigned Date</th>
+              <th style="text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="interventionsTableBody">
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                Loading faculty interventions...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <!-- Teacher Analytics Section (Requirement 11) -->
     <section id="analytics-section" class="card" style="margin-bottom: 2rem;">
       <div class="card-header">
@@ -374,6 +566,157 @@
           </h4>
           <div style="height: 240px; position: relative;">
             <canvas id="chartAttendanceCorrelation"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TEACHER ASSESSMENT & QUIZ REVIEW SECTION ================= -->
+    <section id="assessments-section" class="card" style="margin-bottom: 2rem;">
+      <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div class="card-title">
+            <i class="fa-solid fa-list-check" style="color: var(--secondary);"></i>
+            Faculty Assessment & AI Quiz Review
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Inspect, edit, approve, and publish AI-grounded diagnostic questions before student release.
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-outline btn-sm" onclick="handleBatchApprove()">
+            <i class="fa-solid fa-check-double"></i> Batch Approve All
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="openTeacherGenerateQuizModal()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Grounded Questions
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters Toolbar -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border);">
+        <div>
+          <label class="form-label" style="font-size: 0.75rem;">Select Subject</label>
+          <select id="teacherQuizSubjectSelect" class="form-select" onchange="handleTeacherQuizSubjectChange()">
+            <option value="">All Assigned Subjects</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" style="font-size: 0.75rem;">Select Topic</label>
+          <select id="teacherQuizTopicSelect" class="form-select" onchange="loadTeacherQuizzes()">
+            <option value="">All Topics</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" style="font-size: 0.75rem;">Approval Status</label>
+          <select id="teacherQuizStatusFilter" class="form-select" onchange="loadTeacherQuizzes()">
+            <option value="all">All Statuses</option>
+            <option value="pending_review">Pending Review (Drafts)</option>
+            <option value="approved">Approved & Published</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Questions List Container -->
+      <div id="teacherQuizzesListContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="text-align: center; color: var(--text-muted); padding: 2.5rem 1rem;">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--secondary);"></i>
+          <p>Loading questions for faculty inspection...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TEACHER MESSAGING SECTION ================= -->
+    <section id="messages-section" class="card" style="margin-bottom: 2rem;">
+      <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div class="card-title">
+            <i class="fa-solid fa-comments" style="color: var(--primary-light);"></i>
+            Student Inquiries & Direct Messaging
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Real-time persistent messaging with enrolled B.Tech students.
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button onclick="openNewChatTeacherModal()" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-pen-to-square"></i> Message Student
+          </button>
+        </div>
+      </div>
+
+      <div id="teacherChatCard" class="chat-container-card">
+        <!-- Left Sidebar: Conversations List -->
+        <div class="chat-sidebar-pane">
+          <div class="chat-sidebar-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">
+                Student Threads
+              </div>
+              <span id="teacherChatUnreadHeaderPill" class="badge badge-primary" style="font-size: 0.7rem; display: none;">0 unread</span>
+            </div>
+            <div class="chat-sidebar-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="teacherConvSearchInput" class="form-control" placeholder="Search students or messages..." oninput="filterTeacherConversations()">
+            </div>
+          </div>
+
+          <div id="teacherChatThreadsList" class="chat-threads-scroll">
+            <div style="text-align: center; color: var(--text-muted); padding: 2rem 1rem; font-size: 0.85rem;">
+              <i class="fa-solid fa-spinner fa-spin" style="margin-bottom: 0.5rem; font-size: 1.2rem;"></i><br>
+              Loading conversation threads...
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Window: Active Chat -->
+        <div class="chat-window-pane">
+          <!-- Header -->
+          <div class="chat-header-bar">
+            <div class="chat-partner-info">
+              <button class="chat-back-btn" onclick="toggleTeacherMobileChat(false)" title="Back to conversations">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <div id="teacherChatActiveAvatar" class="conv-avatar-box student-avatar" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                🎓
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span id="teacherChatActiveName" style="font-weight: 700; font-size: 0.95rem; color: #fff;">Select a Student</span>
+                  <span id="teacherChatActiveRollBadge" class="badge badge-neutral" style="font-size: 0.65rem; font-family: monospace;">-</span>
+                </div>
+                <div id="teacherChatActiveSubtitle" style="font-size: 0.75rem; color: var(--text-muted);">
+                  Select a student conversation from the left to view messages
+                </div>
+              </div>
+            </div>
+            <div>
+              <button id="btnViewStudentFromChat" onclick="openActiveStudentProfileFromChat()" class="btn btn-secondary btn-sm" style="display: none;">
+                <i class="fa-solid fa-user-gear"></i> View Profile
+              </button>
+            </div>
+          </div>
+
+          <!-- Messages Area -->
+          <div id="teacherChatMessagesArea" class="chat-messages-area">
+            <div class="chat-empty-state">
+              <div class="chat-empty-icon"><i class="fa-solid fa-comments"></i></div>
+              <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">No messages yet</div>
+              <div style="font-size: 0.8rem;">Select a student to start a conversation.</div>
+            </div>
+          </div>
+
+          <!-- Input Bar -->
+          <div class="chat-input-bar-container">
+            <form id="teacherChatSendForm" onsubmit="handleTeacherSendMessage(event)" class="chat-form-flex">
+              <input type="text" id="teacherChatInput" class="chat-input-field" placeholder="Type a message or academic guidance to student... (Press Enter to send)" autocomplete="off" disabled>
+              <button type="submit" id="teacherChatSendBtn" class="btn btn-primary chat-send-btn" disabled>
+                <span>Send</span>
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -460,6 +803,13 @@
               <i class="fa-solid fa-floppy-disk"></i> Save & Notify Student
             </button>
           </form>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--bg-card-border); margin-top: 1.25rem;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('studentDetailModal')">Close</button>
+          <button type="button" id="btnModalMessageStudent" class="btn btn-primary btn-sm" onclick="openChatFromStudentModal()">
+            <i class="fa-solid fa-comments"></i> Message Student Directly
+          </button>
         </div>
 
       </div>
@@ -626,6 +976,168 @@
     </div>
   </div>
 
+  <!-- ================= MODAL: START NEW CHAT WITH STUDENT ================= -->
+  <div id="newTeacherChatModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-comments" style="color: var(--primary-light);"></i> Direct Student Message / Advisory
+        </h3>
+        <button class="close-btn" onclick="closeModal('newTeacherChatModal')">&times;</button>
+      </div>
+      <form onsubmit="handleStartNewTeacherChat(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Select Student</label>
+            <select id="newTeacherChatStudentSelect" class="form-select" required>
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Initial Message / Academic Guidance</label>
+            <textarea id="newTeacherChatInitialMessage" class="form-control" rows="4" placeholder="Type instructions, remedial advice, or inquiry response for student..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('newTeacherChatModal')">Cancel</button>
+          <button type="submit" id="newTeacherChatSubmitBtn" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane"></i> Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <!-- ================= MODAL: GENERATE GROUNDED AI QUIZ ================= -->
+  <div id="teacherGenerateQuizModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--secondary);"></i> Generate Grounded AI Quiz
+        </h3>
+        <button class="close-btn" onclick="closeModal('teacherGenerateQuizModal')">&times;</button>
+      </div>
+      <form onsubmit="handleGenerateQuizSubmit(event)">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 0.8rem; color: #a5f3fc;">
+            <i class="fa-solid fa-shield-halved"></i> <strong>Syllabus-Grounded Generation:</strong> Questions are synthesized strictly from authorized textbook chunks and official syllabus modules.
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <select id="modalGenQuizSubject" class="form-select" required onchange="handleModalGenSubjectChange()">
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Syllabus Topic *</label>
+            <select id="modalGenQuizTopic" class="form-select" required>
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Difficulty Level</label>
+              <select id="modalGenQuizDiff" class="form-select">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate" selected>Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Number of Questions</label>
+              <input type="number" id="modalGenQuizCount" class="form-control" min="1" max="10" value="3" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-main); cursor: pointer;">
+              <input type="checkbox" id="modalGenAutoApprove">
+              <span>Automatically approve and publish immediately to students</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('teacherGenerateQuizModal')">Cancel</button>
+          <button type="submit" id="btnSubmitGenQuiz" class="btn btn-primary">
+            <i class="fa-solid fa-bolt"></i> Generate Questions
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: EDIT QUIZ QUESTION ================= -->
+  <div id="teacherEditQuestionModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-solid fa-pen-to-square" style="color: var(--primary-light);"></i> Edit Assessment Question
+        </h3>
+        <button class="close-btn" onclick="closeModal('teacherEditQuestionModal')">&times;</button>
+      </div>
+      <form onsubmit="handleSaveEditedQuestion(event)">
+        <input type="hidden" id="editQuestionId">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div class="form-group">
+            <label class="form-label">Question Text *</label>
+            <textarea id="editQuestionText" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Option A *</label>
+              <input type="text" id="editOptA" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Option B *</label>
+              <input type="text" id="editOptB" class="form-control" required>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Option C *</label>
+              <input type="text" id="editOptC" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Option D *</label>
+              <input type="text" id="editOptD" class="form-control" required>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Correct Option *</label>
+              <select id="editCorrectAnswer" class="form-select" required>
+                <option value="A">Option A</option>
+                <option value="B">Option B</option>
+                <option value="C">Option C</option>
+                <option value="D">Option D</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Difficulty</label>
+              <select id="editDifficulty" class="form-select">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Pedagogical Explanation / Proof Reference</label>
+            <textarea id="editExplanation" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('teacherEditQuestionModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-check"></i> Save & Approve
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="theme-switcher.js"></script>
   <script>
     let allStudents = [];
     let isDemoMode = false;
@@ -634,10 +1146,46 @@
     let sortAscending = true;
     let validatedCsvFile = null;
 
+    let teacherAssignedSubjects = [];
+    let teacherLoadedQuizzes = [];
+    let currentTeacher = null;
+
     let chartPerfInst = null;
     let chartRiskInst = null;
     let chartSubjectInst = null;
     let chartAttInst = null;
+
+    function switchTeacherTab(tab) {
+      const sections = ['roster', 'assessments', 'analytics', 'messages'];
+      sections.forEach(s => {
+        const el = document.getElementById(`${s}-section`);
+        const link = document.getElementById(`nav${s.charAt(0).toUpperCase() + s.slice(1)}Link`);
+        if (el) {
+          if (s === tab) {
+            el.style.display = 'block';
+          } else {
+            el.style.display = 'none';
+          }
+        }
+        if (link) {
+          if (s === tab) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        }
+      });
+
+      if (tab === 'assessments') {
+        loadTeacherSubjectsForQuizzes();
+        loadTeacherQuizzes();
+      } else if (tab === 'analytics') {
+        setTimeout(renderAnalyticsCharts, 100);
+      } else if (tab === 'messages') {
+        loadTeacherMessagesInbox();
+      }
+    }
+
 
     // Realistic Demo Dataset (120 Students, 74.6% Avg, 12 High, 28 Med, 80 Low Risk)
     const DEMO_STUDENTS = generateDemoStudents();
@@ -719,8 +1267,37 @@
       }
     }
 
+    async function loadTeacherProfileInfo() {
+      try {
+        const res = await fetch('/api/teacher/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.teacher) {
+            currentTeacher = data.teacher;
+            if (document.getElementById('navTeacherName')) {
+              document.getElementById('navTeacherName').textContent = currentTeacher.full_name;
+            }
+            if (document.getElementById('navTeacherAvatar')) {
+              document.getElementById('navTeacherAvatar').textContent = currentTeacher.full_name.charAt(0) || 'T';
+            }
+            if (document.getElementById('teacherCohortText')) {
+              if (currentTeacher.assigned_classes && currentTeacher.assigned_classes.length > 0) {
+                const classesText = currentTeacher.assigned_classes.map(c => `${c.branch} &bull; ${c.year} &bull; Sec ${c.section}`).join(' | ');
+                document.getElementById('teacherCohortText').innerHTML = `Assigned Class: ${classesText}`;
+              } else if (currentTeacher.branch && currentTeacher.year && currentTeacher.section) {
+                document.getElementById('teacherCohortText').innerHTML = `Assigned Class: ${currentTeacher.branch} &bull; ${currentTeacher.year} &bull; Sec ${currentTeacher.section}`;
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Teacher profile fetch failed:', e);
+      }
+    }
+
     async function loadRealDbStudents() {
       try {
+        await loadTeacherProfileInfo();
         const res = await fetch('/api/teacher/students');
         if (res.status === 401 || res.status === 403) {
           // If unauthenticated, fallback to demo mode safely
@@ -728,7 +1305,7 @@
           return;
         }
         const data = await res.json();
-        if (data.success && data.students && data.students.length > 0) {
+        if (data.success && Array.isArray(data.students)) {
           allStudents = data.students.map(st => ({
             ...st,
             learning_activity: st.learning_activity || st.attendance,
@@ -742,7 +1319,7 @@
             }
           }));
           isDemoMode = false;
-          updateModeBadge('LIVE DB DATA', 'badge-neutral');
+          updateModeBadge(`LIVE DB DATA (${allStudents.length} Students)`, 'badge-neutral');
         } else {
           enableDemoMode();
           return;
@@ -914,7 +1491,16 @@
           <td>
             <span class="badge ${badgeCls}">${r.toUpperCase()}</span>
           </td>
-          <td style="text-align: right;">
+          <td style="text-align: right; white-space: nowrap;">
+            <button class="btn btn-sm" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); color: #38bdf8; margin-right: 0.35rem; padding: 0.35rem 0.6rem;" onclick="openTeacherStudentReportCard(${st.id})" title="Official Academic Report Card">
+              <i class="fa-solid fa-file-pdf"></i> Report
+            </button>
+            <button class="btn btn-sm" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; margin-right: 0.35rem; padding: 0.35rem 0.6rem;" onclick="openOneClickInterventionModal(${st.id})" title="1-Click Remedial Intervention">
+              <i class="fa-solid fa-bolt"></i> 1-Click
+            </button>
+            <button class="btn btn-secondary btn-sm" title="Message Student" onclick="openTeacherChatForStudent(${st.id}, '${st.full_name.replace(/'/g, "\\'")}', '${st.roll_no}', '${st.branch}')" style="margin-right: 0.35rem; padding: 0.35rem 0.55rem;">
+              <i class="fa-solid fa-comments"></i>
+            </button>
             ${actionBtn}
           </td>
         `;
@@ -1276,19 +1862,1502 @@
       }
     }
 
-    function openModal(id) {
-      document.getElementById(id).classList.add('show');
+    // ================= TEACHER MESSAGING SYSTEM STATE & FUNCTIONS =================
+    let teacherConversationsData = [];
+    let teacherAvailableStudents = [];
+    let activeTeacherChat = {
+      convId: null,
+      studentId: null,
+      studentName: '',
+      studentRoll: '',
+      studentBranch: '',
+      subjectId: null,
+      subjectName: ''
+    };
+    let teacherChatPollInterval = null;
+    let teacherUnreadPollInterval = null;
+
+    function switchTeacherTab(tabName) {
+      document.querySelectorAll('.nav-links .nav-link').forEach(l => l.classList.remove('active'));
+      
+      if (tabName === 'roster') {
+        const link = document.getElementById('navRosterLink');
+        if (link) link.classList.add('active');
+        document.getElementById('roster-section').scrollIntoView({ behavior: 'smooth' });
+      } else if (tabName === 'interventions') {
+        const link = document.getElementById('navInterventionsLink');
+        if (link) link.classList.add('active');
+        document.getElementById('interventions-section').scrollIntoView({ behavior: 'smooth' });
+        loadTeacherInterventions();
+      } else if (tabName === 'analytics') {
+        const link = document.getElementById('navAnalyticsLink');
+        if (link) link.classList.add('active');
+        document.getElementById('analytics-section').scrollIntoView({ behavior: 'smooth' });
+      } else if (tabName === 'messages') {
+        const link = document.getElementById('navTeacherMessagesLink');
+        if (link) link.classList.add('active');
+        document.getElementById('messages-section').scrollIntoView({ behavior: 'smooth' });
+        loadTeacherMessagesInbox();
+      }
+    }
+
+    function formatMessageTime(isoStr) {
+      if (!isoStr) return '';
+      try {
+        const d = new Date(isoStr.replace(' ', 'T'));
+        if (isNaN(d.getTime())) return isoStr.slice(11, 16);
+        const now = new Date();
+        const isToday = d.toDateString() === now.toDateString();
+        if (isToday) {
+          return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      } catch (e) {
+        return isoStr.slice(11, 16);
+      }
+    }
+
+    function toggleTeacherMobileChat(showChat) {
+      const card = document.getElementById('teacherChatCard');
+      if (showChat) {
+        card.classList.add('mobile-active-chat');
+      } else {
+        card.classList.remove('mobile-active-chat');
+      }
+    }
+
+    async function fetchTeacherUnreadCount() {
+      try {
+        const res = await fetch('/api/teacher/messages/unread-count');
+        const data = await res.json();
+        if (data.success) {
+          updateTeacherUnreadBadge(data.unread_count || 0);
+        }
+      } catch (e) {}
+    }
+
+    async function loadTeacherMessagesInbox(isPolling = false) {
+      try {
+        const res = await fetch('/api/teacher/messages');
+        if (res.status === 401 || res.status === 403) return;
+        const data = await res.json();
+        if (!data.success) return;
+
+        if (data.teacher) {
+          currentTeacher = data.teacher;
+        }
+
+        teacherConversationsData = data.conversations || [];
+        teacherAvailableStudents = data.available_students || [];
+
+        updateTeacherUnreadBadge(data.total_unread || 0);
+        renderTeacherConversationsList(teacherConversationsData);
+
+        // Auto select first thread on initial view if available and none selected
+        if (!activeTeacherChat.convId && teacherConversationsData.length > 0 && !isPolling) {
+          const first = teacherConversationsData[0];
+          openTeacherChatThread(first.conversation_id, first.student_id, first.student_name, first.student_roll, first.student_branch, first.subject_name, first.subject_id);
+        }
+      } catch (err) {
+        console.error('Error loading teacher messages:', err);
+      }
+    }
+
+    function updateTeacherUnreadBadge(count) {
+      const navBadge = document.getElementById('navTeacherMsgBadge');
+      const headerPill = document.getElementById('teacherChatUnreadHeaderPill');
+
+      if (navBadge) {
+        if (count > 0) {
+          navBadge.textContent = count;
+          navBadge.style.display = 'inline-block';
+        } else {
+          navBadge.style.display = 'none';
+        }
+      }
+
+      if (headerPill) {
+        if (count > 0) {
+          headerPill.textContent = `${count} unread`;
+          headerPill.style.display = 'inline-block';
+        } else {
+          headerPill.style.display = 'none';
+        }
+      }
+    }
+
+    function renderTeacherConversationsList(threads) {
+      const container = document.getElementById('teacherChatThreadsList');
+      if (!container) return;
+
+      if (!threads || threads.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 2.5rem 1rem; font-size: 0.825rem;">
+            <i class="fa-solid fa-inbox" style="font-size: 2rem; color: var(--text-dim); margin-bottom: 0.65rem; display: block;"></i>
+            <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">No messages yet</div>
+            <div style="font-size: 0.8rem; margin-bottom: 0.75rem;">Select a student to start a conversation.</div>
+            <button onclick="openNewChatTeacherModal()" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-plus"></i> Message a Student
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      threads.forEach(th => {
+        const isActive = activeTeacherChat.convId === th.conversation_id;
+        const item = document.createElement('div');
+        item.className = `conv-thread-item ${isActive ? 'active' : ''}`;
+        item.onclick = () => openTeacherChatThread(th.conversation_id, th.student_id, th.student_name, th.student_roll, th.student_branch, th.subject_name, th.subject_id);
+
+        const initials = th.student_name ? th.student_name.split(' ').map(n => n[0]).slice(0, 2).join('') : '🎓';
+        const formattedTime = formatMessageTime(th.last_updated);
+        const snippet = th.last_message ? (th.last_message_role === 'teacher' ? 'You: ' + th.last_message : th.last_message) : 'Start conversation...';
+
+        item.innerHTML = `
+          <div class="conv-avatar-box student-avatar">
+            ${initials}
+            <span class="conv-online-dot"></span>
+          </div>
+          <div class="conv-info-col">
+            <div class="conv-top-row">
+              <span class="conv-name-text">${th.student_name}</span>
+              <span class="conv-time-text">${formattedTime}</span>
+            </div>
+            <div class="conv-bottom-row">
+              <span class="conv-preview-text">${snippet}</span>
+              ${th.unread_count > 0 ? `<span class="conv-unread-pill">${th.unread_count}</span>` : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function filterTeacherConversations() {
+      const q = (document.getElementById('teacherConvSearchInput').value || '').toLowerCase().trim();
+      if (!q) {
+        renderTeacherConversationsList(teacherConversationsData);
+        return;
+      }
+      const filtered = teacherConversationsData.filter(th =>
+        (th.student_name && th.student_name.toLowerCase().includes(q)) ||
+        (th.student_roll && th.student_roll.toLowerCase().includes(q)) ||
+        (th.last_message && th.last_message.toLowerCase().includes(q))
+      );
+      renderTeacherConversationsList(filtered);
+    }
+
+    function openTeacherChatThread(convId, studentId, studentName, studentRoll, studentBranch, subjectName, subjectId) {
+      const teacherId = currentTeacher?.id || 1;
+      const canonicalConvId = convId || `conv_s${studentId}_t${teacherId}`;
+
+      activeTeacherChat = {
+        convId: canonicalConvId,
+        studentId: studentId,
+        studentName: studentName || 'Student',
+        studentRoll: studentRoll || '-',
+        studentBranch: studentBranch || 'B.Tech',
+        subjectId: subjectId || null,
+        subjectName: subjectName || 'Academic Advisory'
+      };
+
+      // Re-render list to highlight active item
+      renderTeacherConversationsList(teacherConversationsData);
+
+      // Header info
+      document.getElementById('teacherChatActiveName').textContent = activeTeacherChat.studentName;
+      document.getElementById('teacherChatActiveRollBadge').textContent = activeTeacherChat.studentRoll;
+      document.getElementById('teacherChatActiveSubtitle').textContent = `${activeTeacherChat.studentBranch} • Roll: ${activeTeacherChat.studentRoll}`;
+      const initials = activeTeacherChat.studentName ? activeTeacherChat.studentName.split(' ').map(n => n[0]).slice(0, 2).join('') : '🎓';
+      document.getElementById('teacherChatActiveAvatar').textContent = initials;
+      
+      const btnProfile = document.getElementById('btnViewStudentFromChat');
+      if (btnProfile) btnProfile.style.display = 'inline-flex';
+
+      // Enable Input
+      const input = document.getElementById('teacherChatInput');
+      const btn = document.getElementById('teacherChatSendBtn');
+      input.disabled = false;
+      btn.disabled = false;
+      input.placeholder = `Message ${activeTeacherChat.studentName}... (Press Enter to send)`;
+      input.focus();
+
+      toggleTeacherMobileChat(true);
+
+      // Load Messages
+      loadTeacherThreadMessages(activeTeacherChat.convId);
+    }
+
+    async function loadTeacherThreadMessages(convId, isPolling = false) {
+      if (!convId) return;
+      try {
+        const res = await fetch(`/api/teacher/messages/${convId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success) return;
+
+        const container = document.getElementById('teacherChatMessagesArea');
+        if (!container) return;
+
+        if (!data.messages || data.messages.length === 0) {
+          if (!isPolling) {
+            container.innerHTML = `
+              <div class="chat-empty-state">
+                <div class="chat-empty-icon"><i class="fa-solid fa-paper-plane" style="color: var(--secondary);"></i></div>
+                <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">No messages yet</div>
+                <div style="font-size: 0.8rem;">Select a student to start a conversation. Send academic guidance to ${activeTeacherChat.studentName}.</div>
+              </div>
+            `;
+            container.dataset.lastSignature = 'empty';
+          }
+          return;
+        }
+
+        const msgSignature = data.messages.map(m => `${m.id}_${m.is_read}`).join('|');
+        if (isPolling && container.dataset.lastSignature === msgSignature) {
+          return;
+        }
+        container.dataset.lastSignature = msgSignature;
+
+        container.innerHTML = '';
+        data.messages.forEach(m => {
+          const isSent = m.sender_role === 'teacher';
+          const row = document.createElement('div');
+          row.className = `chat-message-row ${isSent ? 'sent' : 'received'}`;
+
+          const timeStr = formatMessageTime(m.created_at);
+          const checkIcon = isSent ? (m.is_read ? '<i class="fa-solid fa-check-double" style="color: #38bdf8;" title="Read by student"></i>' : '<i class="fa-solid fa-check" style="color: rgba(255,255,255,0.7);" title="Sent"></i>') : '';
+
+          row.innerHTML = `
+            <div class="chat-bubble-box">
+              <div>${m.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</div>
+              <div class="chat-meta-bar">
+                <span>${timeStr}</span>
+                ${checkIcon}
+              </div>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+
+        container.scrollTop = container.scrollHeight;
+
+        if (!isPolling) {
+          const th = teacherConversationsData.find(c => c.conversation_id === convId);
+          if (th && th.unread_count > 0) {
+            th.unread_count = 0;
+            renderTeacherConversationsList(teacherConversationsData);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching teacher thread messages:', err);
+      }
+    }
+
+    async function handleTeacherSendMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('teacherChatInput');
+      const btn = document.getElementById('teacherChatSendBtn');
+      const message = input.value.trim();
+
+      if (!message || !activeTeacherChat.studentId) {
+        showToast('Please enter a message and select a student.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending...</span>';
+
+      try {
+        const payload = {
+          student_id: activeTeacherChat.studentId,
+          subject_id: activeTeacherChat.subjectId,
+          conversation_id: activeTeacherChat.convId,
+          message: message
+        };
+
+        const res = await fetch('/api/teacher/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          input.value = '';
+          if (data.conversation_id) {
+            activeTeacherChat.convId = data.conversation_id;
+          }
+          await loadTeacherThreadMessages(activeTeacherChat.convId);
+          await loadTeacherMessagesInbox(true);
+        } else {
+          showToast(data.message || 'Message could not be sent. Please try again.', 'error');
+        }
+      } catch (err) {
+        console.error('Error sending teacher message:', err);
+        showToast('Message could not be sent. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Send</span> <i class="fa-solid fa-paper-plane"></i>';
+        input.focus();
+      }
+    }
+
+    function openNewChatTeacherModal(preselectedStudentId = null) {
+      const select = document.getElementById('newTeacherChatStudentSelect');
+      if (!select) return;
+      select.innerHTML = '';
+
+      const listToUse = teacherAvailableStudents.length > 0 ? teacherAvailableStudents : allStudents;
+      const teacherId = currentTeacher?.id || 1;
+
+      if (listToUse.length > 0) {
+        listToUse.forEach(st => {
+          const opt = document.createElement('option');
+          const stId = st.id || st.student_id;
+          opt.value = JSON.stringify({
+            student_id: stId,
+            student_name: st.full_name || st.student_name,
+            student_roll: st.roll_no || st.student_roll,
+            branch: st.branch,
+            conv_id: st.default_conv_id || `conv_s${stId}_t${teacherId}`
+          });
+          opt.textContent = `${st.full_name || st.student_name} (${st.roll_no || st.student_roll}) — ${st.branch || 'B.Tech'}`;
+          if (preselectedStudentId && stId === preselectedStudentId) {
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.value = JSON.stringify({ student_id: 1, student_name: 'Rahul Varma', student_roll: '23A91A0501', branch: 'CSE', conv_id: `conv_s1_t${teacherId}` });
+        opt.textContent = 'Rahul Varma (23A91A0501) — CSE';
+        select.appendChild(opt);
+      }
+
+      const msgInput = document.getElementById('newTeacherChatInitialMessage');
+      if (msgInput) msgInput.value = '';
+      openModal('newTeacherChatModal');
+    }
+
+    async function handleStartNewTeacherChat(e) {
+      e.preventDefault();
+      const selectVal = document.getElementById('newTeacherChatStudentSelect').value;
+      const message = document.getElementById('newTeacherChatInitialMessage').value.trim();
+      const submitBtn = document.getElementById('newTeacherChatSubmitBtn');
+
+      if (!selectVal || !message) return;
+
+      const target = JSON.parse(selectVal);
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+      try {
+        const res = await fetch('/api/teacher/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            student_id: target.student_id,
+            conversation_id: target.conv_id,
+            message: message
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('newTeacherChatModal');
+          showToast('Message sent to student successfully!', 'success');
+          switchTeacherTab('messages');
+          openTeacherChatThread(data.conversation_id || target.conv_id, target.student_id, target.student_name, target.student_roll, target.branch, 'Academic Advisory', null);
+          await loadTeacherMessagesInbox(true);
+        } else {
+          showToast(data.message || 'Failed to send message.', 'error');
+        }
+      } catch (err) {
+        console.error('Error starting student chat:', err);
+        showToast('Network error starting conversation.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+      }
+    }
+
+    function openTeacherChatForStudent(studentId, studentName, rollNo, branch) {
+      switchTeacherTab('messages');
+      const teacherId = currentTeacher?.id || 1;
+      const convId = `conv_s${studentId}_t${teacherId}`;
+      openTeacherChatThread(convId, studentId, studentName, rollNo, branch, 'Academic Advisory', null);
+    }
+
+    function openChatFromStudentModal() {
+      const studentId = parseInt(document.getElementById('modalStudentId').value);
+      const studentName = document.getElementById('modalStudentName').textContent;
+      const rollNo = document.getElementById('modalRollNo').textContent;
+      const branch = document.getElementById('modalBranchYear').textContent;
+      closeModal('studentDetailModal');
+      openTeacherChatForStudent(studentId, studentName, rollNo, branch);
+    }
+
+    function openActiveStudentProfileFromChat() {
+      if (activeTeacherChat.studentId) {
+        openStudentDetail(activeTeacherChat.studentId);
+      }
+    }
+
+    function startRealtimeTeacherMessaging() {
+      // 2.5s polling for messages tab
+      if (!teacherChatPollInterval) {
+        teacherChatPollInterval = setInterval(() => {
+          const section = document.getElementById('messages-section');
+          if (section) {
+            if (activeTeacherChat.convId) {
+              loadTeacherThreadMessages(activeTeacherChat.convId, true);
+            }
+            loadTeacherMessagesInbox(true);
+          }
+        }, 2500);
+      }
+
+      // 6s polling for unread badge
+      if (!teacherUnreadPollInterval) {
+        teacherUnreadPollInterval = setInterval(fetchTeacherUnreadCount, 6000);
+      }
+    }
+
+    // ================= TEACHER ASSESSMENT & AI QUIZ REVIEW LOGIC =================
+    async function loadTeacherSubjectsForQuizzes() {
+      try {
+        const res = await fetch('/api/teacher/subjects');
+        if (!res.ok) return;
+        const data = await res.json();
+        teacherAssignedSubjects = data.subjects || [];
+
+        const sel = document.getElementById('teacherQuizSubjectSelect');
+        const modalSel = document.getElementById('modalGenQuizSubject');
+        if (!sel || !modalSel) return;
+
+        sel.innerHTML = '<option value="">All Assigned Subjects</option>';
+        modalSel.innerHTML = '<option value="">Select Subject</option>';
+
+        teacherAssignedSubjects.forEach(s => {
+          sel.innerHTML += `<option value="${s.id}">${s.subject_code} - ${s.subject_name}</option>`;
+          modalSel.innerHTML += `<option value="${s.id}">${s.subject_code} - ${s.subject_name}</option>`;
+        });
+
+        if (teacherAssignedSubjects.length > 0) {
+          handleModalGenSubjectChange();
+        }
+      } catch (err) {
+        console.error('Error loading subjects for quizzes:', err);
+      }
+    }
+
+    async function handleTeacherQuizSubjectChange() {
+      const subjectId = document.getElementById('teacherQuizSubjectSelect').value;
+      const topicSel = document.getElementById('teacherQuizTopicSelect');
+      topicSel.innerHTML = '<option value="">All Topics</option>';
+
+      if (subjectId) {
+        try {
+          const res = await fetch(`/api/teacher/subject/${subjectId}/topics`);
+          if (res.ok) {
+            const data = await res.json();
+            (data.topics || []).forEach(t => {
+              topicSel.innerHTML += `<option value="${t.id}">${t.topic_name}</option>`;
+            });
+          }
+        } catch (e) {}
+      }
+      loadTeacherQuizzes();
+    }
+
+    async function handleModalGenSubjectChange() {
+      const subjectId = document.getElementById('modalGenQuizSubject').value;
+      const topicSel = document.getElementById('modalGenQuizTopic');
+      topicSel.innerHTML = '<option value="">Select Topic</option>';
+
+      if (subjectId) {
+        try {
+          const res = await fetch(`/api/teacher/subject/${subjectId}/topics`);
+          if (res.ok) {
+            const data = await res.json();
+            (data.topics || []).forEach(t => {
+              topicSel.innerHTML += `<option value="${t.id}">${t.topic_name}</option>`;
+            });
+          }
+        } catch (e) {}
+      }
+    }
+
+    async function loadTeacherQuizzes() {
+      const container = document.getElementById('teacherQuizzesListContainer');
+      if (!container) return;
+
+      const subjectId = document.getElementById('teacherQuizSubjectSelect')?.value || '';
+      const topicId = document.getElementById('teacherQuizTopicSelect')?.value || '';
+      const status = document.getElementById('teacherQuizStatusFilter')?.value || 'all';
+
+      container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 2rem;"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--secondary);"></i><p style="margin-top: 0.5rem;">Fetching syllabus-grounded questions...</p></div>';
+
+      try {
+        let url = `/api/teacher/quizzes?status=${status}`;
+        if (subjectId) url += `&subject_id=${subjectId}`;
+        if (topicId) url += `&topic_id=${topicId}`;
+
+        const res = await fetch(url);
+        if (!res.ok) {
+          container.innerHTML = '<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Error loading questions.</div>';
+          return;
+        }
+        const data = await res.json();
+        teacherLoadedQuizzes = data.questions || [];
+
+        if (teacherLoadedQuizzes.length === 0) {
+          container.innerHTML = `
+            <div style="background: var(--bg-surface); border: 1px dashed var(--bg-card-border); border-radius: var(--radius-md); padding: 3rem 1.5rem; text-align: center;">
+              <i class="fa-solid fa-folder-open fa-3x" style="color: var(--text-dim); margin-bottom: 0.75rem;"></i>
+              <h4 style="color: #fff; margin-bottom: 0.25rem;">No Assessment Questions Found</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Generate new questions grounded strictly in authorized curriculum materials.</p>
+              <button class="btn btn-primary btn-sm" onclick="openTeacherGenerateQuizModal()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI Questions Now
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        teacherLoadedQuizzes.forEach((q, idx) => {
+          const isApproved = q.approval_status === 'approved';
+          const statusBadge = isApproved
+            ? '<span class="badge badge-low"><i class="fa-solid fa-check"></i> Published to Students</span>'
+            : '<span class="badge badge-med-risk"><i class="fa-solid fa-hourglass-half"></i> Pending Faculty Review</span>';
+
+          html += `
+            <div class="card" style="background: var(--bg-surface); border-left: 4px solid ${isApproved ? 'var(--risk-low)' : '#f59e0b'}; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <span class="subject-code-tag">${q.subject_code || 'COURSE'}</span>
+                    <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">${q.topic_name}</span>
+                    <span class="badge badge-neutral" style="font-size: 0.65rem;">${q.difficulty}</span>
+                  </div>
+                  <div style="font-size: 0.75rem; color: var(--secondary);">
+                    <i class="fa-solid fa-book-open"></i> Provenance Citation: <strong>${q.source_reference || 'Official Syllabus'}</strong> (Page ${q.source_page || 1})
+                  </div>
+                </div>
+                <div>${statusBadge}</div>
+              </div>
+
+              <h4 style="font-size: 1rem; color: #f8fafc; line-height: 1.45; margin-bottom: 0.85rem;">
+                ${idx + 1}. ${q.question_text}
+              </h4>
+
+              <div class="grid-2" style="gap: 0.5rem; margin-bottom: 0.85rem;">
+                <div style="padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; background: ${q.correct_answer === 'A' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.02)'}; border: 1px solid ${q.correct_answer === 'A' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255,255,255,0.05)'}; color: ${q.correct_answer === 'A' ? '#6ee7b7' : '#cbd5e1'};">
+                  <strong>A)</strong> ${q.options.A} ${q.correct_answer === 'A' ? '✓ (Correct)' : ''}
+                </div>
+                <div style="padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; background: ${q.correct_answer === 'B' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.02)'}; border: 1px solid ${q.correct_answer === 'B' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255,255,255,0.05)'}; color: ${q.correct_answer === 'B' ? '#6ee7b7' : '#cbd5e1'};">
+                  <strong>B)</strong> ${q.options.B} ${q.correct_answer === 'B' ? '✓ (Correct)' : ''}
+                </div>
+                <div style="padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; background: ${q.correct_answer === 'C' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.02)'}; border: 1px solid ${q.correct_answer === 'C' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255,255,255,0.05)'}; color: ${q.correct_answer === 'C' ? '#6ee7b7' : '#cbd5e1'};">
+                  <strong>C)</strong> ${q.options.C} ${q.correct_answer === 'C' ? '✓ (Correct)' : ''}
+                </div>
+                <div style="padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; background: ${q.correct_answer === 'D' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.02)'}; border: 1px solid ${q.correct_answer === 'D' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255,255,255,0.05)'}; color: ${q.correct_answer === 'D' ? '#6ee7b7' : '#cbd5e1'};">
+                  <strong>D)</strong> ${q.options.D} ${q.correct_answer === 'D' ? '✓ (Correct)' : ''}
+                </div>
+              </div>
+
+              ${q.explanation ? `
+                <div style="font-size: 0.8rem; color: var(--text-muted); background: rgba(255,255,255,0.02); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); margin-bottom: 0.85rem;">
+                  <strong style="color: var(--secondary);">Rationale:</strong> ${q.explanation}
+                </div>
+              ` : ''}
+
+              <div style="display: flex; justify-content: flex-end; gap: 0.5rem; align-items: center; border-top: 1px solid var(--bg-card-border); padding-top: 0.75rem;">
+                ${!isApproved ? `
+                  <button class="btn btn-primary btn-sm" onclick="handleApproveQuestion(${q.id})">
+                    <i class="fa-solid fa-check"></i> Approve & Publish
+                  </button>
+                ` : `
+                  <span style="font-size: 0.75rem; color: #10b981; margin-right: 0.5rem;"><i class="fa-solid fa-circle-check"></i> Live in Student Quiz Pool</span>
+                `}
+                <button class="btn btn-outline btn-sm" onclick='openEditQuestionModal(${JSON.stringify(q).replace(/'/g, "&apos;")})'>
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button class="btn btn-outline btn-sm" style="color: #f87171; border-color: rgba(248,113,113,0.3);" onclick="handleDeleteQuestion(${q.id})">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = '<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Failed to load questions.</div>';
+      }
+    }
+
+    function openTeacherGenerateQuizModal() {
+      loadTeacherSubjectsForQuizzes();
+      openModal('teacherGenerateQuizModal');
+    }
+
+    async function handleGenerateQuizSubmit(e) {
+      e.preventDefault();
+      const subjectId = document.getElementById('modalGenQuizSubject').value;
+      const topicId = document.getElementById('modalGenQuizTopic').value;
+      const diff = document.getElementById('modalGenQuizDiff').value;
+      const count = parseInt(document.getElementById('modalGenQuizCount').value || 3);
+      const autoApprove = document.getElementById('modalGenAutoApprove').checked;
+      const submitBtn = document.getElementById('btnSubmitGenQuiz');
+
+      if (!subjectId || !topicId) {
+        showToast('Please select a subject and syllabus topic.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Grounding & Synthesizing...';
+
+      try {
+        const res = await fetch('/api/teacher/quizzes/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject_id: parseInt(subjectId),
+            topic_id: parseInt(topicId),
+            difficulty: diff,
+            num_questions: count,
+            auto_approve: autoApprove
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('teacherGenerateQuizModal');
+          showToast(`Generated ${data.questions_generated || count} grounded questions!`, 'success');
+          loadTeacherQuizzes();
+        } else {
+          showToast(data.message || 'Generation failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error during generation.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> Generate Questions';
+      }
+    }
+
+    async function handleApproveQuestion(qId) {
+      try {
+        const res = await fetch(`/api/teacher/quizzes/${qId}/approve`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadTeacherQuizzes();
+        } else {
+          showToast(data.message || 'Approval failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error approving question.', 'error');
+      }
+    }
+
+    async function handleDeleteQuestion(qId) {
+      if (!confirm('Are you sure you want to delete this question?')) return;
+      try {
+        const res = await fetch(`/api/teacher/quizzes/${qId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Question deleted.', 'info');
+          loadTeacherQuizzes();
+        } else {
+          showToast(data.message || 'Delete failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error deleting question.', 'error');
+      }
+    }
+
+    function openEditQuestionModal(q) {
+      document.getElementById('editQuestionId').value = q.id;
+      document.getElementById('editQuestionText').value = q.question_text || '';
+      document.getElementById('editOptA').value = q.options?.A || '';
+      document.getElementById('editOptB').value = q.options?.B || '';
+      document.getElementById('editOptC').value = q.options?.C || '';
+      document.getElementById('editOptD').value = q.options?.D || '';
+      document.getElementById('editCorrectAnswer').value = q.correct_answer || 'A';
+      document.getElementById('editDifficulty').value = q.difficulty || 'Intermediate';
+      document.getElementById('editExplanation').value = q.explanation || '';
+      openModal('teacherEditQuestionModal');
+    }
+
+    async function handleSaveEditedQuestion(e) {
+      e.preventDefault();
+      const qId = document.getElementById('editQuestionId').value;
+      const payload = {
+        question_text: document.getElementById('editQuestionText').value.trim(),
+        option_a: document.getElementById('editOptA').value.trim(),
+        option_b: document.getElementById('editOptB').value.trim(),
+        option_c: document.getElementById('editOptC').value.trim(),
+        option_d: document.getElementById('editOptD').value.trim(),
+        correct_answer: document.getElementById('editCorrectAnswer').value,
+        difficulty: document.getElementById('editDifficulty').value,
+        explanation: document.getElementById('editExplanation').value.trim()
+      };
+
+      try {
+        const res = await fetch(`/api/teacher/quizzes/${qId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeModal('teacherEditQuestionModal');
+          showToast('Question updated and approved.', 'success');
+          loadTeacherQuizzes();
+        } else {
+          showToast(data.message || 'Failed to update question.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error saving question.', 'error');
+      }
+    }
+
+    async function handleBatchApprove() {
+      const subjectId = document.getElementById('teacherQuizSubjectSelect')?.value;
+      const topicId = document.getElementById('teacherQuizTopicSelect')?.value;
+
+      try {
+        const res = await fetch('/api/teacher/quizzes/batch-approve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject_id: subjectId ? parseInt(subjectId) : null,
+            topic_id: topicId ? parseInt(topicId) : null
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadTeacherQuizzes();
+        } else {
+          showToast(data.message || 'Batch approval failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error during batch approval.', 'error');
+      }
+    }
+
+    // ================= 1-CLICK REMEDIAL INTERVENTIONS JS ENGINE =================
+    let cachedInterventions = [];
+    let currentInterventionStudent = null;
+    let cachedRecommendedTemplates = [];
+
+    async function loadTeacherInterventions() {
+      try {
+        const res = await fetch('/api/teacher/interventions');
+        if (res.status === 401 || res.status === 403) return;
+        const data = await res.json();
+        if (!data.success) return;
+
+        cachedInterventions = data.interventions || [];
+        const summ = data.summary || {};
+
+        const kpiTot = document.getElementById('itKpiTotal');
+        const kpiAct = document.getElementById('itKpiActive');
+        const kpiComp = document.getElementById('itKpiCompleted');
+        const kpiUrg = document.getElementById('itKpiUrgent');
+
+        if (kpiTot) kpiTot.textContent = summ.total || cachedInterventions.length;
+        if (kpiAct) kpiAct.textContent = summ.active || 0;
+        if (kpiComp) kpiComp.textContent = summ.completed || 0;
+        if (kpiUrg) kpiUrg.textContent = summ.urgent || 0;
+
+        renderInterventionsTable(cachedInterventions);
+      } catch (err) {
+        console.error('Error loading interventions:', err);
+      }
+    }
+
+    function renderInterventionsTable(interventions) {
+      const tbody = document.getElementById('interventionsTableBody');
+      if (!tbody) return;
+
+      if (!interventions || interventions.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+              <i class="fa-solid fa-clipboard-check" style="font-size: 1.75rem; color: #10b981; margin-bottom: 0.5rem; display: block;"></i>
+              No active interventions. Click "1-Click Intervene" on any at-risk student in the roster above to assign targeted academic support.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      interventions.forEach(it => {
+        const tr = document.createElement('tr');
+        const isCompleted = it.status === 'Completed' || it.status === 'Resolved';
+        const dateStr = it.created_at ? it.created_at.slice(0, 16) : 'Recently';
+
+        let prioBadge = '<span class="badge badge-low">Normal</span>';
+        if (it.priority === 'Urgent' || it.priority === 'High') {
+          prioBadge = `<span class="badge ${it.priority === 'Urgent' ? 'badge-high' : 'badge-med-risk'}">${it.priority}</span>`;
+        }
+
+        let statusBadge = isCompleted 
+          ? `<span class="badge badge-low"><i class="fa-solid fa-check"></i> ${it.status}</span>`
+          : `<span class="badge badge-med-risk"><i class="fa-solid fa-clock"></i> ${it.status}</span>`;
+
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight: 600; color: #fff;">${it.student_name || 'Student'}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">${it.student_roll || '-'} &bull; ${it.student_branch || ''}</div>
+          </td>
+          <td>
+            <div style="font-weight: 600; font-size: 0.85rem; color: #38bdf8;">${it.action_type || 'Remedial Action'}</div>
+            <div style="font-size: 0.8rem; color: #cbd5e1;">${it.title}</div>
+          </td>
+          <td>
+            <div style="font-size: 0.85rem;">${it.subject_name || 'Engineering Subject'}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">${it.subject_code || ''}</div>
+          </td>
+          <td>${prioBadge}</td>
+          <td>${statusBadge}</td>
+          <td style="font-size: 0.8rem; color: var(--text-muted);">${dateStr}</td>
+          <td style="text-align: right; white-space: nowrap;">
+            ${!isCompleted ? `
+              <button class="btn btn-sm btn-primary" style="background: #10b981; border-color: #10b981; padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="updateInterventionStatus(${it.id}, 'Completed')" title="Mark Resolved">
+                <i class="fa-solid fa-check"></i> Complete
+              </button>
+            ` : `
+              <button class="btn btn-sm btn-outline" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="updateInterventionStatus(${it.id}, 'Assigned')" title="Reopen Intervention">
+                <i class="fa-solid fa-rotate-left"></i> Reopen
+              </button>
+            `}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function openOneClickInterventionModal(studentId) {
+      try {
+        const res = await fetch(`/api/teacher/students/${studentId}/recommended-interventions`);
+        const data = await res.json();
+        if (!data.success) {
+          showToast('Could not load student recommendations.', 'error');
+          return;
+        }
+
+        currentInterventionStudent = data.student;
+        cachedRecommendedTemplates = data.recommended_templates || [];
+
+        document.getElementById('oneClickStudentId').value = studentId;
+        document.getElementById('oneClickStudentName').textContent = data.student.full_name;
+        document.getElementById('oneClickStudentRoll').textContent = data.student.roll_no;
+        document.getElementById('oneClickStudentCohort').textContent = `${data.student.branch} • ${data.student.year} (Sec ${data.student.section})`;
+        
+        const risk = data.risk_prediction?.risk_level || 'Medium Risk';
+        const riskBadge = document.getElementById('oneClickRiskBadge');
+        riskBadge.textContent = risk.toUpperCase();
+        riskBadge.className = `badge ${risk.includes('High') ? 'badge-high' : 'badge-med-risk'}`;
+
+        // Render recommended 1-click template chips
+        const tplContainer = document.getElementById('oneClickTemplateChips');
+        tplContainer.innerHTML = '';
+        cachedRecommendedTemplates.forEach((tpl, idx) => {
+          const div = document.createElement('div');
+          div.style = 'background: rgba(255,255,255,0.03); border: 1px solid var(--bg-card-border); padding: 0.75rem 1rem; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s;';
+          div.onmouseover = () => { div.style.borderColor = '#f59e0b'; div.style.background = 'rgba(245, 158, 11, 0.08)'; };
+          div.onmouseout = () => { div.style.borderColor = 'var(--bg-card-border)'; div.style.background = 'rgba(255,255,255,0.03)'; };
+          div.onclick = () => applyRecommendedTemplate(idx);
+
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+              <strong style="color: #fbbf24; font-size: 0.85rem;"><i class="fa-solid fa-bolt"></i> ${tpl.action_type}</strong>
+              <span class="badge ${tpl.priority === 'Urgent' ? 'badge-high' : 'badge-primary'}" style="font-size: 0.65rem;">${tpl.priority}</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #fff; font-weight: 600;">${tpl.title}</div>
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">${tpl.description}</div>
+          `;
+          tplContainer.appendChild(div);
+        });
+
+        // Apply first template by default
+        if (cachedRecommendedTemplates.length > 0) {
+          applyRecommendedTemplate(0);
+        }
+
+        openModal('oneClickInterventionModal');
+      } catch (err) {
+        showToast('Error opening intervention modal.', 'error');
+      }
+    }
+
+    function applyRecommendedTemplate(idx) {
+      const tpl = cachedRecommendedTemplates[idx];
+      if (!tpl) return;
+
+      document.getElementById('oneClickActionType').value = tpl.action_type || 'Remedial Quiz';
+      document.getElementById('oneClickTitle').value = tpl.title || '';
+      document.getElementById('oneClickDescription').value = tpl.description || '';
+      document.getElementById('oneClickPriority').value = tpl.priority || 'High';
+      document.getElementById('oneClickSubjectId').value = tpl.subject_id || '';
+    }
+
+    async function submitOneClickIntervention(e) {
+      e.preventDefault();
+      const studentId = document.getElementById('oneClickStudentId').value;
+      const btn = document.getElementById('oneClickSubmitBtn');
+
+      const payload = {
+        action_type: document.getElementById('oneClickActionType').value,
+        title: document.getElementById('oneClickTitle').value.trim(),
+        description: document.getElementById('oneClickDescription').value.trim(),
+        priority: document.getElementById('oneClickPriority').value,
+        subject_id: document.getElementById('oneClickSubjectId').value ? parseInt(document.getElementById('oneClickSubjectId').value) : null,
+        notes: document.getElementById('oneClickNotes').value.trim()
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching...';
+
+      try {
+        const res = await fetch(`/api/teacher/students/${studentId}/intervene`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('oneClickInterventionModal');
+          showToast(data.message, 'success');
+          loadTeacherInterventions();
+        } else {
+          showToast(data.message || 'Failed to dispatch intervention.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error dispatching intervention.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Dispatch 1-Click Intervention';
+      }
+    }
+
+    async function updateInterventionStatus(intervId, newStatus) {
+      try {
+        const res = await fetch(`/api/teacher/interventions/${intervId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadTeacherInterventions();
+        } else {
+          showToast(data.message || 'Status update failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error updating status.', 'error');
+      }
+    }
+
+    function openBulkInterveneModal() {
+      openModal('bulkInterveneModal');
+    }
+
+    async function submitBulkIntervention(e) {
+      e.preventDefault();
+      const riskFilter = document.getElementById('bulkRiskFilter').value;
+      const actionType = document.getElementById('bulkActionType').value;
+      const title = document.getElementById('bulkTitle').value.trim();
+      const description = document.getElementById('bulkDescription').value.trim();
+      const priority = document.getElementById('bulkPriority').value;
+      const btn = document.getElementById('bulkSubmitBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching to Cohort...';
+
+      try {
+        const res = await fetch('/api/teacher/students/bulk-intervene', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            risk_filter: riskFilter,
+            action_type: actionType,
+            title: title,
+            description: description,
+            priority: priority
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal('bulkInterveneModal');
+          showToast(data.message, 'success');
+          loadTeacherInterventions();
+        } else {
+          showToast(data.message || 'Bulk intervention failed.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error during bulk dispatch.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Dispatch to All Matching Students';
+      }
+    }
+
+    // ================= OFFICIAL ACADEMIC REPORT CARD EXPORT (FACULTY VIEW) =================
+    let currentReportCardData = null;
+
+    async function openTeacherStudentReportCard(studentId) {
+      try {
+        showToast('Fetching official student academic dossier...', 'info');
+        const res = await fetch(`/api/teacher/students/${studentId}/report-card`);
+        const data = await res.json();
+        if (!data.success || !data.report_card) {
+          showToast(data.message || 'Failed to fetch student report card.', 'error');
+          return;
+        }
+
+        currentReportCardData = data.report_card;
+        renderReportCardDossier(currentReportCardData);
+        openModal('officialReportCardModal');
+      } catch (err) {
+        showToast('Error generating student report card: ' + err.message, 'error');
+      }
+    }
+
+    function renderReportCardDossier(rc) {
+      const c = document.getElementById('reportCardPrintArea');
+      if (!c) return;
+
+      const inst = rc.institution || {};
+      const st = rc.student || {};
+      const qml = rc.quantum_ml_evaluation || {};
+      const metrics = rc.academic_metrics || {};
+      const bloom = rc.bloom_mastery || {};
+      const gamification = rc.gamification || {};
+      const sigs = rc.signatories || {};
+
+      let riskBadge = '<span class="badge badge-low-risk">🟢 LOW RISK</span>';
+      if ((qml.risk_level || '').toLowerCase().includes('high')) {
+        riskBadge = '<span class="badge badge-high-risk">🔴 HIGH RISK</span>';
+      } else if ((qml.risk_level || '').toLowerCase().includes('medium')) {
+        riskBadge = '<span class="badge badge-med-risk">🟡 MEDIUM RISK</span>';
+      }
+
+      c.innerHTML = `
+        <div class="report-dossier-card">
+          <!-- Institutional Header -->
+          <div class="report-dossier-header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 56px; height: 56px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #0284c7); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div>
+                <h2 style="font-size: 1.35rem; margin-bottom: 0.15rem; color: #fff; letter-spacing: -0.02em;">${inst.name || 'Andhra University College of Engineering'}</h2>
+                <div style="font-size: 0.8rem; color: #94a3b8;">${inst.affiliation || 'Autonomous • NAAC A++ • NIRF #29'} &bull; ${inst.location || 'Visakhapatnam, Andhra Pradesh'}</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 0.72rem; color: #94a3b8; font-family: monospace;">REPORT ID: <strong style="color: #38bdf8;">${rc.report_id}</strong></div>
+              <div style="font-size: 0.72rem; color: #94a3b8; font-family: monospace;">SECURITY TOKEN: <strong style="color: #a855f7;">${rc.verification_hash}</strong></div>
+              <div style="font-size: 0.72rem; color: #64748b;">Issued: ${rc.issue_date}</div>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 1.25rem;">
+            <div style="display: inline-block; padding: 0.35rem 1.2rem; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 999px; font-weight: 700; font-size: 0.85rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em;">
+              Cumulative Academic Dossier & Quantum ML Progress Transcript
+            </div>
+          </div>
+
+          <!-- Student Profile Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">STUDENT NAME</div>
+              <div style="font-weight: 700; color: #fff; font-size: 1rem;">${st.full_name || '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">REGISTRATION / ROLL NO</div>
+              <div style="font-weight: 700; color: #38bdf8; font-family: monospace;">${st.roll_no || '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">PROGRAM / BRANCH</div>
+              <div style="font-weight: 600; color: #e2e8f0;">${st.program_name || st.branch || '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">ACADEMIC COORDINATES</div>
+              <div style="font-weight: 600; color: #e2e8f0;">${st.year || '2nd Year'} &bull; Sem ${st.semester || 1} (Sec ${st.section || 'A'})</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">REGULATION & SESSION</div>
+              <div style="font-weight: 600; color: #e2e8f0;">${st.regulation || 'R23'} &bull; AY ${rc.academic_year || '2024-2025'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">OVERALL ATTENDANCE</div>
+              <div style="font-weight: 700; color: ${st.attendance >= 75 ? '#34d399' : '#f87171'};">${st.attendance || 80}% (${st.attendance >= 75 ? 'Satisfactory' : 'Condonation Needed'})</div>
+            </div>
+          </div>
+
+          <!-- Quantum ML Diagnostics & Standing Summary -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">SEMESTER SGPA</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #38bdf8;">${metrics.sgpa || '7.50'}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">Scale 10.0</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">CUMULATIVE CGPA</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #a855f7;">${metrics.cgpa || '7.80'}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">${metrics.standing || 'First Class'}</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">QUANTUM ML EVALUATION</div>
+              <div style="margin: 0.25rem 0;">${riskBadge}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">${qml.confidence || 92}% QML Confidence</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">XP & GAMIFICATION</div>
+              <div style="font-size: 1.2rem; font-weight: 800; color: #fbbf24;">${st.xp_points || 450} XP</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">${st.current_level || 'Level 1'}</div>
+            </div>
+          </div>
+
+          <!-- Course-wise Grade Sheet Table -->
+          <div style="margin-bottom: 1.5rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #fff; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fa-solid fa-table-list" style="color: #38bdf8; margin-right: 0.4rem;"></i> Course Gradebook Breakdown</span>
+              <span style="font-size: 0.8rem; color: #94a3b8; font-weight: normal;">Total Credits: <strong>${metrics.total_credits || 16}</strong></span>
+            </div>
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Course Title</th>
+                  <th>Type</th>
+                  <th>Credits</th>
+                  <th>Attendance</th>
+                  <th>Internal %</th>
+                  <th>Quiz %</th>
+                  <th>Overall %</th>
+                  <th>Grade</th>
+                  <th>Grade Point</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(metrics.subjects || []).map(s => `
+                  <tr>
+                    <td style="font-family: monospace; font-weight: 600; color: #38bdf8;">${s.subject_code}</td>
+                    <td style="font-weight: 600; color: #fff;">${s.subject_name}</td>
+                    <td style="text-transform: capitalize; color: #94a3b8;">${s.subject_type || 'Theory'}</td>
+                    <td style="text-align: center;">${s.credits || 3}</td>
+                    <td style="color: ${s.attendance >= 75 ? '#34d399' : '#f87171'};">${Math.round(s.attendance || 75)}%</td>
+                    <td>${Math.round(s.assessment_score || 65)}%</td>
+                    <td>${Math.round(s.quiz_score || 65)}%</td>
+                    <td style="font-weight: 700; color: #fff;">${Math.round(s.overall_score || 70)}%</td>
+                    <td style="font-weight: 800; color: ${s.grade === 'F' ? '#f87171' : '#38bdf8'};">${s.grade || 'A'}</td>
+                    <td style="font-weight: 700; text-align: center;">${s.grade_point || '8.0'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Bloom Taxonomy Mastery & Badges Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; font-size: 0.875rem; color: #fff; margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-brain" style="color: #a855f7; margin-right: 0.4rem;"></i> Bloom's Taxonomy Cognitive Mastery Index
+              </div>
+              ${Object.entries(bloom).map(([k, v]) => `
+                <div style="margin-bottom: 0.45rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
+                    <span style="color: #cbd5e1;">${k}</span>
+                    <strong style="color: #38bdf8;">${v}%</strong>
+                  </div>
+                  <div class="bloom-bar-container">
+                    <div class="bloom-bar-fill" style="width: ${v}%;"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; font-size: 0.875rem; color: #fff; margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-award" style="color: #fbbf24; margin-right: 0.4rem;"></i> Verified Achievements & Badges (${gamification.total_badges || 0})
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+                ${(gamification.badges || []).map(b => `
+                  <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 6px; padding: 0.35rem 0.6rem; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem;">
+                    <i class="fa-solid ${b.badge_icon || 'fa-medal'}" style="color: ${b.badge_color || '#fbbf24'};"></i>
+                    <span style="color: #fff; font-weight: 600;">${b.badge_name}</span>
+                  </div>
+                `).join('')}
+              </div>
+              <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 0.5rem;">
+                <div><i class="fa-solid fa-code" style="color: #38bdf8;"></i> Coding Challenges Solved: <strong style="color: #fff;">${gamification.coding_challenges_solved || 0}</strong></div>
+                <div><i class="fa-solid fa-fire" style="color: #fbbf24;"></i> Active Learning Streak: <strong style="color: #fff;">${st.learning_streak || 3} Days</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Official Signatory Stamp Footer -->
+          <div style="border-top: 1px dashed rgba(148, 163, 184, 0.3); padding-top: 1.5rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem;">
+            <div style="text-align: center; width: 180px;">
+              <div style="font-family: 'Brush Script MT', cursive, serif; font-size: 1.2rem; color: #38bdf8; min-height: 28px;">A. S. Murthy</div>
+              <div style="border-top: 1px solid rgba(148, 163, 184, 0.4); margin-top: 0.25rem; padding-top: 0.25rem; font-size: 0.7rem; color: #94a3b8;">
+                ${sigs.faculty_advisor || 'Faculty Advisor'}
+              </div>
+            </div>
+            <div style="text-align: center; width: 180px;">
+              <div style="font-family: 'Brush Script MT', cursive, serif; font-size: 1.2rem; color: #a855f7; min-height: 28px;">K. Rama Krishna</div>
+              <div style="border-top: 1px solid rgba(148, 163, 184, 0.4); margin-top: 0.25rem; padding-top: 0.25rem; font-size: 0.7rem; color: #94a3b8;">
+                ${sigs.dean_academics || 'Dean, Academic Affairs'}
+              </div>
+            </div>
+            <div style="text-align: center; width: 180px;">
+              <div style="width: 50px; height: 50px; margin: 0 auto; border: 2px solid #38bdf8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: -0.05em; line-height: 1;">
+                OFFICIAL<br>SEAL
+              </div>
+              <div style="border-top: 1px solid rgba(148, 163, 184, 0.4); margin-top: 0.25rem; padding-top: 0.25rem; font-size: 0.7rem; color: #94a3b8;">
+                ${sigs.controller_examinations || 'Controller of Exams'}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function printReportCard() {
+      window.print();
+    }
+
+    function downloadDossierJson() {
+      if (!currentReportCardData) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentReportCardData, null, 2));
+      const dlAnchorElem = document.createElement('a');
+      dlAnchorElem.setAttribute("href", dataStr);
+      dlAnchorElem.setAttribute("download", `academic_report_${currentReportCardData.student?.roll_no || 'student'}.json`);
+      dlAnchorElem.click();
+      showToast('Academic dossier JSON downloaded successfully.', 'success');
     }
     function closeModal(id) {
-      document.getElementById(id).classList.remove('show');
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('show');
     }
 
     async function logout() {
+      if (teacherChatPollInterval) clearInterval(teacherChatPollInterval);
+      if (teacherUnreadPollInterval) clearInterval(teacherUnreadPollInterval);
       await fetch('/api/logout', { method: 'POST' });
       window.location.href = '/teacher-login';
     }
 
-    window.onload = initTeacherPortal;
+    window.onload = () => {
+      initTeacherPortal();
+      fetchTeacherUnreadCount();
+      loadTeacherMessagesInbox();
+      loadTeacherInterventions();
+      startRealtimeTeacherMessaging();
+    };
   </script>
+
+  <!-- ================= 1-CLICK REMEDIAL INTERVENTION MODAL ================= -->
+  <div id="oneClickInterventionModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--bg-card-border); padding-bottom: 1rem;">
+        <div>
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 1.25rem;">
+            <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> 1-Click Remedial Intervention
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.2rem 0 0 0;">
+            Pre-composed ML diagnostic action based on student's weak topics and quantum risk factors.
+          </p>
+        </div>
+        <button class="close-btn" onclick="closeModal('oneClickInterventionModal')">&times;</button>
+      </div>
+
+      <form onsubmit="submitOneClickIntervention(event)">
+        <div class="modal-body" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; max-height: 520px; overflow-y: auto;">
+          <input type="hidden" id="oneClickStudentId">
+          <input type="hidden" id="oneClickSubjectId">
+
+          <!-- Target Student Summary Card -->
+          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--bg-card-border); padding: 0.85rem 1.1rem; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; font-size: 1.05rem; color: #fff;" id="oneClickStudentName">-</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;" id="oneClickStudentCohort">-</div>
+            </div>
+            <div style="text-align: right;">
+              <span id="oneClickStudentRoll" style="font-family: monospace; font-size: 0.85rem; color: var(--secondary); display: block; margin-bottom: 0.25rem;">-</span>
+              <span id="oneClickRiskBadge" class="badge badge-high">HIGH RISK</span>
+            </div>
+          </div>
+
+          <!-- ML Recommended Templates -->
+          <div>
+            <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: #fbbf24; text-transform: uppercase;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Select ML Recommended Action Template
+            </label>
+            <div id="oneClickTemplateChips" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- Form Fields -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label class="form-label" style="font-size: 0.8rem;">Action Type</label>
+              <select id="oneClickActionType" class="form-select" required>
+                <option value="Remedial Quiz">Targeted Remedial Quiz</option>
+                <option value="Mentorship Session">1-on-1 Faculty Mentorship</option>
+                <option value="Study Material">Curated Study Notes / PDF</option>
+                <option value="Attendance Warning">Attendance Counseling Warning</option>
+                <option value="Lab Walkthrough">Practical Lab Remedial Session</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 0.8rem;">Priority Level</label>
+              <select id="oneClickPriority" class="form-select" required>
+                <option value="Urgent">Urgent (24h Action)</option>
+                <option value="High" selected>High Priority (3 Days)</option>
+                <option value="Medium">Medium Priority (5 Days)</option>
+                <option value="Low">Low / Enrichment</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Intervention Title</label>
+            <input type="text" id="oneClickTitle" class="form-control" required placeholder="e.g. Remedial Diagnostic Drill: Binary Search Trees">
+          </div>
+
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Specific Instructions / Directives for Student</label>
+            <textarea id="oneClickDescription" class="form-control" rows="3" required placeholder="Describe specific concept areas or quiz requirements..."></textarea>
+          </div>
+
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Internal Faculty Notes (Optional)</label>
+            <input type="text" id="oneClickNotes" class="form-control" placeholder="e.g. Student struggling with pointer mechanics. Follow up in Lab 2.">
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--bg-card-border); padding: 1rem 1.25rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('oneClickInterventionModal')">Cancel</button>
+          <button type="submit" id="oneClickSubmitBtn" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #ef4444); border: none;">
+            <i class="fa-solid fa-bolt"></i> Dispatch 1-Click Intervention
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= 1-CLICK BULK INTERVENE MODAL ================= -->
+  <div id="bulkInterveneModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 600px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 1.25rem;">
+            <i class="fa-solid fa-users-gear" style="color: #ef4444;"></i> Bulk Cohort Remedial Intervention
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.2rem 0 0 0;">
+            Broadcast targeted remedial action tasks to all at-risk students across your assigned sections.
+          </p>
+        </div>
+        <button class="close-btn" onclick="closeModal('bulkInterveneModal')">&times;</button>
+      </div>
+
+      <form onsubmit="submitBulkIntervention(event)">
+        <div class="modal-body" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Target Cohort Filter</label>
+            <select id="bulkRiskFilter" class="form-select" required>
+              <option value="High" selected>All High-Risk Students (&lt; 70% Attendance or &lt; 50% Progress)</option>
+              <option value="Medium">All Medium + High-Risk Students (&lt; 80% Attendance)</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label class="form-label" style="font-size: 0.8rem;">Action Type</label>
+              <select id="bulkActionType" class="form-select" required>
+                <option value="Remedial Quiz">Cohort Diagnostic Quiz</option>
+                <option value="Attendance Warning">Attendance Caution Warning</option>
+                <option value="Study Material">Remedial Question Bank</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 0.8rem;">Priority</label>
+              <select id="bulkPriority" class="form-select" required>
+                <option value="Urgent">Urgent Priority</option>
+                <option value="High" selected>High Priority</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Intervention Title</label>
+            <input type="text" id="bulkTitle" class="form-control" value="Cohort Mid-Term Remedial Diagnostic Assessment" required>
+          </div>
+
+          <div>
+            <label class="form-label" style="font-size: 0.8rem;">Instructions for Students</label>
+            <textarea id="bulkDescription" class="form-control" rows="3" required>All identified at-risk students must complete the 15-question adaptive remedial diagnostic quiz and review Module 2 & 3 lecture summaries before Friday.</textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('bulkInterveneModal')">Cancel</button>
+          <button type="submit" id="bulkSubmitBtn" class="btn btn-primary" style="background: #ef4444; border-color: #ef4444;">
+            <i class="fa-solid fa-bolt"></i> Dispatch to All Matching Students
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= OFFICIAL ACADEMIC REPORT CARD & TRANSCRIPT MODAL (FACULTY VIEW) ================= -->
+  <div id="officialReportCardModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 960px;">
+      <div class="modal-header no-print">
+        <h3 style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-file-pdf" style="color: #38bdf8;"></i> Official Academic Report Card & Progress Transcript
+        </h3>
+        <button class="close-btn" onclick="closeModal('officialReportCardModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height: 650px; overflow-y: auto;">
+        <div id="reportCardPrintArea"></div>
+      </div>
+      <div class="modal-footer no-print" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 0.8rem; color: var(--text-muted);">
+          <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i> Digitally Verified by Autonomous Academic Engine
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('officialReportCardModal')">Close</button>
+          <button type="button" class="btn btn-outline-cyan" onclick="downloadDossierJson()">
+            <i class="fa-solid fa-download"></i> Download JSON
+          </button>
+          <button type="button" class="btn btn-primary" onclick="printReportCard()" style="background: linear-gradient(135deg, #4f46e5, #0284c7); border: none;">
+            <i class="fa-solid fa-print"></i> Print / Save as PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
+

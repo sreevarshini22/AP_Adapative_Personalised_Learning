@@ -49,8 +49,8 @@ dev_train = qml.device(DEVICE_NAME, wires=NUM_QUBITS)
 
 @qml.qnode(dev_train, interface="autograd", diff_method="backprop")
 def qnode_train(features, weights):
-    qml.AngleEmbedding(features, wires=range(NUM_QUBITS), rotation="Y")
     for l in range(NUM_LAYERS):
+        qml.AngleEmbedding(features, wires=range(NUM_QUBITS), rotation="Y")
         for i in range(NUM_QUBITS):
             qml.Rot(weights[l, i, 0], weights[l, i, 1], weights[l, i, 2], wires=i)
         for i in range(NUM_QUBITS):
@@ -81,6 +81,18 @@ def load_and_inspect_dataset(csv_path="data/student_learning_dataset.csv"):
     else:
         df = pd.read_csv(csv_path)
 
+    # Ensure universal QML feature columns are present
+    if "assessment_performance" not in df.columns:
+        df["assessment_performance"] = df["exam_score"].astype(float) if "exam_score" in df.columns else 65.0
+    if "topic_mastery" not in df.columns:
+        df["topic_mastery"] = df["overall_progress"].astype(float) if "overall_progress" in df.columns else 60.0
+    if "assignment_performance" not in df.columns:
+        df["assignment_performance"] = df["assignment_score"].astype(float) if "assignment_score" in df.columns else 70.0
+    if "learning_engagement" not in df.columns:
+        norm_study = np.clip((df["study_hours"].astype(float) / 15.0) * 100.0, 0, 100.0) if "study_hours" in df.columns else 50.0
+        learning_act = df["learning_activity"].astype(float) if "learning_activity" in df.columns else 60.0
+        df["learning_engagement"] = np.round((0.5 * learning_act) + (0.5 * norm_study), 1)
+
     print("\n" + "=" * 75, flush=True)
     print("      DATASET INSPECTION & ACADEMIC AUDIT", flush=True)
     print("=" * 75, flush=True)
@@ -98,11 +110,11 @@ def load_and_inspect_dataset(csv_path="data/student_learning_dataset.csv"):
 
 
 def train_qml_model(
-    epochs: int = 10,
-    batch_size: int = 20,
-    lr: float = 0.06,
-    train_samples: int = 150,
-    test_eval_samples: int = 250,
+    epochs: int = 15,
+    batch_size: int = 24,
+    lr: float = 0.04,
+    train_samples: int = 240,
+    test_eval_samples: int = 300,
     seed: int = 42
 ):
     """
@@ -145,10 +157,18 @@ def train_qml_model(
     h_weights = pnp.random.normal(0, 0.5, size=(3, NUM_QUBITS), requires_grad=True)
     h_bias = pnp.zeros(3, requires_grad=True)
 
-    # Select representative training subset
-    sub_idx = np.random.RandomState(seed).choice(len(X_train_scaled), min(train_samples, len(X_train_scaled)), replace=False)
-    X_train_sub = pnp.array(X_train_scaled[sub_idx], requires_grad=False)
-    y_train_sub = pnp.array(y_train[sub_idx], requires_grad=False)
+    # Select balanced stratified training subset (equal representation for Low, Med, High)
+    rng = np.random.RandomState(seed)
+    samples_per_class = max(80, train_samples // 3)
+    balanced_sub_idx = []
+    for cls_idx in [0, 1, 2]:
+        cls_indices = np.where(y_train == cls_idx)[0]
+        chosen = rng.choice(cls_indices, min(samples_per_class, len(cls_indices)), replace=False)
+        balanced_sub_idx.extend(chosen)
+    
+    rng.shuffle(balanced_sub_idx)
+    X_train_sub = pnp.array(X_train_scaled[balanced_sub_idx], requires_grad=False)
+    y_train_sub = pnp.array(y_train[balanced_sub_idx], requires_grad=False)
 
     opt = qml.AdamOptimizer(stepsize=lr)
 
@@ -295,4 +315,4 @@ def train_qml_model(
 
 
 if __name__ == "__main__":
-    train_qml_model(epochs=10, batch_size=20, lr=0.06, train_samples=150, test_eval_samples=250)
+    train_qml_model(epochs=15, batch_size=24, lr=0.04, train_samples=240, test_eval_samples=300)

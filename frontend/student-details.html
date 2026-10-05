@@ -23,7 +23,10 @@
       <a href="/teacher-dashboard" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Back to Class Roster</a>
       <a href="/ml-performance" class="nav-link"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
     </div>
-    <div class="nav-user">
+    <div class="nav-user" style="display: flex; align-items: center; gap: 0.75rem;">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+        <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+      </button>
       <button class="btn btn-secondary btn-sm" onclick="logout()">
         <i class="fa-solid fa-right-from-bracket"></i> Logout
       </button>
@@ -466,5 +469,6 @@
 
     window.onload = checkAuthAndLoad;
   </script>
+  <script src="theme-switcher.js"></script>
 </body>
 </html>

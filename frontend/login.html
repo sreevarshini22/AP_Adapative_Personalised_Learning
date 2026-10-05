@@ -3,68 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AP Adaptive Personalised Learning Platform | Login</title>
+  <title>AP Adaptive Personalised Learning Platform | Unified Portal Login</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .login-wrapper {
-      max-width: 1080px;
+      max-width: 1180px;
       width: 100%;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 1.75rem auto 3rem;
+      padding: 0 1.25rem;
     }
-    .login-grid {
+    .role-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: stretch;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
     }
-    @media (max-width: 820px) {
-      .login-grid {
+    @media (max-width: 860px) {
+      .role-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .role-tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .role-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .role-tab-btn.active {
+      background: rgba(79, 70, 229, 0.15);
+      border-color: var(--primary-light);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
+    }
+    .role-tab-btn i {
+      font-size: 1.5rem;
+    }
+    .main-login-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .main-login-grid {
         grid-template-columns: 1fr;
       }
     }
-    .login-panel {
+    .login-box {
       background: var(--bg-card);
       backdrop-filter: blur(16px);
       border: 1px solid var(--bg-card-border);
       border-radius: var(--radius-lg);
       padding: 2.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+      box-shadow: var(--shadow-md);
     }
-    .login-panel:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    .demo-accounts-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
     }
-    .panel-header {
-      margin-bottom: 1.75rem;
-    }
-    .panel-icon {
-      width: 48px;
-      height: 48px;
+    .demo-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: var(--radius-md);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
+      padding: 0.85rem;
       margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .student-icon {
-      background: rgba(79, 70, 229, 0.15);
-      color: var(--primary-light);
-    }
-    .teacher-icon {
-      background: rgba(6, 182, 212, 0.15);
-      color: var(--secondary);
+    .demo-pill:hover {
+      background: rgba(79, 70, 229, 0.12);
+      border-color: var(--primary-light);
+      transform: translateX(4px);
     }
     .alert-box {
       display: none;
-      padding: 0.65rem 0.85rem;
+      padding: 0.75rem 1rem;
       border-radius: var(--radius-md);
-      font-size: 0.825rem;
+      font-size: 0.85rem;
       margin-bottom: 1.25rem;
     }
     .alert-error {
@@ -86,183 +120,339 @@
     <div class="nav-brand">
       <div style="display: flex; align-items: center; gap: 0.6rem; color: #fff;">
         <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i>
-        <span>AP Adaptive Personalised Learning</span>
+        <span>AP Adaptive Personalised Learning Platform</span>
       </div>
-      <span class="badge-tag">Database Auth</span>
+      <span class="badge-tag">Curriculum-Agnostic Multi-Tenancy</span>
+    </div>
+    <div class="nav-links" style="display: flex; align-items: center; gap: 0.75rem;">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+        <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+      </button>
+      <a href="/ml-performance" class="btn btn-secondary" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-atom"></i> Quantum vs Classical ML
+      </a>
     </div>
   </nav>
 
-  <!-- Main Login Container -->
   <main class="login-wrapper">
-    <div style="text-align: center; margin-bottom: 2.25rem;">
-      <h1 style="font-size: 2.1rem; margin-bottom: 0.4rem; letter-spacing: -0.5px;">AP ADAPTIVE PERSONALISED LEARNING PLATFORM</h1>
-      <p style="color: var(--text-muted); font-size: 1rem;">Select your role to access your personalized adaptive learning environment.</p>
+
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="font-size: 2.1rem; margin-bottom: 0.35rem; letter-spacing: -0.5px;">AP ADAPTIVE LEARNING INTELLIGENCE PORTAL</h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Select your role or 1-click test with pre-configured institutional credentials across universities.
+      </p>
     </div>
 
-    <!-- Side-by-Side Panels -->
-    <div class="login-grid">
-
-      <!-- ================= STUDENT LOGIN PANEL ================= -->
-      <div class="login-panel" style="border-top: 4px solid var(--primary-light);">
+    <!-- 4 Role Selector Tabs -->
+    <div class="role-tabs">
+      <button class="role-tab-btn active" onclick="selectRole('student', this)">
+        <i class="fa-solid fa-user-graduate" style="color: var(--primary-light);"></i>
         <div>
-          <div class="panel-header">
-            <div class="panel-icon student-icon">
-              <i class="fa-solid fa-user-graduate"></i>
-            </div>
-            <h2>Student Login</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-              Access your personalized learning path & risk diagnosis
-            </p>
+          <strong style="display: block; font-size: 0.95rem;">Student</strong>
+          <span style="font-size: 0.75rem;">Adaptive syllabus & QML</span>
+        </div>
+      </button>
+
+      <button class="role-tab-btn" onclick="selectRole('teacher', this)">
+        <i class="fa-solid fa-chalkboard-user" style="color: var(--secondary);"></i>
+        <div>
+          <strong style="display: block; font-size: 0.95rem;">Faculty / Teacher</strong>
+          <span style="font-size: 0.75rem;">Class mastery & quizzes</span>
+        </div>
+      </button>
+
+      <button class="role-tab-btn" onclick="selectRole('institution_admin', this)">
+        <i class="fa-solid fa-building-columns" style="color: #f59e0b;"></i>
+        <div>
+          <strong style="display: block; font-size: 0.95rem;">Institution Admin</strong>
+          <span style="font-size: 0.75rem;">Upload syllabus & resources</span>
+        </div>
+      </button>
+
+      <button class="role-tab-btn" onclick="selectRole('state_admin', this)">
+        <i class="fa-solid fa-landmark-dome" style="color: #10b981;"></i>
+        <div>
+          <strong style="display: block; font-size: 0.95rem;">State Admin</strong>
+          <span style="font-size: 0.75rem;">Statewide privacy analytics</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="main-login-grid">
+
+      <!-- ================= MAIN LOGIN FORM BOX ================= -->
+      <div class="login-box">
+        <div style="margin-bottom: 1.5rem;">
+          <div id="roleHeaderIcon" style="font-size: 1.8rem; color: var(--primary-light); margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-user-graduate"></i>
           </div>
-
-          <div id="studentAlert" class="alert-box alert-error"></div>
-
-          <form id="studentLoginForm" onsubmit="handleStudentLogin(event)">
-            <div class="form-group">
-              <label class="form-label" for="studentEmail">Email / Username</label>
-              <input type="email" id="studentEmail" class="form-control" placeholder="Enter student email" required autocomplete="username">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="studentPassword">Password</label>
-              <div class="password-input-wrapper">
-                <input type="password" id="studentPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
-                <button type="button" id="toggleStudentPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('studentPassword', 'toggleStudentPasswordBtn')" aria-label="Show password" title="Show password">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" id="studentLoginBtn" class="btn btn-primary" style="width: 100%; padding: 0.75rem; margin-top: 0.5rem;">
-              <i class="fa-solid fa-right-to-bracket"></i> Student Login
-            </button>
-          </form>
+          <h2 id="loginTitle" style="font-size: 1.4rem;">Student Login</h2>
+          <p id="loginSubtitle" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
+            Sign in to access your institution's personalized curriculum & quantum mastery diagnosis.
+          </p>
         </div>
 
+        <div id="loginAlert" class="alert-box alert-error"></div>
+
+        <form id="mainLoginForm" onsubmit="handleUnifiedLogin(event)">
+          <input type="hidden" id="activeRole" value="student">
+
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Institutional Email / Username</label>
+            <input type="email" id="loginEmail" class="form-control" placeholder="e.g. student.au@au.edu.in" required autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+              <button type="button" id="togglePasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', 'togglePasswordBtn')" aria-label="Show password" title="Show password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="submitLoginBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem; margin-top: 0.75rem; font-size: 0.95rem;">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In to Portal
+          </button>
+        </form>
+
         <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--bg-card-border); display: flex; justify-content: space-between; align-items: center; font-size: 0.825rem;">
-          <a href="javascript:void(0)" onclick="openForgotModal('student')" style="color: var(--text-muted);">
+          <a href="javascript:void(0)" onclick="openForgotModal()" style="color: var(--text-muted);">
             <i class="fa-solid fa-key"></i> Forgot Password?
           </a>
-          <a href="javascript:void(0)" onclick="openRegisterModal('student')" style="color: var(--primary-light); font-weight: 600;">
+          <a href="javascript:void(0)" id="registerLink" onclick="openRegisterModal()" style="color: var(--primary-light); font-weight: 600;">
             <i class="fa-solid fa-user-plus"></i> Register Student
           </a>
         </div>
       </div>
 
-      <!-- ================= TEACHER LOGIN PANEL ================= -->
-      <div class="login-panel" style="border-top: 4px solid var(--secondary);">
-        <div>
-          <div class="panel-header">
-            <div class="panel-icon teacher-icon">
-              <i class="fa-solid fa-chalkboard-user"></i>
+      <!-- ================= 1-CLICK DEMO TEST ACCOUNTS ================= -->
+      <div class="demo-accounts-box">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <h3 style="font-size: 1.1rem; color: #fff; margin: 0;">
+            <i class="fa-solid fa-vial-circle-check" style="color: var(--secondary);"></i> 1-Click Test Credentials
+          </h3>
+          <span class="badge badge-low" style="font-size: 0.7rem;">Curriculum Isolated</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">
+          Click any persona below to auto-fill credentials and evaluate the multi-tenant architecture:
+        </p>
+
+        <!-- College A Student (AU AIML) -->
+        <div class="demo-pill" onclick="quickFill('student.au@au.edu.in', 'StudentAU@2024', 'student')">
+          <div>
+            <div style="font-weight: 600; color: #fff; font-size: 0.875rem;">
+              <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light); margin-right: 0.4rem;"></i>
+              Student A: AU (AIML Year 3)
             </div>
-            <h2>Teacher Login</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-              Access class analytics, ML risk factors & student interventions
-            </p>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+              Sees: Machine Learning, DBMS, CN
+            </div>
           </div>
-
-          <div id="teacherAlert" class="alert-box alert-error"></div>
-
-          <form id="teacherLoginForm" onsubmit="handleTeacherLogin(event)">
-            <div class="form-group">
-              <label class="form-label" for="teacherEmail">Email / Username</label>
-              <input type="email" id="teacherEmail" class="form-control" placeholder="Enter faculty email" required autocomplete="username">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="teacherPassword">Password</label>
-              <div class="password-input-wrapper">
-                <input type="password" id="teacherPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
-                <button type="button" id="toggleTeacherPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('teacherPassword', 'toggleTeacherPasswordBtn')" aria-label="Show password" title="Show password">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" id="teacherLoginBtn" class="btn btn-secondary" style="width: 100%; padding: 0.75rem; margin-top: 0.5rem; background: var(--secondary); color: #000; font-weight: 700;">
-              <i class="fa-solid fa-right-to-bracket"></i> Teacher Login
-            </button>
-          </form>
+          <span class="badge" style="background: rgba(79, 70, 229, 0.2); color: #a5b4fc; font-size: 0.7rem;">1-Click</span>
         </div>
 
-        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--bg-card-border); display: flex; justify-content: space-between; align-items: center; font-size: 0.825rem;">
-          <a href="javascript:void(0)" onclick="openForgotModal('teacher')" style="color: var(--text-muted);">
-            <i class="fa-solid fa-key"></i> Forgot Password?
-          </a>
-          <a href="javascript:void(0)" onclick="openRegisterModal('teacher')" style="color: var(--secondary); font-weight: 600;">
-            <i class="fa-solid fa-user-tie"></i> Register Teacher
-          </a>
+        <!-- College B Student (JNTUK ECE) -->
+        <div class="demo-pill" onclick="quickFill('student.jntuk@jntuk.edu.in', 'StudentJNTUK@2024', 'student')">
+          <div>
+            <div style="font-weight: 600; color: #fff; font-size: 0.875rem;">
+              <i class="fa-solid fa-microchip" style="color: var(--secondary); margin-right: 0.4rem;"></i>
+              Student B: JNTUK (ECE Year 3)
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+              Sees: Signals & Systems, VLSI, Dig. Comm
+            </div>
+          </div>
+          <span class="badge" style="background: rgba(6, 182, 212, 0.2); color: #67e8f9; font-size: 0.7rem;">1-Click</span>
         </div>
+
+        <!-- AU Faculty -->
+        <div class="demo-pill" onclick="quickFill('prof.murthy@au.edu.in', 'ProfMurthy@2024', 'teacher')">
+          <div>
+            <div style="font-weight: 600; color: #fff; font-size: 0.875rem;">
+              <i class="fa-solid fa-chalkboard-user" style="color: var(--secondary); margin-right: 0.4rem;"></i>
+              Prof. Murthy (AU AIML Faculty)
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+              CSV student marks import & quiz generator
+            </div>
+          </div>
+          <span class="badge" style="background: rgba(6, 182, 212, 0.2); color: #67e8f9; font-size: 0.7rem;">1-Click</span>
+        </div>
+
+        <!-- AU Institution Admin -->
+        <div class="demo-pill" onclick="quickFill('admin@au.edu.in', 'AdminAU@2024', 'institution_admin')">
+          <div>
+            <div style="font-weight: 600; color: #fff; font-size: 0.875rem;">
+              <i class="fa-solid fa-building-columns" style="color: #f59e0b; margin-right: 0.4rem;"></i>
+              Andhra University Admin
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+              Upload syllabus, manage regulations & resources
+            </div>
+          </div>
+          <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; font-size: 0.7rem;">1-Click</span>
+        </div>
+
+        <!-- State Admin (APSCHE) -->
+        <div class="demo-pill" onclick="quickFill('state.admin@sche.ap.gov.in', 'StateAdmin@2024', 'state_admin')">
+          <div>
+            <div style="font-weight: 600; color: #fff; font-size: 0.875rem;">
+              <i class="fa-solid fa-landmark-dome" style="color: #10b981; margin-right: 0.4rem;"></i>
+              State Higher Education Council (APSCHE)
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+              Statewide privacy-preserving aggregate telemetry
+            </div>
+          </div>
+          <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; font-size: 0.7rem;">1-Click</span>
+        </div>
+
+        <!-- Default Demo Student & Teacher -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+          <div class="demo-pill" style="margin-bottom: 0;" onclick="quickFill('student@example.com', 'password123', 'student')">
+            <span style="font-size: 0.75rem; color: #cbd5e1;">Default Student</span>
+          </div>
+          <div class="demo-pill" style="margin-bottom: 0;" onclick="quickFill('teacher@example.com', 'password123', 'teacher')">
+            <span style="font-size: 0.75rem; color: #cbd5e1;">Default Teacher</span>
+          </div>
+        </div>
+
       </div>
 
     </div>
+
   </main>
 
   <!-- ================= REGISTRATION MODAL ================= -->
   <div id="registerModal" class="modal-backdrop">
-    <div class="modal-container" style="max-width: 540px;">
+    <div class="modal-container" style="max-width: 560px;">
       <div class="modal-header">
         <h3 id="regModalTitle" style="display: flex; align-items: center; gap: 0.5rem;">
           <i class="fa-solid fa-user-plus" style="color: var(--primary-light);"></i>
-          Create Account
+          Create Portal Account
         </h3>
         <button class="close-btn" onclick="closeRegisterModal()">&times;</button>
       </div>
 
       <form id="registerForm" onsubmit="handleRegistration(event)">
         <div class="modal-body">
-          <div id="regAlert" class="alert-box alert-error"></div>
-          <input type="hidden" id="regRole" value="student">
+          <div id="regAlert" class="alert-box alert-error" style="display: none;"></div>
+          
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Register As</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <button type="button" id="regRoleBtnStudent" class="role-tab active" onclick="setRegisterRole('student')" style="border-radius: 8px; font-size: 0.85rem; padding: 0.6rem;">
+                <i class="fa-solid fa-user-graduate"></i> Student
+              </button>
+              <button type="button" id="regRoleBtnTeacher" class="role-tab" onclick="setRegisterRole('teacher')" style="border-radius: 8px; font-size: 0.85rem; padding: 0.6rem;">
+                <i class="fa-solid fa-chalkboard-user"></i> Faculty / Teacher
+              </button>
+            </div>
+            <input type="hidden" id="regRole" value="student">
+          </div>
 
           <div class="form-group">
             <label class="form-label">Full Name *</label>
             <input type="text" id="regFullName" class="form-control" required placeholder="e.g. Arun Kumar">
           </div>
 
+          <!-- Cascading Institution Master Selector -->
+          <div class="form-group" style="background: rgba(255, 255, 255, 0.02); padding: 0.85rem; border-radius: 8px; border: 1px solid var(--bg-card-border);">
+            <label class="form-label" style="color: var(--primary-light); display: flex; align-items: center; gap: 0.4rem; font-weight: 600;">
+              <i class="fa-solid fa-building-columns"></i> Verified Institution Selection *
+            </label>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.6rem;">
+              <div>
+                <label style="font-size: 0.75rem; color: var(--text-muted);">State</label>
+                <select id="regStateSelect" class="form-select" onchange="onStateChange()" style="padding: 0.4rem 0.6rem; font-size: 0.82rem;">
+                  <option value="">Loading States...</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; color: var(--text-muted);">District</label>
+                <select id="regDistrictSelect" class="form-select" onchange="onDistrictChange()" style="padding: 0.4rem 0.6rem; font-size: 0.82rem;">
+                  <option value="">All Districts</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size: 0.75rem; color: var(--text-muted);">Search / Select University or College</label>
+              <div style="position: relative; margin-bottom: 0.5rem;">
+                <input type="text" id="regInstSearch" class="form-control" placeholder="Search by name, AISHE, or university..." oninput="debounceInstSearch()" style="padding: 0.45rem 0.6rem; font-size: 0.85rem;">
+              </div>
+              <select id="regInstitution" class="form-select" onchange="onInstitutionSelected()" required style="font-size: 0.85rem;">
+                <option value="">Select an institution from database...</option>
+              </select>
+              <input type="hidden" id="regInstitutionId" value="">
+            </div>
+
+            <!-- Verified Institution Information Card -->
+            <div id="instInfoCard" style="display: none; margin-top: 0.6rem; padding: 0.6rem 0.8rem; background: rgba(79, 70, 229, 0.08); border: 1px solid rgba(79, 70, 229, 0.25); border-radius: 6px; font-size: 0.78rem;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
+                <strong id="cardInstName" style="color: #fff; font-size: 0.85rem;">-</strong>
+                <span id="cardAishe" class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.4); padding: 2px 6px; border-radius: 4px;">AISHE: -</span>
+              </div>
+              <div style="color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.8rem;">
+                <span><i class="fa-solid fa-graduation-cap"></i> Type: <span id="cardInstType" style="color: var(--text-light);">-</span></span>
+                <span><i class="fa-solid fa-location-dot"></i> <span id="cardLocation" style="color: var(--text-light);">-</span></span>
+              </div>
+            </div>
+          </div>
+
           <div id="regRollGroup" class="form-group">
             <label class="form-label">Roll Number *</label>
-            <input type="text" id="regRollNo" class="form-control" placeholder="e.g. 23A91A0501">
+            <input type="text" id="regRollNo" class="form-control" placeholder="e.g. 23A91A0501" required>
+          </div>
+
+          <div id="regDesignationGroup" class="form-group" style="display: none;">
+            <label class="form-label">Academic Designation</label>
+            <select id="regDesignation" class="form-select">
+              <option value="Assistant Professor">Assistant Professor</option>
+              <option value="Associate Professor">Associate Professor</option>
+              <option value="Professor">Professor</option>
+              <option value="Head of Department">Head of Department (HoD)</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label" id="regBranchLabel">Branch / Program</label>
+              <select id="regBranch" class="form-select">
+                <option value="CSE (AI & ML)">CSE (AI & ML)</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="CSE (Data Science)">CSE (Data Science)</option>
+                <option value="Information Technology">Information Technology</option>
+              </select>
+            </div>
+
+            <div id="regYearGroup" class="form-group">
+              <label class="form-label">Academic Year</label>
+              <select id="regYear" class="form-select">
+                <option value="1st Year">1st Year (Sem 1-2)</option>
+                <option value="2nd Year">2nd Year (Sem 3-4)</option>
+                <option value="3rd Year" selected>3rd Year (Sem 5-6)</option>
+                <option value="4th Year">4th Year (Sem 7-8)</option>
+              </select>
+            </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Email Address *</label>
-            <input type="email" id="regEmail" class="form-control" required placeholder="e.g. user@example.com">
+            <label class="form-label">Institutional / Official Email *</label>
+            <input type="email" id="regEmail" class="form-control" required placeholder="e.g. user@au.edu.in">
           </div>
 
           <div class="form-group">
             <label class="form-label" for="regPassword">Password *</label>
             <div class="password-input-wrapper">
-              <input type="password" id="regPassword" class="form-control" required placeholder="Create a secure password" autocomplete="new-password">
+              <input type="password" id="regPassword" class="form-control" required placeholder="Create a secure password (min. 4 chars)" autocomplete="new-password">
               <button type="button" id="toggleRegPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', 'toggleRegPasswordBtn')" aria-label="Show password" title="Show password">
                 <i class="fa-solid fa-eye"></i>
               </button>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-            <div class="form-group">
-              <label class="form-label">Branch</label>
-              <select id="regBranch" class="form-select">
-                <option value="CSE">CSE</option>
-                <option value="CSE (AI & ML)">CSE (AI & ML)</option>
-                <option value="CSE (Data Science)">CSE (Data Science)</option>
-                <option value="ECE">ECE</option>
-                <option value="EEE">EEE</option>
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="Civil Engineering">Civil Engineering</option>
-                <option value="Information Technology">Information Technology</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Year</label>
-              <select id="regYear" class="form-select">
-                <option value="1st Year">1st Year</option>
-                <option value="2nd Year">2nd Year</option>
-                <option value="3rd Year" selected>3rd Year</option>
-                <option value="4th Year">4th Year</option>
-              </select>
             </div>
           </div>
         </div>
@@ -277,34 +467,44 @@
     </div>
   </div>
 
-  <!-- ================= FORGOT PASSWORD MODAL ================= -->
+  <!-- ================= FORGOT / RESET PASSWORD MODAL ================= -->
   <div id="forgotModal" class="modal-backdrop">
-    <div class="modal-container" style="max-width: 440px;">
+    <div class="modal-container" style="max-width: 480px;">
       <div class="modal-header">
-        <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem;">
           <i class="fa-solid fa-key" style="color: var(--secondary);"></i>
-          Password Recovery
+          Password Reset & Recovery
         </h3>
         <button class="close-btn" onclick="closeForgotModal()">&times;</button>
       </div>
 
-      <form id="forgotForm" onsubmit="handleForgotPassword(event)">
-        <div class="modal-body">
-          <div id="forgotAlert" class="alert-box alert-success"></div>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
-            Enter your registered email address to receive secure password recovery instructions.
+      <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem; padding: 1.25rem;">
+          <div id="forgotAlert" class="alert-box" style="display: none;"></div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.5;">
+            Enter your registered email and your new password to reset your credentials immediately.
           </p>
 
           <div class="form-group">
-            <label class="form-label">Registered Email</label>
-            <input type="email" id="forgotEmail" class="form-control" required placeholder="Enter registered email">
+            <label class="form-label">Registered Email Address *</label>
+            <input type="email" id="forgotEmail" class="form-control" required placeholder="e.g. user@au.edu.in or user@gmail.com" autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="forgotNewPassword">New Password *</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="forgotNewPassword" class="form-control" required placeholder="Enter new password (min. 4 chars)" autocomplete="new-password">
+              <button type="button" id="toggleForgotPwdBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('forgotNewPassword', 'toggleForgotPwdBtn')" aria-label="Show password" title="Show password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.6rem;">
           <button type="button" class="btn btn-secondary" onclick="closeForgotModal()">Cancel</button>
           <button type="submit" id="forgotSubmitBtn" class="btn btn-primary">
-            <i class="fa-solid fa-paper-plane"></i> Send Instructions
+            <i class="fa-solid fa-shield-check"></i> Reset Password &amp; Sign In
           </button>
         </div>
       </form>
@@ -312,26 +512,87 @@
   </div>
 
   <footer>
-    <p>AP Adaptive Personalised Learning Platform &bull; Quantum Machine Learning &bull; B.Tech Academic Suite</p>
+    <p>AP Adaptive Personalised Learning Platform &bull; Quantum Machine Learning &bull; Multi-Institution Academic Suite</p>
   </footer>
 
   <script>
-    // ================= STUDENT LOGIN =================
-    async function handleStudentLogin(e) {
+    const roleConfig = {
+      student: {
+        title: "Student Login",
+        subtitle: "Sign in to access your institution's personalized curriculum & quantum mastery diagnosis.",
+        icon: "fa-solid fa-user-graduate",
+        color: "var(--primary-light)",
+        dest: "/student-dashboard"
+      },
+      teacher: {
+        title: "Faculty / Teacher Login",
+        subtitle: "Access class analytics, upload performance CSVs, and generate grounded assessments.",
+        icon: "fa-solid fa-chalkboard-user",
+        color: "var(--secondary)",
+        dest: "/teacher-dashboard"
+      },
+      institution_admin: {
+        title: "Institution Admin Login",
+        subtitle: "Upload official syllabus matrices, manage authorized resources, and configure programs.",
+        icon: "fa-solid fa-building-columns",
+        color: "#f59e0b",
+        dest: "/institution-dashboard"
+      },
+      state_admin: {
+        title: "State Admin (APSCHE) Login",
+        subtitle: "Monitor statewide aggregated telemetry, learning gaps, and system infrastructure.",
+        icon: "fa-solid fa-landmark-dome",
+        color: "#10b981",
+        dest: "/state-dashboard"
+      }
+    };
+
+    function selectRole(role, btn) {
+      document.querySelectorAll('.role-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      document.getElementById('activeRole').value = role;
+      const cfg = roleConfig[role] || roleConfig.student;
+
+      document.getElementById('loginTitle').textContent = cfg.title;
+      document.getElementById('loginSubtitle').textContent = cfg.subtitle;
+      document.getElementById('roleHeaderIcon').innerHTML = `<i class="${cfg.icon}" style="color: ${cfg.color};"></i>`;
+      
+      const regLink = document.getElementById('registerLink');
+      if (role === 'student' || role === 'teacher') {
+        regLink.style.display = 'inline';
+        regLink.innerHTML = `<i class="fa-solid fa-user-plus"></i> Register ${role === 'student' ? 'Student' : 'Faculty'}`;
+      } else {
+        regLink.style.display = 'none';
+      }
+
+      document.getElementById('loginAlert').style.display = 'none';
+    }
+
+    function quickFill(email, password, role) {
+      const tabBtns = document.querySelectorAll('.role-tab-btn');
+      const roleIndex = { student: 0, teacher: 1, institution_admin: 2, state_admin: 3 }[role] || 0;
+      selectRole(role, tabBtns[roleIndex]);
+
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPassword').value = password;
+      
+      // Auto-submit after small visual feedback
+      document.getElementById('submitLoginBtn').focus();
+    }
+
+    async function handleUnifiedLogin(e) {
       e.preventDefault();
-      const alertBox = document.getElementById('studentAlert');
-      const btn = document.getElementById('studentLoginBtn');
+      const alertBox = document.getElementById('loginAlert');
+      const btn = document.getElementById('submitLoginBtn');
       alertBox.style.display = 'none';
 
-      const email = document.getElementById('studentEmail').value.trim();
-      const password = document.getElementById('studentPassword').value;
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const role = document.getElementById('activeRole').value;
 
-      if (!email) {
-        showError(alertBox, "Please enter your email.");
-        return;
-      }
-      if (!password) {
-        showError(alertBox, "Please enter your password.");
+      if (!email || !password) {
+        showError(alertBox, "Please enter both email and password.");
         return;
       }
 
@@ -339,84 +600,208 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
 
       try {
-        const res = await fetch('/api/login/student', {
+        const res = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email, password, role })
         });
         const data = await res.json();
 
         if (res.ok && data.success) {
-          window.location.href = '/student-dashboard';
+          const dest = data.redirect_url || roleConfig[data.role]?.dest || '/student-dashboard';
+          window.location.href = dest;
         } else {
-          showError(alertBox, data.message || "Invalid student email or password.");
+          const errMsg = data.message || "Invalid credentials or unauthorized role.";
+          alertBox.className = 'alert-box alert-error';
+          alertBox.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <i class="fa-solid fa-circle-exclamation" style="margin-top: 2px; font-size: 1.1rem; color: #fca5a5;"></i>
+              <div>
+                <span>${errMsg}</span>
+                <div style="margin-top: 0.45rem; font-size: 0.82rem; line-height: 1.4;">
+                  Don't have an account yet with this email? 
+                  <a href="javascript:void(0)" onclick="openRegisterModal()" style="color: #ffffff; text-decoration: underline; font-weight: 700;">Click here to Create an Account &rarr;</a>
+                  <span style="margin: 0 0.35rem; opacity: 0.7;">|</span>
+                  <a href="javascript:void(0)" onclick="openForgotModal()" style="color: #cbd5e1; text-decoration: underline;">Reset Password</a>
+                </div>
+              </div>
+            </div>
+          `;
+          alertBox.style.display = 'block';
         }
       } catch (err) {
-        showError(alertBox, "Connection error. Please try again.");
+        showError(alertBox, "Connection error. Please ensure the backend is running.");
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Student Login';
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to Portal';
       }
     }
 
-    // ================= TEACHER LOGIN =================
-    async function handleTeacherLogin(e) {
-      e.preventDefault();
-      const alertBox = document.getElementById('teacherAlert');
-      const btn = document.getElementById('teacherLoginBtn');
-      alertBox.style.display = 'none';
-
-      const email = document.getElementById('teacherEmail').value.trim();
-      const password = document.getElementById('teacherPassword').value;
-
-      if (!email) {
-        showError(alertBox, "Please enter your email.");
-        return;
-      }
-      if (!password) {
-        showError(alertBox, "Please enter your password.");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
-
-      try {
-        const res = await fetch('/api/login/teacher', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          window.location.href = '/teacher-dashboard';
-        } else {
-          showError(alertBox, data.message || "Invalid teacher email or password.");
-        }
-      } catch (err) {
-        showError(alertBox, "Connection error. Please try again.");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Teacher Login';
-      }
-    }
-
-    // ================= REGISTRATION MODAL LOGIC =================
-    function openRegisterModal(role) {
+    function setRegisterRole(role) {
       document.getElementById('regRole').value = role;
-      document.getElementById('regAlert').style.display = 'none';
       const isStudent = role === 'student';
+      
+      const btnStudent = document.getElementById('regRoleBtnStudent');
+      const btnTeacher = document.getElementById('regRoleBtnTeacher');
+      if (btnStudent && btnTeacher) {
+        if (isStudent) {
+          btnStudent.classList.add('active');
+          btnTeacher.classList.remove('active');
+        } else {
+          btnTeacher.classList.add('active');
+          btnStudent.classList.remove('active');
+        }
+      }
+
       document.getElementById('regModalTitle').innerHTML = isStudent
-        ? '<i class="fa-solid fa-user-graduate" style="color: var(--primary-light);"></i> Register New Student'
-        : '<i class="fa-solid fa-chalkboard-user" style="color: var(--secondary);"></i> Register New Faculty';
+        ? '<i class="fa-solid fa-user-graduate" style="color: var(--primary-light);"></i> Create Student Account'
+        : '<i class="fa-solid fa-chalkboard-user" style="color: var(--secondary);"></i> Create Faculty Account';
+      
       document.getElementById('regRollGroup').style.display = isStudent ? 'block' : 'none';
       document.getElementById('regRollNo').required = isStudent;
+      document.getElementById('regDesignationGroup').style.display = isStudent ? 'none' : 'block';
+      document.getElementById('regYearGroup').style.display = isStudent ? 'block' : 'none';
+      document.getElementById('regBranchLabel').textContent = isStudent ? 'Branch / Program' : 'Department / Discipline';
+    }
+
+    function openRegisterModal() {
+      const currentRole = document.getElementById('activeRole').value;
+      const role = currentRole === 'teacher' ? 'teacher' : 'student';
+      setRegisterRole(role);
+      
+      const enteredEmail = document.getElementById('loginEmail')?.value.trim();
+      if (enteredEmail && !document.getElementById('regEmail').value) {
+        document.getElementById('regEmail').value = enteredEmail;
+      }
+
+      document.getElementById('regAlert').style.display = 'none';
       document.getElementById('registerModal').classList.add('show');
+      loadInstitutionDropdowns();
     }
 
     function closeRegisterModal() {
       document.getElementById('registerModal').classList.remove('show');
+    }
+
+    let loadedInstitutions = [];
+    let searchTimeout = null;
+
+    async function loadInstitutionDropdowns() {
+      try {
+        // 1. Load states
+        const sRes = await fetch('/api/institutions/states');
+        const sData = await sRes.json();
+        const stateSelect = document.getElementById('regStateSelect');
+        if (sData.success && sData.states) {
+          stateSelect.innerHTML = sData.states.map(s => 
+            `<option value="${s}" ${s === 'Andhra Pradesh' ? 'selected' : ''}>${s}</option>`
+          ).join('');
+        }
+
+        // 2. Load districts for default state
+        await onStateChange();
+      } catch (err) {
+        console.warn("Could not load institution master dropdowns:", err);
+      }
+    }
+
+    async function onStateChange() {
+      const state = document.getElementById('regStateSelect').value;
+      const distSelect = document.getElementById('regDistrictSelect');
+      distSelect.innerHTML = '<option value="">All Districts</option>';
+      
+      try {
+        const url = state ? `/api/institutions/districts?state=${encodeURIComponent(state)}` : '/api/institutions/districts';
+        const dRes = await fetch(url);
+        const dData = await dRes.json();
+        if (dData.success && dData.districts) {
+          distSelect.innerHTML = '<option value="">All Districts</option>' + 
+            dData.districts.map(d => `<option value="${d}">${d}</option>`).join('');
+        }
+      } catch (err) {
+        console.warn("Could not load districts:", err);
+      }
+
+      await fetchInstitutions();
+    }
+
+    async function onDistrictChange() {
+      await fetchInstitutions();
+    }
+
+    function debounceInstSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(fetchInstitutions, 300);
+    }
+
+    async function fetchInstitutions() {
+      const state = document.getElementById('regStateSelect').value;
+      const district = document.getElementById('regDistrictSelect').value;
+      const search = document.getElementById('regInstSearch').value.trim();
+      const instSelect = document.getElementById('regInstitution');
+
+      instSelect.innerHTML = '<option value="">Loading institutions...</option>';
+
+      try {
+        let url = `/api/institutions?limit=50`;
+        if (state) url += `&state=${encodeURIComponent(state)}`;
+        if (district) url += `&district=${encodeURIComponent(district)}`;
+        if (search) url += `&search=${encodeURIComponent(search)}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.success && data.institutions) {
+          loadedInstitutions = data.institutions;
+          if (loadedInstitutions.length === 0) {
+            instSelect.innerHTML = '<option value="">No institutions match your search criteria</option>';
+            document.getElementById('instInfoCard').style.display = 'none';
+            document.getElementById('regInstitutionId').value = '';
+            return;
+          }
+
+          instSelect.innerHTML = '<option value="">-- Select Institution from Database --</option>' +
+            loadedInstitutions.map(inst => 
+              `<option value="${inst.id}">${inst.institution_name} [${inst.aishe_code}] - ${inst.district}</option>`
+            ).join('');
+
+          // If only 1 result, auto-select it
+          if (loadedInstitutions.length === 1) {
+            instSelect.value = loadedInstitutions[0].id;
+            onInstitutionSelected();
+          } else if (instSelect.value) {
+            onInstitutionSelected();
+          } else {
+            // Select first by default
+            instSelect.selectedIndex = 1;
+            onInstitutionSelected();
+          }
+        }
+      } catch (err) {
+        console.warn("Error querying institutions API:", err);
+      }
+    }
+
+    function onInstitutionSelected() {
+      const select = document.getElementById('regInstitution');
+      const instId = parseInt(select.value, 10);
+      const card = document.getElementById('instInfoCard');
+      const hiddenInput = document.getElementById('regInstitutionId');
+
+      if (!instId) {
+        card.style.display = 'none';
+        hiddenInput.value = '';
+        return;
+      }
+
+      hiddenInput.value = instId;
+      const inst = loadedInstitutions.find(i => i.id === instId);
+      if (inst) {
+        document.getElementById('cardInstName').textContent = inst.institution_name;
+        document.getElementById('cardAishe').textContent = `AISHE: ${inst.aishe_code}`;
+        document.getElementById('cardInstType').textContent = inst.institution_type;
+        document.getElementById('cardLocation').textContent = `${inst.district}, ${inst.state}`;
+        card.style.display = 'block';
+      }
     }
 
     async function handleRegistration(e) {
@@ -432,12 +817,21 @@
       const password = document.getElementById('regPassword').value;
       const branch = document.getElementById('regBranch').value;
       const year = document.getElementById('regYear').value;
+      const designation = document.getElementById('regDesignation')?.value || 'Assistant Professor';
+      const institution_id = parseInt(document.getElementById('regInstitutionId').value || document.getElementById('regInstitution').value, 10);
+
+      if (!institution_id) {
+        showError(alertBox, "Please select an institution from the verified catalog dropdown.");
+        return;
+      }
 
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering...';
 
       const endpoint = role === 'student' ? '/api/register/student' : '/api/register/teacher';
-      const payload = { full_name, roll_no, email, password, branch, year, section: 'A', semester: 5 };
+      const payload = role === 'student'
+        ? { full_name, roll_no, email, password, branch, year, section: 'A', semester: 5, institution_id }
+        : { full_name, email, password, branch, department: branch, designation, institution_id };
 
       try {
         const res = await fetch(endpoint, {
@@ -449,29 +843,42 @@
 
         if (res.ok && data.success) {
           closeRegisterModal();
-          alert(`${data.message}`);
-          if (role === 'student') {
-            document.getElementById('studentEmail').value = email;
-            document.getElementById('studentPassword').value = password;
+          
+          // Auto-sign in
+          const loginRes = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, role })
+          });
+          const loginData = await loginRes.json();
+          if (loginRes.ok && loginData.success) {
+            const dest = loginData.redirect_url || roleConfig[role]?.dest || '/student-dashboard';
+            window.location.href = dest;
           } else {
-            document.getElementById('teacherEmail').value = email;
-            document.getElementById('teacherPassword').value = password;
+            selectRole(role);
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            document.getElementById('loginAlert').className = 'alert-box alert-success';
+            document.getElementById('loginAlert').textContent = "Account created! Click 'Sign In to Portal' to proceed.";
+            document.getElementById('loginAlert').style.display = 'block';
           }
         } else {
           showError(alertBox, data.message || "Registration failed. Please check inputs.");
         }
       } catch (err) {
-        showError(alertBox, "Connection error. Please try again.");
+        showError(alertBox, "Connection error. Please check your backend connection and try again.");
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-check"></i> Register Account';
       }
     }
 
-    // ================= FORGOT PASSWORD MODAL LOGIC =================
-    function openForgotModal(role) {
-      const alertBox = document.getElementById('forgotAlert');
-      alertBox.style.display = 'none';
+    function openForgotModal() {
+      const enteredEmail = document.getElementById('loginEmail')?.value.trim();
+      if (enteredEmail) {
+        document.getElementById('forgotEmail').value = enteredEmail;
+      }
+      document.getElementById('forgotAlert').style.display = 'none';
       document.getElementById('forgotModal').classList.add('show');
     }
 
@@ -484,25 +891,54 @@
       const alertBox = document.getElementById('forgotAlert');
       const btn = document.getElementById('forgotSubmitBtn');
       const email = document.getElementById('forgotEmail').value.trim();
+      const new_password = document.getElementById('forgotNewPassword').value;
+
+      if (!email || !new_password) {
+        showError(alertBox, "Please provide both email and your new password.");
+        return;
+      }
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Resetting Password...';
 
       try {
-        const res = await fetch('/api/forgot-password', {
+        const res = await fetch('/api/reset-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email, new_password })
         });
         const data = await res.json();
-        alertBox.className = 'alert-box alert-success';
-        alertBox.textContent = data.message;
-        alertBox.style.display = 'block';
+
+        if (res.ok && data.success) {
+          closeForgotModal();
+          document.getElementById('loginEmail').value = email;
+          document.getElementById('loginPassword').value = new_password;
+          
+          // Auto-sign in
+          const activeRole = document.getElementById('activeRole').value;
+          const loginRes = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: new_password, role: activeRole })
+          });
+          const loginData = await loginRes.json();
+          if (loginRes.ok && loginData.success) {
+            const dest = loginData.redirect_url || roleConfig[loginData.role]?.dest || '/student-dashboard';
+            window.location.href = dest;
+          } else {
+            const mainAlert = document.getElementById('loginAlert');
+            mainAlert.className = 'alert-box alert-success';
+            mainAlert.textContent = 'Password reset successfully! Click "Sign In to Portal" to enter.';
+            mainAlert.style.display = 'block';
+          }
+        } else {
+          showError(alertBox, data.message || "Unable to reset password. Please check your email.");
+        }
       } catch (err) {
-        showError(alertBox, "Error processing request.");
+        showError(alertBox, "Server connection error. Please try again.");
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Instructions';
+        btn.innerHTML = '<i class="fa-solid fa-shield-check"></i> Reset Password &amp; Sign In';
       }
     }
 
@@ -527,5 +963,6 @@
       el.style.display = 'block';
     }
   </script>
+  <script src="theme-switcher.js"></script>
 </body>
 </html>

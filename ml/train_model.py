@@ -13,7 +13,13 @@ if PROJECT_ROOT not in sys.path:
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import (
+    RandomForestClassifier,
+    GradientBoostingClassifier,
+    HistGradientBoostingClassifier,
+    VotingClassifier,
+    ExtraTreesClassifier
+)
 
 from ml.preprocessing import prepare_data, save_pipeline, FEATURE_COLUMNS, CLASS_NAMES
 from ml.evaluation import evaluate_model, print_model_comparison
@@ -51,12 +57,21 @@ def train_and_evaluate_all():
     # Save fitted preprocessing pipeline
     save_pipeline(pipeline, os.path.join(models_dir, "preprocessing_pipeline.pkl"))
     
-    # Define candidate models
+    # Define candidate models with balanced class weighting and tuned hyperparameters
     models = {
-        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42, C=1.0),
-        "Decision Tree": DecisionTreeClassifier(max_depth=8, min_samples_split=10, random_state=42),
-        "Random Forest": RandomForestClassifier(n_estimators=120, max_depth=12, min_samples_split=6, random_state=42, n_jobs=-1),
-        "Gradient Boosting": GradientBoostingClassifier(n_estimators=120, learning_rate=0.08, max_depth=4, random_state=42)
+        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42, C=1.0, class_weight="balanced"),
+        "Decision Tree": DecisionTreeClassifier(max_depth=8, min_samples_split=10, random_state=42, class_weight="balanced"),
+        "Random Forest": RandomForestClassifier(n_estimators=150, max_depth=14, min_samples_split=4, class_weight="balanced_subsample", random_state=42, n_jobs=-1),
+        "Gradient Boosting": GradientBoostingClassifier(n_estimators=150, learning_rate=0.08, max_depth=4, subsample=0.9, random_state=42),
+        "Hist Gradient Boosting": HistGradientBoostingClassifier(max_iter=150, learning_rate=0.08, max_depth=6, random_state=42),
+        "Voting Ensemble (Champion)": VotingClassifier(
+            estimators=[
+                ("gb", GradientBoostingClassifier(n_estimators=150, learning_rate=0.08, max_depth=4, subsample=0.9, random_state=42)),
+                ("rf", RandomForestClassifier(n_estimators=150, max_depth=14, min_samples_split=4, class_weight="balanced_subsample", random_state=42, n_jobs=-1)),
+                ("et", ExtraTreesClassifier(n_estimators=120, max_depth=12, random_state=42, n_jobs=-1))
+            ],
+            voting="soft"
+        )
     }
     
     benchmark_results = {}
@@ -87,6 +102,21 @@ def train_and_evaluate_all():
         raw_imp = best_model.feature_importances_
         for col, imp in zip(FEATURE_COLUMNS, raw_imp):
             feature_importances[col] = round(float(imp), 4)
+    elif hasattr(best_model, "estimators_"):
+        # For VotingClassifier, aggregate feature importances from sub-estimators
+        sub_imps = []
+        for est in best_model.estimators_:
+            if hasattr(est, "feature_importances_"):
+                sub_imps.append(est.feature_importances_)
+        if sub_imps:
+            avg_imp = np.mean(sub_imps, axis=0)
+            avg_imp = avg_imp / np.sum(avg_imp)
+            for col, imp in zip(FEATURE_COLUMNS, avg_imp):
+                feature_importances[col] = round(float(imp), 4)
+        else:
+            # Fallback uniform
+            for col in FEATURE_COLUMNS:
+                feature_importances[col] = round(1.0 / len(FEATURE_COLUMNS), 4)
     elif hasattr(best_model, "coef_"):
         # For Logistic Regression, average absolute coefficient across classes
         coef_mean = np.mean(np.abs(best_model.coef_), axis=0)

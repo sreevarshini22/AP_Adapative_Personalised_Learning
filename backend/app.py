@@ -12,6 +12,9 @@ from backend.routes.auth_routes import auth_bp
 from backend.routes.student_routes import student_bp
 from backend.routes.teacher_routes import teacher_bp
 from backend.routes.ml_routes import ml_bp
+from backend.routes.institution_admin_routes import inst_admin_bp
+from backend.routes.state_admin_routes import state_admin_bp
+from backend.routes.institution_routes import institution_bp
 
 
 def create_app():
@@ -30,8 +33,8 @@ def create_app():
     is_prod = os.environ.get("FLASK_ENV") == "production" or os.environ.get("ENVIRONMENT") == "production"
     app.config["SESSION_COOKIE_SECURE"] = is_prod
     
-    # Maximum upload size for student CSV imports (16MB)
-    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+    # Maximum upload size for student CSV imports and curriculum documents (32MB)
+    app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
     
     # Enable CORS for safe API requests
     CORS(app, supports_credentials=True)
@@ -45,6 +48,9 @@ def create_app():
     app.register_blueprint(student_bp)
     app.register_blueprint(teacher_bp)
     app.register_blueprint(ml_bp)
+    app.register_blueprint(inst_admin_bp)
+    app.register_blueprint(state_admin_bp)
+    app.register_blueprint(institution_bp)
     
     # Health Check API
     @app.route("/api/health", methods=["GET"])
@@ -104,6 +110,14 @@ def create_app():
     @app.route("/teacher-dashboard")
     def teacher_dashboard_page():
         return send_from_directory(frontend_dir, "teacher-dashboard.html")
+
+    @app.route("/institution-dashboard")
+    def institution_dashboard_page():
+        return send_from_directory(frontend_dir, "institution-dashboard.html")
+
+    @app.route("/state-dashboard")
+    def state_dashboard_page():
+        return send_from_directory(frontend_dir, "state-dashboard.html")
         
     @app.route("/student-details")
     def student_details_page():
@@ -119,7 +133,7 @@ def create_app():
     def favicon_route():
         return "", 204
 
-    @app.route("/<path:path>")
+    @app.route("/<path:path>", methods=["GET"])
     def serve_static(path):
         if os.path.exists(os.path.join(frontend_dir, path)):
             return send_from_directory(frontend_dir, path)

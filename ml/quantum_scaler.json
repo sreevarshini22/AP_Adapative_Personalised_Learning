@@ -1,24 +1,24 @@
 {
   "scaler_min": [
     38.0,
-    22.0,
-    24.0,
     20.0,
-    25.0
+    28.0,
+    25.0,
+    26.3
   ],
   "scaler_max": [
     99.5,
+    94.0,
     99.0,
-    98.0,
     100.0,
-    100.0
+    99.0
   ],
   "feature_columns": [
     "attendance",
-    "mathematics_score",
-    "physics_score",
-    "programming_score",
-    "assignment_score"
+    "assessment_performance",
+    "topic_mastery",
+    "assignment_performance",
+    "learning_engagement"
   ],
   "normalization_range": [
     0,

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Login | AP Adaptive Personalised Learning Platform</title>
+  <title>Student Login & Registration | AP Adaptive Personalised Learning Platform</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -16,62 +16,239 @@
         <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i>
         <span>AP Adaptive Personalised Learning</span>
       </a>
-      <span class="badge-tag">Student</span>
+      <span class="badge-tag">Student Gateway</span>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" style="display: flex; align-items: center; gap: 0.75rem;">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+        <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+      </button>
       <a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
       <a href="/teacher-login" class="nav-link"><i class="fa-solid fa-chalkboard-user"></i> Faculty Portal</a>
       <a href="/ml-performance" class="nav-link"><i class="fa-solid fa-chart-line"></i> ML Benchmarks</a>
     </div>
   </nav>
 
-  <div class="auth-page-container">
+  <div class="auth-page-container" style="max-width: 520px; margin: 2rem auto; padding: 0 1rem;">
     <div class="auth-card">
-      <div style="text-align: center; margin-bottom: 2rem;">
-        <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--bg-surface); color: var(--primary-light); display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; border: 1px solid var(--bg-card-border);">
+      <div style="text-align: center; margin-bottom: 1.75rem;">
+        <div style="width: 58px; height: 58px; border-radius: 50%; background: var(--bg-surface); color: var(--primary-light); display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 0.85rem; border: 1px solid var(--bg-card-border); box-shadow: 0 0 20px rgba(79, 70, 229, 0.25);">
           <i class="fa-solid fa-user-graduate"></i>
         </div>
-        <h2>Student Sign In</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Access your adaptive learning path & academic risk diagnosis</p>
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">Student Portal Sign In</h2>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">Access your adaptive syllabus, diagnostic quizzes, sandbox & progress</p>
       </div>
 
-      <div id="errorMessage" style="display: none; background: var(--risk-high-bg); border: 1px solid var(--risk-high-border); color: #fca5a5; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.25rem;">
+      <div id="errorMessage" style="display: none; background: var(--risk-high-bg); border: 1px solid var(--risk-high-border); color: #fca5a5; padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.25rem; line-height: 1.5;">
+      </div>
+
+      <div id="successMessage" style="display: none; background: var(--risk-low-bg); border: 1px solid var(--risk-low-border); color: #6ee7b7; padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.25rem; line-height: 1.5;">
       </div>
 
       <form id="studentLoginForm">
         <div class="form-group">
           <label class="form-label" for="email">Student Email Address</label>
-          <input type="email" id="email" class="form-control" placeholder="e.g. student@example.com" required value="student@example.com">
+          <input type="email" id="email" class="form-control" placeholder="e.g. your_email@student.edu.in" required value="student@example.com" autocomplete="username">
         </div>
 
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
           <div class="password-input-wrapper">
-            <input type="password" id="password" class="form-control" placeholder="••••••••" required value="student123" autocomplete="current-password">
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required value="student123" autocomplete="current-password">
             <button type="button" id="togglePasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('password', 'togglePasswordBtn')" aria-label="Show password" title="Show password">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
         </div>
 
-        <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.95rem; margin-top: 0.5rem;">
+        <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 0.95rem; font-weight: 600; margin-top: 0.5rem; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
           <i class="fa-solid fa-right-to-bracket"></i> Sign In to Dashboard
         </button>
       </form>
 
-      <div class="demo-credentials-box">
-        <div style="display: flex; align-items: center; gap: 0.4rem; font-weight: 600; color: #a5b4fc;">
-          <i class="fa-solid fa-key"></i> Quick Demo Account
+      <!-- Action Links: Forgot Password & Register -->
+      <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--bg-card-border); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+        <a href="javascript:void(0)" onclick="openForgotModal()" style="color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+          <i class="fa-solid fa-key" style="color: #f59e0b;"></i> Forgot Password?
+        </a>
+        <a href="javascript:void(0)" onclick="openRegisterModal()" style="color: var(--primary-light); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+          <i class="fa-solid fa-user-plus"></i> Create New Account
+        </a>
+      </div>
+
+      <!-- Quick 1-Click Demo Accounts -->
+      <div class="demo-credentials-box" style="margin-top: 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+          <span style="font-weight: 600; color: #a5b4fc; font-size: 0.8rem;">
+            <i class="fa-solid fa-bolt"></i> 1-Click Demo Logins
+          </span>
+          <span class="badge" style="background: rgba(79, 70, 229, 0.2); color: #c7d2fe; font-size: 0.7rem;">Ready to Test</span>
         </div>
-        <div style="margin-top: 0.4rem; color: var(--text-muted);">
-          Click to auto-fill: 
-          <span class="demo-pill" onclick="fillDemo('student@example.com', 'student123')">student@example.com / student123</span>
+        <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem;">
+          <div class="demo-pill" style="cursor: pointer; padding: 0.45rem 0.7rem; margin: 0; font-size: 0.78rem; display: flex; justify-content: space-between;" onclick="fillDemo('student@example.com', 'student123')">
+            <span><strong>Default Student:</strong> student@example.com</span>
+            <span style="color: var(--secondary);">AU AIML</span>
+          </div>
+          <div class="demo-pill" style="cursor: pointer; padding: 0.45rem 0.7rem; margin: 0; font-size: 0.78rem; display: flex; justify-content: space-between;" onclick="fillDemo('student.au@au.edu.in', 'StudentAU@2024')">
+            <span><strong>AU Scholar:</strong> student.au@au.edu.in</span>
+            <span style="color: #34d399;">AU Core</span>
+          </div>
+          <div class="demo-pill" style="cursor: pointer; padding: 0.45rem 0.7rem; margin: 0; font-size: 0.78rem; display: flex; justify-content: space-between;" onclick="fillDemo('jntuk_student1@jntuk.edu.in', 'student123')">
+            <span><strong>JNTUK Scholar:</strong> jntuk_student1@jntuk.edu.in</span>
+            <span style="color: #f59e0b;">JNTUK ECE</span>
+          </div>
         </div>
       </div>
 
       <div style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-dim);">
-        Are you a faculty member? <a href="/teacher-login">Faculty Sign In &rarr;</a>
+        Are you a faculty member? <a href="/teacher-login" style="color: var(--secondary); font-weight: 600;">Faculty Sign In &rarr;</a>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= STUDENT REGISTRATION MODAL ================= -->
+  <div id="studentRegisterModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem;">
+          <i class="fa-solid fa-user-plus" style="color: var(--primary-light);"></i>
+          Create Student Account
+        </h3>
+        <button class="close-btn" onclick="closeRegisterModal()">&times;</button>
+      </div>
+
+      <form id="studentRegisterForm" onsubmit="handleStudentRegistration(event)">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem; max-height: 520px; overflow-y: auto; padding: 1.25rem;">
+          <div id="regAlert" class="alert-box alert-error" style="display: none;"></div>
+
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="regFullName" class="form-control" required placeholder="e.g. Arun Kumar Reddy">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address (Personal or College) *</label>
+            <input type="email" id="regEmail" class="form-control" required placeholder="e.g. arun.reddy@gmail.com or student@au.edu.in">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Roll Number *</label>
+              <input type="text" id="regRollNo" class="form-control" placeholder="e.g. 23A91A0501" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Branch / Program *</label>
+              <select id="regBranch" class="form-select">
+                <option value="CSE (AI & ML)">CSE (AI & ML)</option>
+                <option value="CSE">Computer Science (CSE)</option>
+                <option value="ECE">Electronics & Communication (ECE)</option>
+                <option value="CSE (Data Science)">CSE (Data Science)</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="EEE">Electrical & Electronics (EEE)</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Academic Year</label>
+              <select id="regYear" class="form-select" onchange="updateSemesterOption()">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year" selected>3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="regSemester" class="form-select">
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5" selected>Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section</label>
+              <select id="regSection" class="form-select">
+                <option value="A" selected>Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Institution Selector -->
+          <div class="form-group">
+            <label class="form-label">University / College *</label>
+            <select id="regInstitutionSelect" class="form-select" required>
+              <option value="">Loading institutions...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Create Password *</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPassword" class="form-control" required placeholder="Minimum 4 characters" autocomplete="new-password">
+              <button type="button" id="toggleRegPasswordBtn" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', 'toggleRegPasswordBtn')" aria-label="Show password" title="Show password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.6rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeRegisterModal()">Cancel</button>
+          <button type="submit" id="regSubmitBtn" class="btn btn-primary">
+            <i class="fa-solid fa-user-plus"></i> Complete Registration & Sign In
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FORGOT / RESET PASSWORD MODAL ================= -->
+  <div id="studentForgotModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.2rem;">
+          <i class="fa-solid fa-key" style="color: #f59e0b;"></i>
+          Password Reset & Recovery
+        </h3>
+        <button class="close-btn" onclick="closeForgotModal()">&times;</button>
+      </div>
+
+      <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem; padding: 1.25rem;">
+          <div id="forgotAlert" class="alert-box" style="display: none;"></div>
+
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.5;">
+            Enter your registered student email and your new password to reset your access immediately.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Registered Student Email *</label>
+            <input type="email" id="forgotEmail" class="form-control" required placeholder="e.g. your_email@student.edu.in">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Password *</label>
+            <input type="password" id="forgotNewPassword" class="form-control" required placeholder="Enter new password (min. 4 chars)">
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.6rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeForgotModal()">Cancel</button>
+          <button type="submit" id="forgotSubmitBtn" class="btn btn-primary">
+            <i class="fa-solid fa-shield-check"></i> Reset Password & Login
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -96,11 +273,64 @@
       document.getElementById('password').value = pass;
     }
 
+    function updateSemesterOption() {
+      const yr = document.getElementById('regYear').value;
+      const semSelect = document.getElementById('regSemester');
+      if (yr === '1st Year') semSelect.value = '1';
+      else if (yr === '2nd Year') semSelect.value = '3';
+      else if (yr === '3rd Year') semSelect.value = '5';
+      else if (yr === '4th Year') semSelect.value = '7';
+    }
+
+    // Modal helpers
+    function openRegisterModal() {
+      document.getElementById('studentRegisterModal').style.display = 'flex';
+      const emailVal = document.getElementById('email').value.trim();
+      if (emailVal && emailVal !== 'student@example.com') {
+        document.getElementById('regEmail').value = emailVal;
+      }
+      loadInstitutionsDropdown();
+    }
+    function closeRegisterModal() {
+      document.getElementById('studentRegisterModal').style.display = 'none';
+    }
+
+    function openForgotModal() {
+      document.getElementById('studentForgotModal').style.display = 'flex';
+      const emailVal = document.getElementById('email').value.trim();
+      if (emailVal) document.getElementById('forgotEmail').value = emailVal;
+    }
+    function closeForgotModal() {
+      document.getElementById('studentForgotModal').style.display = 'none';
+    }
+
+    // Load active institutions
+    async function loadInstitutionsDropdown() {
+      const sel = document.getElementById('regInstitutionSelect');
+      if (sel.options.length > 1) return;
+      try {
+        const res = await fetch('/api/institutions/list');
+        const data = await res.json();
+        if (data.success && data.institutions && data.institutions.length > 0) {
+          sel.innerHTML = data.institutions.map(inst => `
+            <option value="${inst.id}">${inst.name || inst.institution_name} (${inst.district || 'Andhra Pradesh'})</option>
+          `).join('');
+        } else {
+          sel.innerHTML = '<option value="1">Andhra University College of Engineering (Visakhapatnam)</option><option value="2">JNTU Kakinada University College of Engineering</option>';
+        }
+      } catch (err) {
+        sel.innerHTML = '<option value="1">Andhra University College of Engineering (Visakhapatnam)</option><option value="2">JNTU Kakinada University College of Engineering</option>';
+      }
+    }
+
+    // Handle Login
     document.getElementById('studentLoginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const errBox = document.getElementById('errorMessage');
+      const succBox = document.getElementById('successMessage');
       const btn = document.getElementById('loginBtn');
       errBox.style.display = 'none';
+      succBox.style.display = 'none';
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -119,17 +349,149 @@
         if (res.ok && data.success) {
           window.location.href = '/student-dashboard';
         } else {
-          errBox.textContent = data.error || 'Login failed. Please check credentials.';
+          const errMsg = data.message || data.error || 'Login failed. Please check credentials.';
+          errBox.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+              <i class="fa-solid fa-circle-exclamation" style="margin-top: 2px;"></i>
+              <div>
+                <span>${errMsg}</span>
+                <div style="margin-top: 0.4rem; font-size: 0.8rem;">
+                  Don't have an account yet with this email? <a href="javascript:void(0)" onclick="openRegisterModal()" style="color: #fff; text-decoration: underline; font-weight: 700;">Click here to Create an Account &rarr;</a>
+                  <span style="margin: 0 0.35rem; opacity: 0.7;">|</span>
+                  <a href="javascript:void(0)" onclick="openForgotModal()" style="color: #cbd5e1; text-decoration: underline;">Reset Password</a>
+                </div>
+              </div>
+            </div>
+          `;
           errBox.style.display = 'block';
         }
       } catch (err) {
-        errBox.textContent = 'Server connection error. Please try again.';
+        errBox.textContent = 'Server connection error. Please verify the backend is running.';
         errBox.style.display = 'block';
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In to Dashboard';
       }
     });
+
+    // Handle Student Registration
+    async function handleStudentRegistration(e) {
+      e.preventDefault();
+      const alertBox = document.getElementById('regAlert');
+      const btn = document.getElementById('regSubmitBtn');
+      alertBox.style.display = 'none';
+
+      const full_name = document.getElementById('regFullName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const roll_no = document.getElementById('regRollNo').value.trim().toUpperCase();
+      const branch = document.getElementById('regBranch').value;
+      const year = document.getElementById('regYear').value;
+      const semester = parseInt(document.getElementById('regSemester').value) || 5;
+      const section = document.getElementById('regSection').value;
+      const institution_id = parseInt(document.getElementById('regInstitutionSelect').value) || 1;
+      const password = document.getElementById('regPassword').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering Account...';
+
+      try {
+        const res = await fetch('/api/register/student', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            full_name, email, roll_no, branch, year, semester, section, institution_id, password
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          closeRegisterModal();
+          // Auto-sign in with the newly registered credentials
+          const loginRes = await fetch('/api/login/student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const loginData = await loginRes.json();
+          if (loginRes.ok && loginData.success) {
+            window.location.href = '/student-dashboard';
+          } else {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            const succBox = document.getElementById('successMessage');
+            succBox.textContent = 'Account created successfully! Please click Sign In below.';
+            succBox.style.display = 'block';
+          }
+        } else {
+          alertBox.textContent = data.message || 'Registration failed. Please review inputs.';
+          alertBox.style.display = 'block';
+        }
+      } catch (err) {
+        alertBox.textContent = 'Server error during registration. Please try again.';
+        alertBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Complete Registration & Sign In';
+      }
+    }
+
+    // Handle Forgot / Reset Password
+    async function handleForgotPassword(e) {
+      e.preventDefault();
+      const alertBox = document.getElementById('forgotAlert');
+      const btn = document.getElementById('forgotSubmitBtn');
+      alertBox.style.display = 'none';
+
+      const email = document.getElementById('forgotEmail').value.trim();
+      const new_password = document.getElementById('forgotNewPassword').value;
+
+      if (!email || !new_password) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Resetting Password...';
+
+      try {
+        const res = await fetch('/api/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, new_password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          closeForgotModal();
+          document.getElementById('email').value = email;
+          document.getElementById('password').value = new_password;
+          
+          // Auto-sign in
+          const loginRes = await fetch('/api/login/student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: new_password })
+          });
+          const loginData = await loginRes.json();
+          if (loginRes.ok && loginData.success) {
+            window.location.href = '/student-dashboard';
+          } else {
+            const succBox = document.getElementById('successMessage');
+            succBox.textContent = 'Password reset successfully! You can now sign in with your new password.';
+            succBox.style.display = 'block';
+          }
+        } else {
+          alertBox.className = 'alert-box alert-error';
+          alertBox.textContent = data.message || 'Unable to reset password. Please check email address.';
+          alertBox.style.display = 'block';
+        }
+      } catch (err) {
+        alertBox.className = 'alert-box alert-error';
+        alertBox.textContent = 'Server error. Please try again later.';
+        alertBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-shield-check"></i> Reset Password & Login';
+      }
+    }
   </script>
+  <script src="theme-switcher.js"></script>
 </body>
 </html>

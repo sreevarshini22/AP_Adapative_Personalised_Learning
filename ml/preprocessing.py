@@ -63,6 +63,12 @@ def prepare_data(df, test_size=0.2, random_state=42):
     X_train_transformed = pipeline.fit_transform(X_train)
     X_test_transformed = pipeline.transform(X_test)
     
+    # Compute balanced class weights for training
+    from sklearn.utils.class_weight import compute_class_weight
+    classes_unique = np.unique(y_train)
+    weights = compute_class_weight(class_weight="balanced", classes=classes_unique, y=y_train)
+    class_weight_dict = {cls_name: float(w) for cls_name, w in zip(classes_unique, weights)}
+
     return {
         "X_train": X_train,
         "X_test": X_test,
@@ -72,7 +78,8 @@ def prepare_data(df, test_size=0.2, random_state=42):
         "y_test": y_test,
         "pipeline": pipeline,
         "feature_columns": FEATURE_COLUMNS,
-        "classes": CLASS_NAMES
+        "classes": CLASS_NAMES,
+        "class_weights": class_weight_dict
     }
 
 def save_pipeline(pipeline, file_path="models/preprocessing_pipeline.pkl"):

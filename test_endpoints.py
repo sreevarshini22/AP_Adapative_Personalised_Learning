@@ -17,9 +17,9 @@ class PlatformTestSuite(unittest.TestCase):
     def test_01_landing_page(self):
         res = self.client.get('/')
         self.assertEqual(res.status_code, 200)
-        self.assertIn(b'Adaptive & Personalised Learning', res.data)
-        self.assertIn(b'How It Works', res.data)
-        self.assertIn(b'Andhra Pradesh', res.data)
+        self.assertIn(b'Adaptive &amp; Personalised Learning', res.data)
+        self.assertIn(b'Student Login', res.data)
+        self.assertIn(b'Teacher Login', res.data)
 
     def test_02_routes_serving(self):
         routes = ['/student-login', '/teacher-login', '/login', '/ml-performance', '/student-dashboard', '/teacher-dashboard']

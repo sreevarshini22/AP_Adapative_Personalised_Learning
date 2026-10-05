@@ -194,6 +194,198 @@
       margin-right: auto;
       border-bottom-left-radius: 4px;
     }
+    /* Gamification & Sandbox Styling */
+    .gamification-pill-hdr {
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      color: #c084fc;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.825rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .gamification-pill-hdr:hover {
+      background: rgba(168, 85, 247, 0.22);
+      transform: translateY(-1px);
+    }
+    .badge-card-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      transition: all 0.25s ease;
+      overflow: hidden;
+    }
+    .badge-card-item.unlocked {
+      border-color: rgba(168, 85, 247, 0.4);
+      background: linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, rgba(15, 23, 42, 0.8) 100%);
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
+    }
+    .badge-card-item.locked {
+      opacity: 0.55;
+      filter: grayscale(0.85);
+    }
+    .badge-card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .sandbox-code-editor {
+      width: 100%;
+      height: 280px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      background: #090d16;
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      resize: vertical;
+      outline: none;
+    }
+    .sandbox-code-editor:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+    .test-result-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.825rem;
+      margin-bottom: 0.5rem;
+    }
+    /* ================= OFFICIAL REPORT CARD PRINT & DOSSIER STYLES ================= */
+    .report-dossier-card {
+      background: #0f172a;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: #e2e8f0;
+      position: relative;
+    }
+    .report-dossier-header {
+      border-bottom: 2px solid rgba(129, 140, 248, 0.4);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    .report-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: #93c5fd;
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      font-weight: 600;
+    }
+    .report-table td {
+      padding: 0.65rem 0.85rem;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+    }
+    .bloom-bar-container {
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 0.35rem;
+    }
+    .bloom-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #38bdf8);
+      border-radius: 999px;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #officialReportCardModal,
+      #officialReportCardModal .modal-container,
+      #officialReportCardModal .modal-body,
+      #officialReportCardModal #reportCardPrintArea,
+      #officialReportCardModal #reportCardPrintArea * {
+        visibility: visible !important;
+      }
+      #officialReportCardModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        display: block !important;
+        overflow: visible !important;
+      }
+      #officialReportCardModal .modal-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 0 !important;
+      }
+      #officialReportCardModal .modal-header,
+      #officialReportCardModal .modal-footer,
+      #officialReportCardModal .no-print {
+        display: none !important;
+      }
+      .report-dossier-card {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+      }
+      .report-dossier-header {
+        border-bottom: 2px solid #0284c7 !important;
+      }
+      .report-table th {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .report-table td {
+        color: #1e293b !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+      .bloom-bar-container {
+        background: #e2e8f0 !important;
+      }
+      .bloom-bar-fill {
+        background: #0284c7 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -248,6 +440,16 @@
           </a>
         </li>
         <li>
+          <a class="nav-item" onclick="switchView('sandbox')">
+            <i class="fa-solid fa-code"></i> Coding Sandbox
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="switchView('badges')">
+            <i class="fa-solid fa-trophy"></i> Badges & XP
+          </a>
+        </li>
+        <li>
           <a class="nav-item" onclick="switchView('messages')">
             <i class="fa-solid fa-comments"></i> Faculty Messaging
             <span id="unreadMsgBadge" class="nav-badge" style="display: none;">0</span>
@@ -256,6 +458,11 @@
         <li>
           <a class="nav-item" onclick="switchView('profile')">
             <i class="fa-solid fa-id-card"></i> Profile
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="openOfficialReportCardModal()" style="color: #38bdf8;">
+            <i class="fa-solid fa-file-pdf"></i> Academic Report Card
           </a>
         </li>
       </ul>
@@ -280,14 +487,26 @@
               <i class="fa-solid fa-building-columns"></i> Loading Branch & Cohort...
             </span>
             <span id="studentRollTag" class="badge badge-neutral" style="font-family: monospace;">-</span>
+            <span id="studentClassTeacherTag" class="student-badge-pill" style="background: rgba(14, 165, 233, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); color: #38bdf8;">
+              <i class="fa-solid fa-chalkboard-user"></i> <span id="hdrClassTeacherText">Class Teacher: Faculty Advisor</span>
+            </span>
             <span id="topRiskBadge" class="badge badge-low-risk">🟢 LOW RISK</span>
             <span id="studentStreakPill" class="streak-pill">
               <i class="fa-solid fa-fire"></i> 4 Days Streak
+            </span>
+            <span id="hdrGamificationPill" class="gamification-pill-hdr" onclick="switchView('badges')" title="View Gamification Badges & Level Progress">
+              <i class="fa-solid fa-gem"></i> <strong id="hdrXpVal">450 XP</strong> &bull; <span id="hdrLevelVal">Level 1</span>
             </span>
           </div>
         </div>
 
         <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+            <i class="fa-solid fa-sun"></i> <span class="theme-text">Light Mode</span>
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="openOfficialReportCardModal()" style="background: linear-gradient(135deg, #4f46e5, #0284c7); border: none; font-weight: 600; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+            <i class="fa-solid fa-file-pdf"></i> Official Report Card
+          </button>
           <button class="btn btn-primary btn-sm" onclick="switchView('learning-path')">
             <i class="fa-solid fa-route"></i> Next Adaptive Step
           </button>
@@ -647,71 +866,314 @@
 
       <!-- ================= VIEW 8: MESSAGES ================= -->
       <section id="view-messages" class="tab-view">
-        <div style="margin-bottom: 1.5rem;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">Subject Faculty Messaging</h2>
-          <p style="color: var(--text-muted); font-size: 0.875rem;">Direct academic communication with your assigned course professors.</p>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; min-height: 480px;">
-          <div class="card" style="padding: 1rem; overflow-y: auto; max-height: 520px;">
-            <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-muted);">CONVERSATIONS</div>
-            <div id="messagesThreadList" style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <!-- Rendered dynamically -->
-            </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">Faculty Messaging & Academic Inquiries</h2>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Real-time persistent messaging with your course professors and academic advisors.</p>
           </div>
-          <div class="card" style="display: flex; flex-direction: column; height: 520px;">
-            <div id="chatboxHeader" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--bg-card-border); margin-bottom: 1rem;">
-              <h3 id="chatFacultyName" style="font-size: 1.1rem;">Select a conversation</h3>
-              <div id="chatSubjectName" style="font-size: 0.8rem; color: var(--text-muted);">-</div>
-            </div>
-            <div id="chatboxMessages" style="flex: 1; overflow-y: auto; padding: 0.5rem 0;">
-              <div style="text-align: center; color: var(--text-muted); margin-top: 3rem;">
-                Select a subject conversation from the left or click "Message Teacher" from any subject card.
+          <div>
+            <button onclick="openNewChatStudentModal()" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-pen-to-square"></i> New Inquiry
+            </button>
+          </div>
+        </div>
+
+        <div id="studentChatCard" class="chat-container-card">
+          <!-- Left Sidebar: Conversations -->
+          <div class="chat-sidebar-pane">
+            <div class="chat-sidebar-header">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">
+                  Instructors & Chats
+                </div>
+                <span id="studentChatUnreadHeaderPill" class="badge badge-primary" style="font-size: 0.7rem; display: none;">0 unread</span>
+              </div>
+              <div class="chat-sidebar-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="studentConvSearchInput" class="form-control" placeholder="Search conversations..." oninput="filterStudentConversations()">
               </div>
             </div>
-            <form id="chatReplyForm" onsubmit="sendStudentReply(event)" style="display: flex; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--bg-card-border);">
-              <input type="hidden" id="activeSubjectId">
-              <input type="text" id="chatInputText" class="form-control" placeholder="Type your academic query..." required>
-              <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.25rem;">
-                <i class="fa-solid fa-paper-plane"></i>
-              </button>
-            </form>
+
+            <div id="studentChatThreadsList" class="chat-threads-scroll">
+              <div style="text-align: center; color: var(--text-muted); padding: 2rem 1rem; font-size: 0.85rem;">
+                <i class="fa-solid fa-spinner fa-spin" style="margin-bottom: 0.5rem; font-size: 1.2rem;"></i><br>
+                Loading conversations...
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Window: Active Chat -->
+          <div class="chat-window-pane">
+            <!-- Header -->
+            <div class="chat-header-bar">
+              <div class="chat-partner-info">
+                <button class="chat-back-btn" onclick="toggleStudentMobileChat(false)" title="Back to conversations">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div id="studentChatActiveAvatar" class="conv-avatar-box teacher-avatar" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                  👨‍🏫
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.4rem;">
+                    <span id="studentChatActiveName" style="font-weight: 700; font-size: 0.95rem; color: #fff;">Select an Instructor</span>
+                    <span id="studentChatActiveRoleBadge" class="badge badge-cyan" style="font-size: 0.65rem;">FACULTY</span>
+                  </div>
+                  <div id="studentChatActiveSubtitle" style="font-size: 0.75rem; color: var(--text-muted);">
+                    Select a conversation from the left to view messages
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="badge badge-neutral" style="font-size: 0.7rem;">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block; margin-right: 4px;"></span> Active Channel
+                </span>
+              </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="studentChatMessagesArea" class="chat-messages-area">
+              <div class="chat-empty-state">
+                <div class="chat-empty-icon"><i class="fa-solid fa-comments"></i></div>
+                <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">No messages yet</div>
+                <div style="font-size: 0.8rem;">Your teacher messages will appear here.</div>
+              </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-input-bar-container">
+              <form id="studentChatSendForm" onsubmit="handleStudentSendMessage(event)" class="chat-form-flex">
+                <input type="text" id="studentChatInput" class="chat-input-field" placeholder="Type your academic inquiry... (Press Enter to send)" autocomplete="off" disabled>
+                <button type="submit" id="studentChatSendBtn" class="btn btn-primary chat-send-btn" disabled>
+                  <span>Send</span>
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
 
+
       <!-- ================= VIEW 9: PROFILE ================= -->
       <section id="view-profile" class="tab-view">
         <div style="margin-bottom: 1.5rem;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">Student Profile & Academic Coordinates</h2>
-          <p style="color: var(--text-muted); font-size: 0.875rem;">Official Andhra Pradesh B.Tech enrollment records.</p>
+          <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-id-card-clip" style="color: var(--primary-light);"></i> Student Profile & Verified Institutional Coordinates
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.875rem;">Official institutional master enrollment record verified against AISHE database.</p>
         </div>
-        <div class="card" style="max-width: 650px;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; font-size: 0.95rem;">
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">FULL NAME</div>
-              <div id="profileFullName" style="font-weight: 600;">-</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">ROLL NUMBER</div>
-              <div id="profileRollNo" style="font-weight: 600; font-family: monospace;">-</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">BRANCH</div>
-              <div id="profileBranch" style="font-weight: 600;">-</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">YEAR & SEMESTER</div>
-              <div id="profileYearSem" style="font-weight: 600;">-</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">SECTION</div>
-              <div id="profileSection" style="font-weight: 600;">-</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.8rem;">EMAIL ADDRESS</div>
-              <div id="profileEmail" style="font-weight: 600;">-</div>
+        
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; max-width: 980px;">
+          <!-- Left: Academic Coordinates Card -->
+          <div class="card" style="border-left: 4px solid var(--primary-light);">
+            <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-building-columns" style="color: var(--primary-light);"></i> Institution Master Details
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; font-size: 0.9rem;">
+              <div style="grid-column: span 2; background: rgba(79, 70, 229, 0.08); padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(79, 70, 229, 0.25);">
+                <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Verified Institution</div>
+                <div id="profileInstName" style="font-weight: 700; color: #fff; font-size: 1.05rem; margin-top: 2px;">-</div>
+                <div style="display: flex; gap: 0.6rem; margin-top: 0.4rem; font-size: 0.8rem; color: var(--text-muted);">
+                  <span id="profileInstType"><i class="fa-solid fa-tag"></i> Autonomous College</span> &bull;
+                  <span id="profileInstLocation"><i class="fa-solid fa-location-dot"></i> Visakhapatnam, Andhra Pradesh</span>
+                </div>
+              </div>
+
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">AFFILIATED UNIVERSITY</div>
+                <div id="profileUniversity" style="font-weight: 600; color: #cbd5e1;">-</div>
+              </div>
+
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">AISHE CODE</div>
+                <div id="profileAishe" style="font-weight: 700; font-family: monospace; color: #34d399;">-</div>
+              </div>
+
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">BRANCH / PROGRAM</div>
+                <div id="profileBranch" style="font-weight: 600; color: #fff;">-</div>
+              </div>
+
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">REGULATION & ACADEMIC YEAR</div>
+                <div style="font-weight: 600; color: var(--secondary);">
+                  <span id="profileRegulation">-</span> &bull; <span id="profileAcademicYear">2024-2025</span>
+                </div>
+              </div>
+
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">YEAR & SEMESTER</div>
+                <div id="profileYearSem" style="font-weight: 600;">-</div>
+              </div>
+
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">CLASS SECTION</div>
+                <div id="profileSection" style="font-weight: 600;">-</div>
+              </div>
             </div>
           </div>
+
+          <!-- Right: Student Credentials & Assigned Faculty Card -->
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <div class="card" style="border-left: 4px solid #10b981;">
+              <h3 style="font-size: 1.05rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-user-check" style="color: #10b981;"></i> Student Credentials
+              </h3>
+              <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.9rem;">
+                <div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem;">STUDENT NAME</div>
+                  <div id="profileFullName" style="font-weight: 700; color: #fff; font-size: 1rem;">-</div>
+                </div>
+                <div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem;">ROLL NUMBER</div>
+                  <div id="profileRollNo" style="font-weight: 700; font-family: monospace; color: #38bdf8;">-</div>
+                </div>
+                <div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem;">OFFICIAL EMAIL</div>
+                  <div id="profileEmail" style="font-weight: 600; color: #cbd5e1;">-</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Assigned Class Teacher Card -->
+            <div class="card" style="border-left: 4px solid var(--secondary);">
+              <h3 style="font-size: 1.05rem; color: #fff; margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-chalkboard-user" style="color: var(--secondary);"></i> Class Teacher & Faculty Advisor
+              </h3>
+              <div id="profileAssignedFacultyBox" style="font-size: 0.85rem;">
+                <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2px;">Assigned Class Teacher</div>
+                <div id="profileTeacherName" style="font-weight: 700; color: #38bdf8; font-size: 1.05rem;">-</div>
+                <div id="profileTeacherDesignation" style="color: var(--secondary); margin-top: 3px; font-weight: 500;">Faculty Advisor</div>
+                <div id="profileTeacherEmail" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 3px;">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 8: PRACTICE CODING SANDBOX ================= -->
+      <section id="view-sandbox" class="tab-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-code" style="color: #38bdf8;"></i> Interactive Practice Coding Sandbox
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">
+              Solve hands-on Python & SQL engineering challenges directly in your browser. Earn XP and unlock mastery badges.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;" id="sandboxChallengeSelectPills">
+            <!-- Dynamically populated challenge buttons -->
+          </div>
+        </div>
+
+        <div class="grid-2" style="grid-template-columns: 1fr 1.3fr; gap: 1.5rem; align-items: start;">
+          <!-- Left: Problem Description Card -->
+          <div class="card" style="border-left: 4px solid #38bdf8;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span id="sandboxChCategory" class="badge badge-primary" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">
+                Machine Learning
+              </span>
+              <span id="sandboxChDifficulty" class="badge badge-neutral" style="color: #fbbf24;">Intermediate</span>
+            </div>
+            <h3 id="sandboxChTitle" style="font-size: 1.2rem; color: #fff; margin-bottom: 0.75rem;">Loading Challenge...</h3>
+            <p id="sandboxChDesc" style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 1.25rem;">
+              Select a coding challenge to get started.
+            </p>
+
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 0.5rem;">
+                <i class="fa-solid fa-vial-circle-check"></i> Sample Test Cases
+              </div>
+              <div id="sandboxSampleCases" style="font-size: 0.825rem; font-family: monospace; color: #94a3b8;">
+                Loading test specifications...
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bg-card-border); padding-top: 0.75rem;">
+              <span style="font-size: 0.85rem; color: #c084fc; font-weight: 700;">
+                <i class="fa-solid fa-gift"></i> <span id="sandboxChXp">150</span> XP Reward
+              </span>
+              <button class="btn btn-outline btn-sm" onclick="resetSandboxStarterCode()">
+                <i class="fa-solid fa-rotate-left"></i> Reset Starter Code
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Code Editor & Execution Console -->
+          <div class="card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-brands fa-python" id="sandboxLangIcon" style="color: #38bdf8;"></i>
+                <span id="sandboxLangLabel">Python 3 Execution Sandbox</span>
+              </span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-shield-halved"></i> Sandboxed Environment</span>
+            </div>
+
+            <textarea id="sandboxCodeEditor" class="sandbox-code-editor" spellcheck="false" placeholder="# Type your code solution here..."></textarea>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.85rem;">
+              <span id="sandboxExecStatusText" style="font-size: 0.825rem; color: var(--text-muted);">Ready to execute</span>
+              <button id="sandboxRunBtn" class="btn btn-primary" onclick="runSandboxCode()" style="background: #0284c7; border-color: #38bdf8;">
+                <i class="fa-solid fa-play"></i> Run Code & Verify
+              </button>
+            </div>
+
+            <!-- Execution Result Panel -->
+            <div id="sandboxResultPanel" style="margin-top: 1.25rem; display: none;">
+              <div style="font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                <span>Test Execution Results</span>
+                <span id="sandboxExecTime" style="color: var(--text-muted);">0.0 ms</span>
+              </div>
+              <div id="sandboxTestResultsContainer"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 9: GAMIFICATION & BADGES ================= -->
+      <section id="view-badges" class="tab-view">
+        <!-- Gamification Banner -->
+        <div class="card" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(168, 85, 247, 0.35); margin-bottom: 1.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem;">
+            <div>
+              <span class="badge" style="background: rgba(168, 85, 247, 0.25); color: #c084fc; margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-crown"></i> Gamification Rank
+              </span>
+              <h2 id="gmLevelTitle" style="font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem;">Level 1: Novice Learner</h2>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin: 0;">
+                Solve coding drills, ace adaptive quizzes, and maintain daily learning streaks to level up.
+              </p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 2rem; font-weight: 800; color: #c084fc;" id="gmTotalXp">450 XP</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);" id="gmNextLevelInfo">50 XP to Level 2</div>
+            </div>
+          </div>
+
+          <!-- XP Progress Bar -->
+          <div style="margin-top: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.35rem; color: #94a3b8;">
+              <span>Progress to Next Tier</span>
+              <span id="gmXpPctText" style="font-weight: 700; color: #c084fc;">90.0%</span>
+            </div>
+            <div class="progress-bar-container" style="height: 8px; background: rgba(0,0,0,0.4);">
+              <div id="gmProgressBarFill" class="progress-bar-fill" style="width: 90%; background: linear-gradient(90deg, #818cf8, #c084fc);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges Showcase Grid -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.2rem; color: #fff;">
+            <i class="fa-solid fa-award" style="color: #fbbf24;"></i> Achievement Badges Showcase
+          </h3>
+          <span id="gmBadgeCountSummary" class="badge badge-neutral">0 / 5 Unlocked</span>
+        </div>
+
+        <div id="gmBadgesGrid" class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+          <!-- Loaded dynamically -->
         </div>
       </section>
 
@@ -774,6 +1236,45 @@
     </div>
   </div>
 
+  <!-- Modal: New Faculty Inquiry -->
+  <div id="newInquiryModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem;">
+            <i class="fa-solid fa-pen-to-square" style="color: var(--primary-light); margin-right: 6px;"></i>
+            New Academic Inquiry
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">
+            Send a direct, persistent message to your faculty instructor or advisor.
+          </p>
+        </div>
+        <button class="close-btn" onclick="closeModal('newInquiryModal')">&times;</button>
+      </div>
+      <form onsubmit="handleStartNewStudentInquiry(event)">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.1rem; padding: 1.25rem;">
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Select Faculty / Course</label>
+            <select id="newInquiryFacultySelect" class="form-control" style="background: var(--bg-secondary); color: var(--text-main);" required>
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Your Message / Academic Doubt</label>
+            <textarea id="newInquiryInitialMessage" class="form-control" rows="4" placeholder="Type your academic question, lesson clarification, or project doubt..." style="background: var(--bg-secondary); color: var(--text-main); resize: vertical;" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.6rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('newInquiryModal')">Cancel</button>
+          <button type="submit" id="newInquirySubmitBtn" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane"></i> Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="theme-switcher.js"></script>
   <script>
     let currentStudent = null;
     let cachedSubjects = [];
@@ -807,6 +1308,8 @@
       if (viewName === 'risk-analysis') loadRiskAnalysisView();
       if (viewName === 'subjects') renderSubjectsView();
       if (viewName === 'quizzes') loadQuizzesView();
+      if (viewName === 'sandbox') loadSandboxChallenges();
+      if (viewName === 'badges') loadGamificationProfile();
       if (viewName === 'messages') loadMessagesInbox();
     }
 
@@ -841,7 +1344,8 @@
         await Promise.allSettled([
           loadStudentKPIs(),
           loadSubjects(),
-          initOverviewCharts()
+          initOverviewCharts(),
+          loadGamificationProfile()
         ]);
       } catch (err) {
         console.error('Error initializing student portal:', err);
@@ -851,17 +1355,44 @@
     function renderHeader(st) {
       document.getElementById('welcomeStudentTitle').textContent = `Welcome back, ${st.full_name} 👋`;
       document.getElementById('studentAcademicTag').innerHTML = `
-        <i class="fa-solid fa-building-columns"></i> ${st.branch} &bull; ${st.year} &bull; Sem ${st.semester} &bull; Sec ${st.section}
+        <i class="fa-solid fa-building-columns"></i> ${st.institution_name || 'Andhra University'} &bull; ${st.branch} &bull; ${st.year} &bull; Sem ${st.semester}
       `;
       document.getElementById('studentRollTag').textContent = st.roll_no;
       document.getElementById('studentStreakPill').innerHTML = `<i class="fa-solid fa-fire"></i> ${st.learning_streak || 4} Days Streak`;
 
-      document.getElementById('profileFullName').textContent = st.full_name;
-      document.getElementById('profileRollNo').textContent = st.roll_no;
-      document.getElementById('profileBranch').textContent = st.branch;
-      document.getElementById('profileYearSem').textContent = `${st.year} (Sem ${st.semester})`;
-      document.getElementById('profileSection').textContent = `Section ${st.section}`;
-      document.getElementById('profileEmail').textContent = st.email;
+      // Class Teacher in Top Header
+      const teacherName = st.class_teacher || (st.assigned_teacher ? st.assigned_teacher.name : 'Dr. K. Srinivas Murthy');
+      if (document.getElementById('hdrClassTeacherText')) {
+        document.getElementById('hdrClassTeacherText').textContent = `Class Teacher: ${teacherName}`;
+      }
+
+      // Profile Coordinates View
+      if (document.getElementById('profileInstName')) {
+        document.getElementById('profileInstName').textContent = st.institution_name || 'Andhra University College of Engineering';
+        document.getElementById('profileInstType').innerHTML = `<i class="fa-solid fa-tag"></i> ${st.institution_type || 'Autonomous College'}`;
+        document.getElementById('profileInstLocation').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${st.district || 'Visakhapatnam'}, ${st.state || 'Andhra Pradesh'}`;
+        document.getElementById('profileUniversity').textContent = st.university_name || st.university || st.institution_name || 'State University';
+        document.getElementById('profileAishe').textContent = st.aishe_code || 'U-0003';
+        document.getElementById('profileBranch').textContent = st.branch;
+        document.getElementById('profileRegulation').textContent = st.regulation || 'R24';
+        document.getElementById('profileAcademicYear').textContent = st.academic_year || '2024-2025';
+        document.getElementById('profileYearSem').textContent = `${st.year} (Semester ${st.semester})`;
+        document.getElementById('profileSection').textContent = `Section ${st.section}`;
+        document.getElementById('profileFullName').textContent = st.full_name;
+        document.getElementById('profileRollNo').textContent = st.roll_no;
+        document.getElementById('profileEmail').textContent = st.email;
+
+        // Teacher
+        if (st.assigned_teacher) {
+          document.getElementById('profileTeacherName').textContent = st.assigned_teacher.name;
+          document.getElementById('profileTeacherDesignation').textContent = `${st.assigned_teacher.designation || 'Class Teacher'} (${st.assigned_teacher.department || st.branch})`;
+          document.getElementById('profileTeacherEmail').textContent = st.assigned_teacher.email || 'faculty@apedu.ac.in';
+        } else {
+          document.getElementById('profileTeacherName').textContent = teacherName;
+          document.getElementById('profileTeacherDesignation').textContent = "Department of " + st.branch;
+          document.getElementById('profileTeacherEmail').textContent = "faculty@" + (st.email ? st.email.split('@')[1] : 'university.edu.in');
+        }
+      }
     }
 
     async function loadStudentKPIs() {
@@ -930,27 +1461,75 @@
       const container = document.getElementById('subjectsCatalogGrid');
       if (!container) return;
       container.innerHTML = '';
+      if (!cachedSubjects || cachedSubjects.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); padding: 1.5rem; text-align: center; grid-column: 1 / -1;">No registered subjects found for your current semester.</div>';
+        return;
+      }
       cachedSubjects.forEach(sub => {
         const div = document.createElement('div');
         div.className = 'subject-card';
+        div.style.cursor = 'pointer';
+        div.onclick = () => openSubjectCurriculumModal(sub.id, sub.subject_name, sub.subject_code);
         div.innerHTML = `
           <div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
               <span class="subject-code-tag">${sub.subject_code}</span>
-              <span class="badge badge-neutral" style="font-size: 0.7rem;">${sub.credits} CREDITS</span>
+              <span class="badge badge-neutral" style="font-size: 0.7rem;">${sub.credits || 3} CREDITS</span>
             </div>
             <h3 style="font-size: 1.05rem; margin-bottom: 0.35rem; color: #fff;">${sub.subject_name}</h3>
             <div style="font-size: 0.8rem; color: var(--secondary); margin-bottom: 0.75rem;">
-              <i class="fa-solid fa-chalkboard-user"></i> ${sub.teacher.name}
+              <i class="fa-solid fa-chalkboard-user"></i> ${sub.teacher?.name || 'Faculty Assigned'}
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.35rem;">
+              <span style="color: var(--text-muted);">Completion & Mastery</span>
+              <span style="font-weight: 600; color: var(--primary-light);">${sub.stats?.progress_percentage || 0}%</span>
+            </div>
+            <div class="progress-bar-container" style="height: 6px;">
+              <div class="progress-bar-fill progress-fill-primary" style="width: ${sub.stats?.progress_percentage || 0}%"></div>
+            </div>
+            <div style="margin-top: 0.75rem; text-align: right;">
+              <span style="font-size: 0.75rem; color: var(--secondary); font-weight: 600;">
+                <i class="fa-solid fa-folder-tree"></i> View Modules & Quizzes &rarr;
+              </span>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      initOverviewCharts();
+    }
+
+    function filterSubjects() {
+      const q = document.getElementById('subjectSearchInput').value.toLowerCase();
+      const filtered = (cachedSubjects || []).filter(s => s.subject_name.toLowerCase().includes(q) || s.subject_code.toLowerCase().includes(q));
+      const container = document.getElementById('subjectsCatalogGrid');
+      if (!container) return;
+      container.innerHTML = '';
+      filtered.forEach(sub => {
+        const div = document.createElement('div');
+        div.className = 'subject-card';
+        div.style.cursor = 'pointer';
+        div.onclick = () => openSubjectCurriculumModal(sub.id, sub.subject_name, sub.subject_code);
+        div.innerHTML = `
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+              <span class="subject-code-tag">${sub.subject_code}</span>
+              <span class="badge badge-neutral" style="font-size: 0.7rem;">${sub.credits || 3} CREDITS</span>
+            </div>
+            <h3 style="font-size: 1.05rem; margin-bottom: 0.35rem; color: #fff;">${sub.subject_name}</h3>
+            <div style="font-size: 0.8rem; color: var(--secondary); margin-bottom: 0.75rem;">
+              <i class="fa-solid fa-chalkboard-user"></i> ${sub.teacher?.name || 'Faculty Assigned'}
             </div>
           </div>
           <div>
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.35rem;">
               <span style="color: var(--text-muted);">Completion</span>
-              <span style="font-weight: 600; color: var(--primary-light);">${sub.stats.progress_percentage}%</span>
+              <span style="font-weight: 600; color: var(--primary-light);">${sub.stats?.progress_percentage || 0}%</span>
             </div>
             <div class="progress-bar-container" style="height: 6px;">
-              <div class="progress-bar-fill progress-fill-primary" style="width: ${sub.stats.progress_percentage}%"></div>
+              <div class="progress-bar-fill progress-fill-primary" style="width: ${sub.stats?.progress_percentage || 0}%"></div>
             </div>
           </div>
         `;
@@ -958,17 +1537,15 @@
       });
     }
 
-    function filterSubjects() {
-      const q = document.getElementById('subjectSearchInput').value.toLowerCase();
-      const filtered = cachedSubjects.filter(s => s.subject_name.toLowerCase().includes(q) || s.subject_code.toLowerCase().includes(q));
-      const container = document.getElementById('subjectsCatalogGrid');
-      container.innerHTML = '';
-      filtered.forEach(sub => {
-        // render matching
-      });
-    }
-
     async function initOverviewCharts() {
+      const labels = (cachedSubjects && cachedSubjects.length > 0)
+        ? cachedSubjects.map(s => s.subject_name)
+        : ['Core Subject 1', 'Core Subject 2', 'Core Subject 3'];
+      
+      const scores = (cachedSubjects && cachedSubjects.length > 0)
+        ? cachedSubjects.map((s, idx) => Math.min(95, Math.max(45, 70 + (idx % 3) * 8 - (idx % 2) * 5)))
+        : [75, 82, 68];
+
       // 1. Subject Performance Bar Chart
       const ctxSub = document.getElementById('chartStudentSubjects');
       if (ctxSub) {
@@ -976,10 +1553,10 @@
         subjectChartInstance = new Chart(ctxSub.getContext('2d'), {
           type: 'bar',
           data: {
-            labels: ['Math', 'Physics', 'Programming', 'Data Structures', 'DBMS', 'Communication'],
+            labels: labels,
             datasets: [{
-              label: 'Student Score (%)',
-              data: [68, 75, 88, 82, 90, 78],
+              label: 'Student Mastery / Score (%)',
+              data: scores,
               backgroundColor: ['rgba(99, 102, 241, 0.7)', 'rgba(6, 182, 212, 0.7)', 'rgba(16, 185, 129, 0.7)', 'rgba(245, 158, 11, 0.7)', 'rgba(139, 92, 246, 0.7)', 'rgba(236, 72, 153, 0.7)'],
               borderRadius: 6
             }]
@@ -1300,91 +1877,1627 @@
       }
     }
 
-    async function loadMessagesInbox() {
-      const res = await fetch('/api/student/messages');
-      const data = await res.json();
-      const threadList = document.getElementById('messagesThreadList');
-      threadList.innerHTML = '';
+    // Global State for Messaging
+    let studentConversationsData = [];
+    let studentAvailableTeachers = [];
+    let activeStudentChat = {
+      convId: null,
+      teacherId: null,
+      teacherName: '',
+      subjectId: null,
+      subjectName: ''
+    };
+    let studentChatPollInterval = null;
+    let studentUnreadPollInterval = null;
 
-      if (data.success && data.conversations.length) {
-        data.conversations.forEach(th => {
-          const div = document.createElement('div');
-          div.style = 'padding: 0.75rem; border-radius: var(--radius-md); background: rgba(255,255,255,0.03); cursor: pointer; border: 1px solid var(--bg-card-border);';
-          div.onclick = () => openChatThread(th.conversation_id, th.teacher_name, th.subject_name, th.subject_id);
-          div.innerHTML = `
-            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.15rem;">
-              <span>${th.teacher_name}</span>
-              <span class="subject-code-tag">${th.subject_code}</span>
+    function formatMessageTime(isoStr) {
+      if (!isoStr) return '';
+      try {
+        const d = new Date(isoStr.replace(' ', 'T'));
+        if (isNaN(d.getTime())) return isoStr.slice(11, 16);
+        const now = new Date();
+        const isToday = d.toDateString() === now.toDateString();
+        if (isToday) {
+          return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      } catch (e) {
+        return isoStr.slice(11, 16);
+      }
+    }
+
+    function toggleStudentMobileChat(showChat) {
+      const card = document.getElementById('studentChatCard');
+      if (showChat) {
+        card.classList.add('mobile-active-chat');
+      } else {
+        card.classList.remove('mobile-active-chat');
+      }
+    }
+
+    async function fetchStudentUnreadCount() {
+      try {
+        const res = await fetch('/api/student/messages/unread-count');
+        const data = await res.json();
+        if (data.success) {
+          updateStudentUnreadBadge(data.unread_count || 0);
+        }
+      } catch (e) {}
+    }
+
+    async function loadMessagesInbox(isPolling = false) {
+      try {
+        const res = await fetch('/api/student/messages');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success) return;
+
+        studentConversationsData = data.conversations || [];
+        studentAvailableTeachers = data.available_teachers || [];
+
+        // Update total unread badge in sidebar and header
+        updateStudentUnreadBadge(data.total_unread || 0);
+
+        renderStudentConversationsList(studentConversationsData);
+
+        // If no active chat selected yet and conversations exist, auto-select first one on initial view
+        if (!activeStudentChat.convId && studentConversationsData.length > 0 && !isPolling) {
+          const first = studentConversationsData[0];
+          openChatThread(first.conversation_id, first.teacher_id, first.teacher_name, first.subject_name, first.subject_id);
+        } else if (!activeStudentChat.convId && studentConversationsData.length === 0 && studentAvailableTeachers.length > 0 && !isPolling) {
+          const firstT = studentAvailableTeachers[0];
+          openChatThread(firstT.default_conv_id, firstT.teacher_id, firstT.teacher_name, firstT.subject_name, firstT.subject_id);
+        }
+      } catch (err) {
+        console.error('Error loading student messages inbox:', err);
+      }
+    }
+
+    function updateStudentUnreadBadge(count) {
+      const sidebarBadge = document.getElementById('unreadMsgBadge');
+      const headerPill = document.getElementById('studentChatUnreadHeaderPill');
+      
+      if (sidebarBadge) {
+        if (count > 0) {
+          sidebarBadge.textContent = count;
+          sidebarBadge.style.display = 'inline-block';
+        } else {
+          sidebarBadge.style.display = 'none';
+        }
+      }
+
+      if (headerPill) {
+        if (count > 0) {
+          headerPill.textContent = `${count} unread`;
+          headerPill.style.display = 'inline-block';
+        } else {
+          headerPill.style.display = 'none';
+        }
+      }
+    }
+
+    function renderStudentConversationsList(threads) {
+      const container = document.getElementById('studentChatThreadsList');
+      if (!container) return;
+
+      if (!threads || threads.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 2.5rem 1rem; font-size: 0.825rem;">
+            <i class="fa-solid fa-inbox" style="font-size: 2rem; color: var(--text-dim); margin-bottom: 0.65rem; display: block;"></i>
+            <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">No messages yet</div>
+            <div style="font-size: 0.8rem; margin-bottom: 0.75rem;">Your teacher messages will appear here.</div>
+            <button onclick="openNewChatStudentModal()" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-plus"></i> Message Instructor
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      threads.forEach(th => {
+        const isActive = activeStudentChat.convId === th.conversation_id;
+        const item = document.createElement('div');
+        item.className = `conv-thread-item ${isActive ? 'active' : ''}`;
+        item.onclick = () => openChatThread(th.conversation_id, th.teacher_id, th.teacher_name, th.subject_name, th.subject_id);
+
+        const initials = th.teacher_name ? th.teacher_name.split(' ').map(n => n[0]).slice(0, 2).join('') : 'T';
+        const formattedTime = formatMessageTime(th.last_updated);
+        const snippet = th.last_message ? (th.last_message_role === 'student' ? 'You: ' + th.last_message : th.last_message) : 'Start inquiry...';
+
+        item.innerHTML = `
+          <div class="conv-avatar-box teacher-avatar">
+            ${initials}
+            <span class="conv-online-dot"></span>
+          </div>
+          <div class="conv-info-col">
+            <div class="conv-top-row">
+              <span class="conv-name-text">${th.teacher_name}</span>
+              <span class="conv-time-text">${formattedTime}</span>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-              ${th.last_message || 'Start conversation...'}
+            <div class="conv-bottom-row">
+              <span class="conv-preview-text">${snippet}</span>
+              ${th.unread_count > 0 ? `<span class="conv-unread-pill">${th.unread_count}</span>` : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function filterStudentConversations() {
+      const q = (document.getElementById('studentConvSearchInput').value || '').toLowerCase().trim();
+      if (!q) {
+        renderStudentConversationsList(studentConversationsData);
+        return;
+      }
+      const filtered = studentConversationsData.filter(th => 
+        (th.teacher_name && th.teacher_name.toLowerCase().includes(q)) ||
+        (th.subject_name && th.subject_name.toLowerCase().includes(q)) ||
+        (th.last_message && th.last_message.toLowerCase().includes(q))
+      );
+      renderStudentConversationsList(filtered);
+    }
+
+    function openChatThread(convId, teacherId, teacherName, subjectName, subjectId) {
+      activeStudentChat = {
+        convId: convId || `conv_s${currentStudent?.id || 1}_t${teacherId || 1}`,
+        teacherId: teacherId,
+        teacherName: teacherName || 'Faculty Instructor',
+        subjectId: subjectId || null,
+        subjectName: subjectName || 'Academic Course'
+      };
+
+      // Highlight active item
+      renderStudentConversationsList(studentConversationsData);
+
+      // Update Header
+      document.getElementById('studentChatActiveName').textContent = activeStudentChat.teacherName;
+      document.getElementById('studentChatActiveSubtitle').textContent = `${activeStudentChat.subjectName} • Academic Faculty`;
+      const initials = activeStudentChat.teacherName ? activeStudentChat.teacherName.split(' ').map(n => n[0]).slice(0, 2).join('') : '👨‍🏫';
+      document.getElementById('studentChatActiveAvatar').textContent = initials;
+
+      // Enable Input
+      const input = document.getElementById('studentChatInput');
+      const btn = document.getElementById('studentChatSendBtn');
+      input.disabled = false;
+      btn.disabled = false;
+      input.placeholder = `Message ${activeStudentChat.teacherName}... (Press Enter to send)`;
+      input.focus();
+
+      // Switch view on mobile
+      toggleStudentMobileChat(true);
+
+      // Load Messages
+      loadThreadMessages(activeStudentChat.convId);
+    }
+
+    async function loadThreadMessages(convId, isPolling = false) {
+      if (!convId) return;
+      try {
+        const res = await fetch(`/api/student/messages/${convId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success) return;
+
+        const container = document.getElementById('studentChatMessagesArea');
+        if (!container) return;
+
+        if (!data.messages || data.messages.length === 0) {
+          if (!isPolling) {
+            container.innerHTML = `
+              <div class="chat-empty-state">
+                <div class="chat-empty-icon"><i class="fa-solid fa-paper-plane" style="color: var(--primary-light);"></i></div>
+                <div style="font-weight: 600; color: #fff; margin-bottom: 0.25rem;">No messages yet</div>
+                <div style="font-size: 0.8rem;">Your teacher messages will appear here. Send an inquiry or doubt regarding ${activeStudentChat.subjectName}.</div>
+              </div>
+            `;
+            container.dataset.lastSignature = 'empty';
+          }
+          return;
+        }
+
+        const msgSignature = data.messages.map(m => `${m.id}_${m.is_read}`).join('|');
+        if (isPolling && container.dataset.lastSignature === msgSignature) {
+          return;
+        }
+        container.dataset.lastSignature = msgSignature;
+
+        container.innerHTML = '';
+        data.messages.forEach(m => {
+          const isSent = m.sender_role === 'student';
+          const row = document.createElement('div');
+          row.className = `chat-message-row ${isSent ? 'sent' : 'received'}`;
+
+          const timeStr = formatMessageTime(m.created_at);
+          const checkIcon = isSent ? (m.is_read ? '<i class="fa-solid fa-check-double" style="color: #38bdf8;" title="Read by instructor"></i>' : '<i class="fa-solid fa-check" style="color: rgba(255,255,255,0.7);" title="Sent"></i>') : '';
+
+          row.innerHTML = `
+            <div class="chat-bubble-box">
+              <div>${m.message.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</div>
+              <div class="chat-meta-bar">
+                <span>${timeStr}</span>
+                ${checkIcon}
+              </div>
             </div>
           `;
-          threadList.appendChild(div);
+          container.appendChild(row);
         });
-      } else {
-        threadList.innerHTML = '<div style="color: var(--text-muted); font-size: 0.825rem;">No active message threads. Message your subject faculty from My Subjects.</div>';
-      }
-    }
 
-    function openChatThread(convId, teacherName, subjectName, subjectId) {
-      document.getElementById('chatFacultyName').textContent = teacherName;
-      document.getElementById('chatSubjectName').textContent = subjectName;
-      document.getElementById('activeSubjectId').value = subjectId;
-      loadThreadMessages(convId);
-    }
-
-    async function loadThreadMessages(convId) {
-      const res = await fetch(`/api/student/messages/${convId}`);
-      const data = await res.json();
-      const container = document.getElementById('chatboxMessages');
-      container.innerHTML = '';
-
-      if (data.success && data.messages.length) {
-        data.messages.forEach(m => {
-          const div = document.createElement('div');
-          div.className = `message-bubble ${m.sender_role}`;
-          div.innerHTML = `<div>${m.message}</div><div style="font-size: 0.65rem; opacity: 0.7; text-align: right; margin-top: 0.2rem;">${m.created_at.slice(11,16)}</div>`;
-          container.appendChild(div);
-        });
+        // Scroll to bottom
         container.scrollTop = container.scrollHeight;
-      } else {
-        container.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 2rem;">No messages yet. Send an inquiry to your instructor below.</div>';
+
+        // Decrement unread in local state if thread had unread
+        if (!isPolling) {
+          const th = studentConversationsData.find(c => c.conversation_id === convId);
+          if (th && th.unread_count > 0) {
+            th.unread_count = 0;
+            renderStudentConversationsList(studentConversationsData);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching thread messages:', err);
       }
     }
 
-    async function sendStudentReply(e) {
+    async function handleStudentSendMessage(e) {
       e.preventDefault();
-      const subject_id = document.getElementById('activeSubjectId').value;
-      const message = document.getElementById('chatInputText').value.trim();
-      if (!message || !subject_id) return;
+      const input = document.getElementById('studentChatInput');
+      const btn = document.getElementById('studentChatSendBtn');
+      const message = input.value.trim();
 
-      const res = await fetch('/api/student/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject_id, message })
-      });
-      const data = await res.json();
-      if (data.success) {
-        document.getElementById('chatInputText').value = '';
-        await loadThreadMessages(data.conversation_id);
-        await loadMessagesInbox();
+      if (!message || !activeStudentChat.teacherId) {
+        showToast('Please type a message and select an instructor.', 'error');
+        return;
+      }
+
+      // Disable button and input temporarily to prevent duplicate messages
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending...</span>';
+
+      try {
+        const payload = {
+          teacher_id: activeStudentChat.teacherId,
+          subject_id: activeStudentChat.subjectId,
+          conversation_id: activeStudentChat.convId,
+          message: message
+        };
+
+        const res = await fetch('/api/student/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          input.value = '';
+          if (data.conversation_id) {
+            activeStudentChat.convId = data.conversation_id;
+          }
+          await loadThreadMessages(activeStudentChat.convId);
+          await loadMessagesInbox(true);
+        } else {
+          showToast(data.message || 'Failed to send message. Please try again.', 'error');
+        }
+      } catch (err) {
+        console.error('Error sending student message:', err);
+        showToast('Message could not be sent. Please check your connection.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Send</span> <i class="fa-solid fa-paper-plane"></i>';
+        input.focus();
+      }
+    }
+
+    function openNewChatStudentModal() {
+      const select = document.getElementById('newInquiryFacultySelect');
+      if (!select) return;
+      select.innerHTML = '';
+
+      if (studentAvailableTeachers.length > 0) {
+        studentAvailableTeachers.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = JSON.stringify({ teacher_id: t.teacher_id, subject_id: t.subject_id, teacher_name: t.teacher_name, subject_name: t.subject_name, conv_id: t.default_conv_id });
+          opt.textContent = `${t.teacher_name} — ${t.subject_name} (${t.subject_code || 'FACULTY'})`;
+          select.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.value = JSON.stringify({ teacher_id: 1, subject_id: null, teacher_name: 'Academic Faculty Advisor', subject_name: 'Academic Advisory', conv_id: `conv_s${currentStudent?.id || 1}_t1` });
+        opt.textContent = 'Academic Faculty Advisor (B.Tech Department)';
+        select.appendChild(opt);
+      }
+
+      const msgInput = document.getElementById('newInquiryInitialMessage');
+      if (msgInput) msgInput.value = '';
+      openModal('newInquiryModal');
+    }
+
+    async function handleStartNewStudentInquiry(e) {
+      e.preventDefault();
+      const selectVal = document.getElementById('newInquiryFacultySelect').value;
+      const message = document.getElementById('newInquiryInitialMessage').value.trim();
+      const submitBtn = document.getElementById('newInquirySubmitBtn');
+
+      if (!selectVal || !message) return;
+
+      const target = JSON.parse(selectVal);
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+      try {
+        const res = await fetch('/api/student/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            teacher_id: target.teacher_id,
+            subject_id: target.subject_id,
+            conversation_id: target.conv_id,
+            message: message
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeModal('newInquiryModal');
+          showToast('Inquiry sent to faculty successfully!', 'success');
+          switchView('messages');
+          openChatThread(data.conversation_id || target.conv_id, target.teacher_id, target.teacher_name, target.subject_name, target.subject_id);
+          await loadMessagesInbox(true);
+        } else {
+          showToast(data.message || 'Failed to start inquiry.', 'error');
+        }
+      } catch (err) {
+        console.error('Error starting inquiry:', err);
+        showToast('Network error starting inquiry.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+      }
+    }
+
+    function startRealtimeStudentMessaging() {
+      // Chat polling every 2.5 seconds
+      if (!studentChatPollInterval) {
+        studentChatPollInterval = setInterval(() => {
+          const messagesTab = document.getElementById('view-messages');
+          if (messagesTab && messagesTab.classList.contains('active')) {
+            if (activeStudentChat.convId) {
+              loadThreadMessages(activeStudentChat.convId, true);
+            }
+            loadMessagesInbox(true);
+          }
+        }, 2500);
+      }
+
+      // Background unread badge poller every 6 seconds
+      if (!studentUnreadPollInterval) {
+        studentUnreadPollInterval = setInterval(fetchStudentUnreadCount, 6000);
       }
     }
 
     function openModal(id) {
-      document.getElementById(id).classList.add('show');
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('show');
     }
     function closeModal(id) {
-      document.getElementById(id).classList.remove('show');
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('show');
+    }
+
+    // ================= DYNAMIC SYLLABUS & TOPIC QUIZ LOGIC =================
+    let currentQuizQuestions = [];
+    let currentActiveTopic = null;
+
+    async function openSubjectCurriculumModal(subjectId, subjectName, subjectCode) {
+      document.getElementById('curriculumModalTitle').innerHTML = `<i class="fa-solid fa-book-bookmark" style="color: var(--primary-light);"></i> ${subjectName} <span class="badge badge-neutral" style="font-size: 0.75rem;">${subjectCode}</span>`;
+      const body = document.getElementById('curriculumModalBody');
+      body.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--secondary);"></i><p style="margin-top: 0.75rem;">Loading verified curriculum hierarchy...</p></div>';
+      openModal('subjectCurriculumModal');
+
+      try {
+        const res = await fetch(`/api/student/subject/${subjectId}/hierarchy`);
+        if (!res.ok) {
+          body.innerHTML = '<div style="color: var(--risk-high); padding: 1.5rem; text-align: center;">Failed to load curriculum hierarchy.</div>';
+          return;
+        }
+        const data = await res.json();
+        const modules = data.modules || [];
+        const resources = data.resources || [];
+
+        let html = '';
+
+        if (resources.length > 0) {
+          html += `
+            <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-md); padding: 0.85rem 1.15rem; margin-bottom: 1.25rem;">
+              <div style="font-size: 0.8rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.35rem;">
+                <i class="fa-solid fa-shield-halved"></i> Authorized Learning Materials:
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          `;
+          resources.forEach(r => {
+            html += `<span class="badge" style="background: rgba(255,255,255,0.06); font-size: 0.75rem; color: #e2e8f0;"><i class="fa-solid fa-file-pdf" style="color: #f87171;"></i> ${r.title}</span>`;
+          });
+          html += `</div></div>`;
+        }
+
+        if (modules.length === 0) {
+          html += '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No syllabus units or modules configured for this course yet.</div>';
+        } else {
+          modules.forEach((mod, idx) => {
+            html += `
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1.15rem; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                  <h4 style="color: #fff; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-layer-group" style="color: var(--secondary); font-size: 0.85rem;"></i>
+                    Module ${mod.module_number || (idx + 1)}: ${mod.module_name}
+                  </h4>
+                  <span class="badge badge-neutral" style="font-size: 0.7rem;">${(mod.topics || []).length} Topics</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            `;
+
+            (mod.topics || []).forEach(top => {
+              const mastery = Math.round(top.mastery_score || 0);
+              const badgeClass = mastery >= 75 ? 'badge-low' : (mastery >= 50 ? 'badge-med' : 'badge-high');
+              html += `
+                <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius-sm); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                  <div>
+                    <div style="font-weight: 600; color: #f1f5f9; font-size: 0.875rem;">${top.topic_name}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">${top.description || 'Core syllabus topic & learning objectives.'}</div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge ${badgeClass}" style="font-size: 0.75rem;">${mastery}% Mastery</span>
+                    <button class="btn btn-outline btn-sm" onclick="openTopicStudyModal(${top.id}, '${escapeQuotes(top.topic_name)}', '${escapeQuotes(subjectName)}')">
+                      <i class="fa-solid fa-book-open-reader"></i> Learn & Practice
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="openTopicQuizModal(${top.id}, '${escapeQuotes(top.topic_name)}', '${escapeQuotes(subjectName)}')">
+                      <i class="fa-solid fa-play"></i> Take Quiz
+                    </button>
+                  </div>
+                </div>
+              `;
+            });
+
+            html += `</div></div>`;
+          });
+        }
+
+        body.innerHTML = html;
+      } catch (err) {
+        body.innerHTML = '<div style="color: var(--risk-high); padding: 1.5rem; text-align: center;">Error loading syllabus hierarchy.</div>';
+      }
+    }
+
+    function escapeQuotes(str) {
+      if (!str) return '';
+      return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    async function openTopicStudyModal(topicId, topicName, subjectName) {
+      document.getElementById('studyModalTitle').innerHTML = `<i class="fa-solid fa-book-open-reader" style="color: var(--primary-light);"></i> ${topicName}`;
+      const body = document.getElementById('studyModalBody');
+      body.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--secondary);"></i><p style="margin-top: 0.75rem;">Retrieving grounded syllabus & textbook content...</p></div>';
+      openModal('topicStudyModal');
+
+      try {
+        const res = await fetch(`/api/student/topic/${topicId}/content`);
+        if (!res.ok) {
+          body.innerHTML = '<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Failed to load topic content.</div>';
+          return;
+        }
+        const data = await res.json();
+        const top = data.topic || {};
+        const prov = data.source_provenance || {};
+        const concepts = data.key_concepts || [];
+        const drills = data.practice_drills || [];
+        const mastery = data.student_mastery || {};
+
+        let html = `
+          <!-- Top Source Provenance Banner -->
+          <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
+              <span class="badge badge-low" style="font-size: 0.75rem;">
+                <i class="fa-solid fa-shield-check"></i> Authorized Institutional Resource
+              </span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">
+                <i class="fa-regular fa-clock"></i> Grounded Provenance Tracking
+              </span>
+            </div>
+            <div style="font-size: 0.875rem; color: #f1f5f9; font-weight: 600; margin-bottom: 0.25rem;">
+              <i class="fa-solid fa-file-pdf" style="color: #f87171; margin-right: 4px;"></i> ${prov.source_document || 'Official Syllabus Matrix'}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--secondary); display: flex; gap: 1rem; flex-wrap: wrap;">
+              <span><strong>Page Citation:</strong> ${prov.source_page || 'Pages 112–118'}</span>
+              <span><strong>Section:</strong> ${prov.section_heading || top.topic_name}</span>
+              <span><strong>Course:</strong> ${top.subject_code} &bull; ${top.subject_name}</span>
+            </div>
+          </div>
+
+          <!-- Grounded Theory & Summary -->
+          <div class="card" style="background: var(--bg-surface); margin-bottom: 1.5rem;">
+            <div class="card-header" style="padding-bottom: 0.5rem;">
+              <h4 style="font-size: 1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-graduation-cap" style="color: var(--primary-light);"></i> Core Concepts & Simplified Explanation
+              </h4>
+              <span class="badge ${mastery.mastery_score >= 70 ? 'badge-low' : 'badge-med'}">${Math.round(mastery.mastery_score || 45)}% Current Mastery</span>
+            </div>
+            <div style="font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 1rem;">
+              ${data.extracted_text || top.description || 'Grounded theoretical fundamentals covering mathematical representations, algorithmic trade-offs, and design methodologies.'}
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem;">
+              <h5 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.65rem;">
+                <i class="fa-solid fa-list-check"></i> Key Engineering Principles
+              </h5>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        `;
+
+        concepts.forEach(c => {
+          html += `
+            <div style="display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: #e2e8f0; background: rgba(255,255,255,0.02); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">
+              <i class="fa-solid fa-circle-check" style="color: #10b981; margin-top: 0.2rem; font-size: 0.8rem;"></i>
+              <span>${c}</span>
+            </div>
+          `;
+        });
+
+        html += `
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Practice Drills -->
+          <div class="card" style="background: var(--bg-surface); margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <h4 style="font-size: 1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-dumbbell" style="color: var(--secondary);"></i> Interactive Practice Drills
+              </h4>
+              <span class="badge badge-neutral">Ungraded Practice</span>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Test your understanding before the diagnostic quiz. Toggle below to verify formulas and step-by-step reasoning.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+        `;
+
+        drills.forEach((d, dIdx) => {
+          const optList = d.options || {};
+          html += `
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-md); padding: 1rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.35rem;">DRILL ${dIdx + 1} &bull; ${d.difficulty || 'Intermediate'}</div>
+              <div style="font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 0.75rem;">${d.question}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                <div><strong>A:</strong> ${optList.A || ''}</div>
+                <div><strong>B:</strong> ${optList.B || ''}</div>
+                <div><strong>C:</strong> ${optList.C || ''}</div>
+                <div><strong>D:</strong> ${optList.D || ''}</div>
+              </div>
+              <div>
+                <button class="btn btn-outline btn-sm" onclick="toggleDrillExplanation('drill_exp_${d.id}')" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+                  <i class="fa-solid fa-lightbulb"></i> Reveal Grounded Solution & Rationale
+                </button>
+                <div id="drill_exp_${d.id}" style="display: none; margin-top: 0.65rem; padding: 0.65rem 0.85rem; background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; border-radius: var(--radius-sm); font-size: 0.825rem; color: #a7f3d0;">
+                  <strong>Correct Answer: Option ${d.correct_answer}</strong><br>
+                  <span>${d.explanation || 'Verified from official syllabus benchmarks and authoritative textbook proofs.'}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+
+          <!-- Bottom Call to Action: Launch Quiz -->
+          <div style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(6, 182, 212, 0.15)); border: 1px solid rgba(79, 70, 229, 0.3); border-radius: var(--radius-md); padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h4 style="color: #fff; margin: 0 0 0.25rem 0; font-size: 1rem;">Ready for the Diagnostic Assessment?</h4>
+              <p style="margin: 0; font-size: 0.8rem; color: #c7d2fe;">Take the 5-question timed quiz to update your topic mastery and trigger adaptive next steps.</p>
+            </div>
+            <button class="btn btn-primary" onclick="closeModal('topicStudyModal'); openTopicQuizModal(${topicId}, '${escapeQuotes(topicName)}', '${escapeQuotes(subjectName)}');">
+              <i class="fa-solid fa-play"></i> Launch Topic Quiz
+            </button>
+          </div>
+        `;
+
+        body.innerHTML = html;
+      } catch (err) {
+        body.innerHTML = '<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Error rendering topic content.</div>';
+      }
+    }
+
+    function toggleDrillExplanation(elId) {
+      const el = document.getElementById(elId);
+      if (el) {
+        el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
+      }
+    }
+
+    // =========================================================================
+    // REAL-TIME DYNAMIC ADAPTIVE QUIZ & REMEDIAL RECOVERY ENGINE
+    // =========================================================================
+
+    let activeAdaptiveQuiz = null;
+
+    async function openTopicQuizModal(topicId, topicName, subjectName) {
+      currentActiveTopic = { id: topicId, name: topicName, subject: subjectName };
+      document.getElementById('quizModalTitle').innerHTML = `<i class="fa-solid fa-brain" style="color: var(--accent-quantum);"></i> ${topicName} &bull; Adaptive Learning Engine`;
+      
+      const body = document.getElementById('quizQuestionsContainer');
+      const resultBox = document.getElementById('quizResultBox');
+      const submitBtn = document.getElementById('submitTopicQuizBtn');
+      
+      resultBox.style.display = 'none';
+      submitBtn.style.display = 'none';
+      body.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+          <i class="fa-solid fa-atom fa-spin fa-2x" style="color: var(--accent-quantum); margin-bottom: 0.75rem;"></i>
+          <p style="font-size: 1rem; color: #fff; font-weight: 600;">Calibrating Adaptive Session...</p>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Analyzing student topic mastery & initializing grounded multi-difficulty question banks.</p>
+        </div>
+      `;
+      openModal('topicQuizModal');
+
+      try {
+        const res = await fetch(`/api/student/topic/${topicId}/adaptive/start`);
+        if (!res.ok) {
+          body.innerHTML = '<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Could not initialize adaptive session.</div>';
+          return;
+        }
+        const data = await res.json();
+        
+        activeAdaptiveQuiz = {
+          topicId: topicId,
+          topicName: topicName,
+          subjectName: subjectName,
+          currentStep: 1,
+          totalSteps: data.total_steps || 5,
+          currentDifficulty: data.starting_difficulty || 'Intermediate',
+          currentQuestion: data.question,
+          answeredIds: [],
+          correctCount: 0,
+          progression: [],
+          startTime: Date.now()
+        };
+
+        renderAdaptiveQuestion();
+      } catch (err) {
+        body.innerHTML = `<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Error loading adaptive quiz: ${err.message}</div>`;
+      }
+    }
+
+    function getDifficultyBadge(diff) {
+      const d = (diff || 'Intermediate').toLowerCase();
+      if (d === 'beginner') {
+        return '<span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);"><i class="fa-solid fa-seedling"></i> Beginner</span>';
+      } else if (d === 'advanced') {
+        return '<span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4);"><i class="fa-solid fa-bolt"></i> Advanced</span>';
+      }
+      return '<span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);"><i class="fa-solid fa-gauge-high"></i> Intermediate</span>';
+    }
+
+    function renderAdaptiveQuestion() {
+      if (!activeAdaptiveQuiz || !activeAdaptiveQuiz.currentQuestion) return;
+      const q = activeAdaptiveQuiz.currentQuestion;
+      const body = document.getElementById('quizQuestionsContainer');
+      const qNum = activeAdaptiveQuiz.currentStep;
+      const total = activeAdaptiveQuiz.totalSteps;
+      const pct = Math.round(((qNum - 1) / total) * 100);
+
+      let opts = q.options;
+      if (typeof opts === 'string') {
+        try { opts = JSON.parse(opts); } catch (e) { opts = { A: opts, B: 'False' }; }
+      }
+
+      let optionsHtml = '';
+      if (Array.isArray(opts)) {
+        opts.forEach((optText, optIdx) => {
+          const optKey = String.fromCharCode(65 + optIdx);
+          optionsHtml += `
+            <div class="adaptive-option" onclick="handleAdaptiveOptionSelect('${optKey}', this)" data-key="${optKey}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;">
+              <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.05); font-weight: 700; font-size: 0.8rem; color: var(--secondary);">${optKey}</span>
+              <span style="font-size: 0.9rem; color: #cbd5e1;">${optText}</span>
+            </div>
+          `;
+        });
+      } else if (typeof opts === 'object') {
+        Object.entries(opts).forEach(([key, val]) => {
+          optionsHtml += `
+            <div class="adaptive-option" onclick="handleAdaptiveOptionSelect('${key}', this)" data-key="${key}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;">
+              <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.05); font-weight: 700; font-size: 0.8rem; color: var(--secondary);">${key}</span>
+              <span style="font-size: 0.9rem; color: #cbd5e1;">${val}</span>
+            </div>
+          `;
+        });
+      }
+
+      body.innerHTML = `
+        <div style="margin-bottom: 1.25rem;">
+          <!-- Progress & Difficulty Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.05em;">
+                Question ${qNum} of ${total}
+              </span>
+              ${getDifficultyBadge(activeAdaptiveQuiz.currentDifficulty)}
+            </div>
+            <span class="badge badge-low" style="font-size: 0.72rem;">
+              <i class="fa-solid fa-book-open"></i> ${q.source_reference || 'Approved Syllabus'} (Pg. ${q.source_page || 1})
+            </span>
+          </div>
+
+          <!-- Dynamic Progress Bar -->
+          <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; margin-bottom: 1.25rem;">
+            <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent-quantum)); transition: width 0.4s ease;"></div>
+          </div>
+
+          <!-- Question Content Card -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--bg-card-border); border-radius: var(--radius-lg); padding: 1.5rem;">
+            <h4 style="font-size: 1.05rem; color: #fff; line-height: 1.5; margin-bottom: 1.25rem; font-weight: 600;">
+              ${q.question_text || q.question}
+            </h4>
+
+            <!-- Options Grid -->
+            <div id="adaptiveOptionsContainer" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              ${optionsHtml}
+            </div>
+
+            <!-- Instant Real-Time Feedback & Adaptation Alert -->
+            <div id="adaptiveFeedbackCard" style="display: none; margin-top: 1.25rem; padding: 1rem 1.25rem; border-radius: var(--radius-md); animation: fadeIn 0.3s ease;"></div>
+
+            <!-- Action Button -->
+            <div id="adaptiveActionArea" style="display: none; margin-top: 1.25rem; text-align: right;">
+              <button id="nextAdaptiveStepBtn" class="btn btn-primary" onclick="proceedNextAdaptiveQuestion()">
+                Next Question <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function handleAdaptiveOptionSelect(selectedOption, element) {
+      if (!activeAdaptiveQuiz || activeAdaptiveQuiz.submittingStep) return;
+      activeAdaptiveQuiz.submittingStep = true;
+
+      // Lock options
+      const options = document.querySelectorAll('.adaptive-option');
+      options.forEach(opt => opt.style.pointerEvents = 'none');
+      element.style.borderColor = 'var(--primary)';
+      element.style.background = 'rgba(79, 70, 229, 0.2)';
+
+      const q = activeAdaptiveQuiz.currentQuestion;
+
+      try {
+        const res = await fetch(`/api/student/topic/${activeAdaptiveQuiz.topicId}/adaptive/step`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            question_id: q.id,
+            selected_option: selectedOption,
+            current_difficulty: activeAdaptiveQuiz.currentDifficulty,
+            answered_ids: activeAdaptiveQuiz.answeredIds,
+            step_number: activeAdaptiveQuiz.currentStep,
+            total_steps: activeAdaptiveQuiz.totalSteps
+          })
+        });
+
+        const data = await res.json();
+        activeAdaptiveQuiz.answeredIds = data.answered_ids;
+
+        if (data.is_correct) {
+          activeAdaptiveQuiz.correctCount++;
+          element.style.borderColor = '#10b981';
+          element.style.background = 'rgba(16, 185, 129, 0.15)';
+        } else {
+          element.style.borderColor = '#ef4444';
+          element.style.background = 'rgba(239, 68, 68, 0.15)';
+          // Highlight correct answer
+          options.forEach(opt => {
+            if (opt.getAttribute('data-key') === data.correct_answer) {
+              opt.style.borderColor = '#10b981';
+              opt.style.background = 'rgba(16, 185, 129, 0.15)';
+            }
+          });
+        }
+
+        // Record progression point
+        activeAdaptiveQuiz.progression.push({
+          step: activeAdaptiveQuiz.currentStep,
+          difficulty: activeAdaptiveQuiz.currentDifficulty,
+          is_correct: data.is_correct,
+          shifted_to: data.difficulty_transition.next
+        });
+
+        // Show Real-time Adaptation Card
+        const fb = document.getElementById('adaptiveFeedbackCard');
+        const dt = data.difficulty_transition;
+        let shiftMsg = '';
+        if (dt.shifted) {
+          if (data.is_correct) {
+            shiftMsg = `<div style="margin-top: 0.5rem; font-size: 0.8rem; color: #a7f3d0; font-weight: 600;"><i class="fa-solid fa-arrow-trend-up"></i> Dynamic Adaptation: Difficulty stepped UP from <strong>${dt.previous}</strong> to <strong>${dt.next}</strong>!</div>`;
+          } else {
+            shiftMsg = `<div style="margin-top: 0.5rem; font-size: 0.8rem; color: #fde68a; font-weight: 600;"><i class="fa-solid fa-arrow-trend-down"></i> Dynamic Adaptation: Difficulty calibrated from <strong>${dt.previous}</strong> to <strong>${dt.next}</strong>.</div>`;
+          }
+        }
+
+        fb.style.display = 'block';
+        fb.style.background = data.is_correct ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+        fb.style.border = `1px solid ${data.is_correct ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`;
+        fb.innerHTML = `
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <i class="fa-solid ${data.is_correct ? 'fa-circle-check' : 'fa-circle-xmark'}" style="font-size: 1.25rem; color: ${data.is_correct ? '#10b981' : '#ef4444'}; margin-top: 2px;"></i>
+            <div style="flex: 1;">
+              <h5 style="color: #fff; margin: 0 0 0.25rem 0; font-size: 0.95rem;">
+                ${data.is_correct ? 'Correct Answer!' : `Incorrect. Correct Option: <strong>${data.correct_answer}</strong>`}
+              </h5>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin: 0 0 0.35rem 0; line-height: 1.4;">
+                ${data.explanation || 'Verified with grounded syllabus curriculum.'}
+              </p>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">
+                <i class="fa-solid fa-shield-check" style="color: var(--accent-quantum);"></i> Reference: ${data.source_reference} (Page ${data.source_page || 1})
+              </div>
+              ${shiftMsg}
+            </div>
+          </div>
+        `;
+
+        // Prepare next state
+        activeAdaptiveQuiz.currentDifficulty = dt.next;
+        activeAdaptiveQuiz.nextQuestion = data.next_question;
+        activeAdaptiveQuiz.isCompleted = data.is_completed;
+
+        // Show Next Action Button
+        const actionArea = document.getElementById('adaptiveActionArea');
+        const nextBtn = document.getElementById('nextAdaptiveStepBtn');
+        actionArea.style.display = 'block';
+        if (data.is_completed) {
+          nextBtn.innerHTML = '<i class="fa-solid fa-chart-pie"></i> View Adaptive Evaluation & Mastery';
+          nextBtn.className = 'btn btn-primary';
+        } else {
+          nextBtn.innerHTML = 'Next Question <i class="fa-solid fa-arrow-right"></i>';
+        }
+      } catch (err) {
+        alert('Step error: ' + err.message);
+      } finally {
+        activeAdaptiveQuiz.submittingStep = false;
+      }
+    }
+
+    async function proceedNextAdaptiveQuestion() {
+      if (!activeAdaptiveQuiz) return;
+      if (activeAdaptiveQuiz.isCompleted) {
+        await finishAdaptiveSession();
+      } else {
+        activeAdaptiveQuiz.currentStep++;
+        activeAdaptiveQuiz.currentQuestion = activeAdaptiveQuiz.nextQuestion;
+        renderAdaptiveQuestion();
+      }
+    }
+
+    async function finishAdaptiveSession() {
+      const body = document.getElementById('quizQuestionsContainer');
+      const resultBox = document.getElementById('quizResultBox');
+      
+      body.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
+          <i class="fa-solid fa-atom fa-spin fa-2x" style="color: var(--accent-quantum); margin-bottom: 0.75rem;"></i>
+          <p style="font-size: 1rem; color: #fff; font-weight: 600;">Scoring with Quantum ML Engine...</p>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Recalculating Bloom mastery vectors, subject aggregation, and personalized remedial recovery paths.</p>
+        </div>
+      `;
+
+      try {
+        const timeSpent = Math.max(1, Math.round((Date.now() - activeAdaptiveQuiz.startTime) / 60000));
+        const res = await fetch(`/api/student/topic/${activeAdaptiveQuiz.topicId}/adaptive/finish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic_id: activeAdaptiveQuiz.topicId,
+            total_questions: activeAdaptiveQuiz.totalSteps,
+            correct_count: activeAdaptiveQuiz.correctCount,
+            time_spent_minutes: timeSpent,
+            progression: activeAdaptiveQuiz.progression
+          })
+        });
+
+        const data = await res.json();
+        const score = data.score_percentage || 0;
+        const loop = data.adaptive_loop || {};
+        const remedial = data.remedial_path || {};
+
+        let progDots = '';
+        if (activeAdaptiveQuiz.progression) {
+          progDots = activeAdaptiveQuiz.progression.map(p => `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <span style="font-size: 0.65rem; color: var(--text-muted);">Q${p.step}</span>
+              <div style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; background: ${p.is_correct ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; border: 1px solid ${p.is_correct ? '#10b981' : '#ef4444'}; color: ${p.is_correct ? '#34d399' : '#f87171'};">
+                <i class="fa-solid ${p.is_correct ? 'fa-check' : 'fa-xmark'}"></i>
+              </div>
+              <span style="font-size: 0.65rem; color: #94a3b8;">${p.difficulty.substring(0, 3)}</span>
+            </div>
+          `).join('');
+        }
+
+        let remedialHtml = '';
+        if (score < 70 && remedial.action_steps) {
+          remedialHtml = `
+            <div style="margin-top: 1.25rem; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-lg); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <h4 style="color: #fca5a5; margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fa-solid fa-life-ring"></i> Automated Remedial Recovery Plan (${remedial.urgency} Priority)
+                </h4>
+                <span class="badge badge-high">Score &lt; 70%</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 1rem;">
+                Our Adaptive Engine detected comprehension gaps on <strong>${activeAdaptiveQuiz.topicName}</strong>. Follow these 3 recovery steps to achieve mastery:
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                ${remedial.action_steps.map(s => `
+                  <div style="display: flex; gap: 0.75rem; background: rgba(15, 23, 42, 0.6); padding: 0.85rem 1rem; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); color: #f87171; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                      ${s.step}
+                    </div>
+                    <div style="flex: 1;">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: #fff; font-size: 0.9rem;">${s.title}</strong>
+                        <span style="font-size: 0.75rem; color: var(--secondary);"><i class="fa-solid fa-clock"></i> ~${s.estimated_minutes} min</span>
+                      </div>
+                      <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.25rem 0 0.35rem 0;">${s.description}</p>
+                      <div style="font-size: 0.75rem; color: var(--accent-quantum);">
+                        <i class="fa-solid fa-bookmark"></i> ${s.resource} &bull; ${s.location}
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        body.innerHTML = `
+          <div>
+            <!-- Header Score Card -->
+            <div style="background: ${score >= 70 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)'}; border: 1px solid ${score >= 70 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; margin-bottom: 1.25rem;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: ${score >= 70 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color: ${score >= 70 ? '#34d399' : '#fbbf24'}; font-size: 1.75rem; margin-bottom: 0.75rem;">
+                <i class="fa-solid ${score >= 70 ? 'fa-trophy' : 'fa-award'}"></i>
+              </div>
+              <h3 style="color: #fff; margin: 0 0 0.25rem 0; font-size: 1.5rem; font-weight: 700;">
+                ${score}% Score (${activeAdaptiveQuiz.correctCount}/${activeAdaptiveQuiz.totalSteps} Correct)
+              </h3>
+              <p style="color: ${score >= 70 ? '#6ee7b7' : '#fde68a'}; font-size: 0.95rem; margin: 0 0 1rem 0; font-weight: 600;">
+                ${score >= 70 ? '🎉 Topic Mastery Achieved!' : '⚠️ Topic Needs Review & Remediation'}
+              </p>
+              <div style="display: flex; justify-content: center; gap: 1.5rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Topic Mastery</span>
+                  <strong style="font-size: 1.1rem; color: #fff;">${loop.new_mastery_percentage || score}%</strong>
+                </div>
+                <div>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Status</span>
+                  <span class="badge ${score >= 70 ? 'badge-low' : 'badge-high'}">${score >= 70 ? 'Mastered' : 'Needs Revision'}</span>
+                </div>
+                <div>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Quantum VQC Risk</span>
+                  <strong style="font-size: 1.1rem; color: var(--accent-quantum);">${loop.predicted_risk_level || 'Low Risk'}</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progression Steps Trace -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--bg-card-border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary); text-transform: uppercase;">Real-Time Adaptation Trace</span>
+              <div style="display: flex; justify-content: space-around; margin-top: 0.75rem;">
+                ${progDots}
+              </div>
+            </div>
+
+            <!-- Remedial Plan or Next Steps -->
+            ${remedialHtml}
+
+            <!-- Footer Close/Action Buttons -->
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+              <button class="btn btn-secondary" onclick="closeModal('topicQuizModal')">Close</button>
+              <button class="btn btn-primary" onclick="openTopicQuizModal(${activeAdaptiveQuiz.topicId}, '${escapeQuotes(activeAdaptiveQuiz.topicName)}', '${escapeQuotes(activeAdaptiveQuiz.subjectName)}')">
+                <i class="fa-solid fa-rotate-right"></i> Retake Adaptive Quiz
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Refresh background KPIs
+        loadKPIs();
+        loadSubjects();
+      } catch (err) {
+        body.innerHTML = `<div style="color: #ef4444; padding: 1.5rem; text-align: center;">Error finalizing quiz: ${err.message}</div>`;
+      }
+    }
+
+    // ================= GAMIFICATION & SANDBOX ENGINE =================
+    let cachedSandboxChallenges = [];
+    let activeSandboxChallenge = null;
+    let gamificationProfileData = null;
+
+    async function loadGamificationProfile() {
+      try {
+        const res = await fetch('/api/student/gamification/profile');
+        const data = await res.json();
+        if (!data.success) return;
+
+        gamificationProfileData = data.profile;
+        const prof = data.profile;
+
+        // Top Header Gamification Pill
+        const hdrXp = document.getElementById('hdrXpVal');
+        const hdrLvl = document.getElementById('hdrLevelVal');
+        if (hdrXp) hdrXp.textContent = `${prof.xp_points || 450} XP`;
+        if (hdrLvl) hdrLvl.textContent = `Lvl ${prof.level_number || 1}`;
+
+        // Gamification View Tab
+        const gmTotalXp = document.getElementById('gmTotalXp');
+        const gmLevelTitle = document.getElementById('gmLevelTitle');
+        const gmNextLvl = document.getElementById('gmNextLevelInfo');
+        const gmXpPct = document.getElementById('gmXpPctText');
+        const gmBarFill = document.getElementById('gmProgressBarFill');
+        const gmCountSumm = document.getElementById('gmBadgeCountSummary');
+
+        if (gmTotalXp) gmTotalXp.textContent = `${prof.xp_points || 450} XP`;
+        if (gmLevelTitle) gmLevelTitle.textContent = prof.current_level || 'Level 1: Novice Learner';
+        if (gmNextLvl) {
+          const diff = Math.max(0, prof.next_level_xp - prof.xp_points);
+          gmNextLvl.textContent = `${diff} XP to Next Tier (${prof.next_level_xp} XP)`;
+        }
+        if (gmXpPct) gmXpPct.textContent = `${prof.xp_progress_percentage}%`;
+        if (gmBarFill) gmBarFill.style.width = `${prof.xp_progress_percentage}%`;
+        if (gmCountSumm) gmCountSumm.textContent = `${prof.unlocked_badges_count} / ${prof.total_badges} Unlocked`;
+
+        renderGamificationBadges(prof.badges || []);
+      } catch (err) {
+        console.error('Error loading gamification profile:', err);
+      }
+    }
+
+    function renderGamificationBadges(badges) {
+      const container = document.getElementById('gmBadgesGrid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      badges.forEach(b => {
+        const isUnlocked = b.is_unlocked;
+        const card = document.createElement('div');
+        card.className = `badge-card-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+        card.innerHTML = `
+          <div class="badge-card-icon" style="background: ${isUnlocked ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255,255,255,0.05)'}; border: 2px solid ${isUnlocked ? b.color : 'rgba(255,255,255,0.1)'}; color: ${isUnlocked ? b.color : '#64748b'};">
+            <i class="fa-solid ${b.icon || 'fa-award'}"></i>
+          </div>
+          <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 0.35rem;">${b.name}</h4>
+          <p style="font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 0.75rem;">
+            ${b.description}
+          </p>
+          <div style="margin-top: auto; padding-top: 0.5rem;">
+            ${isUnlocked 
+              ? `<span class="badge badge-low" style="font-size: 0.7rem;"><i class="fa-solid fa-lock-open"></i> Unlocked</span>` 
+              : `<span class="badge badge-neutral" style="font-size: 0.7rem;"><i class="fa-solid fa-lock"></i> Locked</span>`}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function loadSandboxChallenges() {
+      try {
+        const res = await fetch('/api/student/sandbox/challenges');
+        const data = await res.json();
+        if (!data.success) return;
+
+        cachedSandboxChallenges = data.challenges || [];
+        renderChallengePills();
+
+        if (cachedSandboxChallenges.length > 0 && !activeSandboxChallenge) {
+          selectSandboxChallenge(cachedSandboxChallenges[0].id);
+        }
+      } catch (err) {
+        console.error('Error loading sandbox challenges:', err);
+      }
+    }
+
+    function renderChallengePills() {
+      const container = document.getElementById('sandboxChallengeSelectPills');
+      if (!container) return;
+      container.innerHTML = '';
+
+      cachedSandboxChallenges.forEach((ch, idx) => {
+        const btn = document.createElement('button');
+        const isActive = activeSandboxChallenge && activeSandboxChallenge.id === ch.id;
+        btn.className = `btn btn-sm ${isActive ? 'btn-primary' : 'btn-outline'}`;
+        btn.innerHTML = `<i class="fa-solid ${ch.language === 'sql' ? 'fa-database' : 'fa-code'}"></i> Challenge ${idx + 1}`;
+        btn.onclick = () => selectSandboxChallenge(ch.id);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectSandboxChallenge(chId) {
+      const ch = cachedSandboxChallenges.find(c => c.id === chId);
+      if (!ch) return;
+      activeSandboxChallenge = ch;
+      renderChallengePills();
+
+      document.getElementById('sandboxChTitle').textContent = ch.title;
+      document.getElementById('sandboxChCategory').textContent = ch.category;
+      document.getElementById('sandboxChDifficulty').textContent = ch.difficulty;
+      document.getElementById('sandboxChDesc').textContent = ch.description;
+      document.getElementById('sandboxChXp').textContent = ch.xp_reward;
+      
+      const langIcon = document.getElementById('sandboxLangIcon');
+      const langLabel = document.getElementById('sandboxLangLabel');
+      if (ch.language === 'sql') {
+        langIcon.className = 'fa-solid fa-database';
+        langIcon.style.color = '#f59e0b';
+        langLabel.textContent = 'SQLite Relational Query Sandbox';
+      } else {
+        langIcon.className = 'fa-brands fa-python';
+        langIcon.style.color = '#38bdf8';
+        langLabel.textContent = 'Python 3 Execution Sandbox';
+      }
+
+      document.getElementById('sandboxCodeEditor').value = ch.starter_code || '';
+
+      const sampleBox = document.getElementById('sandboxSampleCases');
+      if (ch.test_cases && ch.test_cases.length > 0) {
+        sampleBox.innerHTML = ch.test_cases.map((t, idx) => `
+          <div style="margin-bottom: 0.35rem;">
+            <strong>Test ${idx + 1}:</strong> Input: <code>${t.input}</code> &rarr; Expected: <code>${t.expected}</code>
+          </div>
+        `).join('');
+      } else {
+        sampleBox.innerHTML = 'Execute query and verify row outputs.';
+      }
+
+      // Reset results panel
+      const resPanel = document.getElementById('sandboxResultPanel');
+      if (resPanel) resPanel.style.display = 'none';
+      document.getElementById('sandboxExecStatusText').textContent = 'Ready to execute';
+    }
+
+    function resetSandboxStarterCode() {
+      if (!activeSandboxChallenge) return;
+      document.getElementById('sandboxCodeEditor').value = activeSandboxChallenge.starter_code || '';
+      showToast('Starter code restored.', 'info');
+    }
+
+    async function runSandboxCode() {
+      if (!activeSandboxChallenge) return;
+      const code = document.getElementById('sandboxCodeEditor').value;
+      const runBtn = document.getElementById('sandboxRunBtn');
+      const statusText = document.getElementById('sandboxExecStatusText');
+      const resPanel = document.getElementById('sandboxResultPanel');
+      const resContainer = document.getElementById('sandboxTestResultsContainer');
+      const execTimeTag = document.getElementById('sandboxExecTime');
+
+      runBtn.disabled = true;
+      runBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing...';
+      statusText.textContent = 'Running test suites in sandbox...';
+
+      try {
+        const res = await fetch('/api/student/sandbox/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            challenge_id: activeSandboxChallenge.id,
+            code: code,
+            language: activeSandboxChallenge.language
+          })
+        });
+
+        const data = await res.json();
+        resPanel.style.display = 'block';
+        const exec = data.execution || {};
+        execTimeTag.textContent = `${exec.execution_time_ms || 0.0} ms`;
+
+        if (exec.success) {
+          statusText.innerHTML = `<span style="color: #34d399; font-weight: 700;">✔ All Tests Passed (+${data.xp_earned} XP)</span>`;
+          showToast(`🎉 Challenge Passed! Earned +${data.xp_earned} XP!`, 'success');
+        } else {
+          statusText.innerHTML = `<span style="color: #f87171; font-weight: 700;">✘ Execution ${exec.status || 'Failed'}</span>`;
+          showToast(`Tests failed. Check error output below.`, 'warning');
+        }
+
+        if (data.unlocked_new_badge) {
+          showToast(`🏆 New Badge Unlocked: ${data.unlocked_new_badge}!`, 'success');
+        }
+
+        // Render test details
+        if (exec.test_results && exec.test_results.length > 0) {
+          resContainer.innerHTML = exec.test_results.map((tr, idx) => `
+            <div class="test-result-box" style="border-left: 3px solid ${tr.passed ? '#10b981' : '#ef4444'};">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span style="color: #fff; font-weight: 600;">Test Case #${idx + 1}</span>
+                <span class="badge ${tr.passed ? 'badge-low' : 'badge-high'}">${tr.passed ? 'PASSED' : 'FAILED'}</span>
+              </div>
+              <div style="color: #94a3b8; font-size: 0.775rem;">Input: <span style="color: #cbd5e1;">${tr.input}</span></div>
+              <div style="color: #94a3b8; font-size: 0.775rem;">Expected: <span style="color: #6ee7b7;">${tr.expected}</span></div>
+              <div style="color: #94a3b8; font-size: 0.775rem;">Actual: <span style="color: ${tr.passed ? '#6ee7b7' : '#f87171'};">${tr.actual}</span></div>
+            </div>
+          `).join('');
+        } else if (exec.rows) {
+          // SQL Table Result
+          resContainer.innerHTML = `
+            <div class="test-result-box" style="border-left: 3px solid #10b981; overflow-x: auto;">
+              <div style="color: #34d399; font-weight: 600; margin-bottom: 0.5rem;">${exec.output}</div>
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--secondary);">
+                    ${(exec.columns || []).map(c => `<th style="padding: 0.35rem 0.5rem;">${c}</th>`).join('')}
+                  </tr>
+                </thead>
+                <tbody>
+                  ${(exec.rows || []).map(r => `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                      ${r.map(val => `<td style="padding: 0.35rem 0.5rem; color: #cbd5e1;">${val}</td>`).join('')}
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        } else if (exec.error) {
+          resContainer.innerHTML = `
+            <div class="test-result-box" style="border-left: 3px solid #ef4444; color: #fca5a5;">
+              <strong>Error:</strong> ${exec.error}
+              ${exec.traceback ? `<pre style="margin-top: 0.5rem; font-size: 0.75rem; color: #f87171; white-space: pre-wrap;">${exec.traceback}</pre>` : ''}
+            </div>
+          `;
+        }
+
+        // Refresh Gamification Profile
+        loadGamificationProfile();
+      } catch (err) {
+        statusText.textContent = `Execution failed: ${err.message}`;
+        showToast('Network error during code execution.', 'error');
+      } finally {
+        runBtn.disabled = false;
+        runBtn.innerHTML = '<i class="fa-solid fa-play"></i> Run Code & Verify';
+      }
+    }
+
+    // ================= OFFICIAL ACADEMIC REPORT CARD EXPORT =================
+    let currentReportCardData = null;
+
+    async function openOfficialReportCardModal() {
+      try {
+        showToast('Generating official academic transcript...', 'info');
+        const res = await fetch('/api/student/report-card');
+        const data = await res.json();
+        if (!data.success || !data.report_card) {
+          showToast(data.message || 'Failed to generate report card.', 'error');
+          return;
+        }
+
+        currentReportCardData = data.report_card;
+        renderReportCardDossier(currentReportCardData);
+        openModal('officialReportCardModal');
+      } catch (err) {
+        showToast('Error generating report card: ' + err.message, 'error');
+      }
+    }
+
+    function renderReportCardDossier(rc) {
+      const c = document.getElementById('reportCardPrintArea');
+      if (!c) return;
+
+      const inst = rc.institution || {};
+      const st = rc.student || {};
+      const qml = rc.quantum_ml_evaluation || {};
+      const metrics = rc.academic_metrics || {};
+      const bloom = rc.bloom_mastery || {};
+      const gamification = rc.gamification || {};
+      const sigs = rc.signatories || {};
+
+      let riskBadge = '<span class="badge badge-low-risk">🟢 LOW RISK</span>';
+      if ((qml.risk_level || '').toLowerCase().includes('high')) {
+        riskBadge = '<span class="badge badge-high-risk">🔴 HIGH RISK</span>';
+      } else if ((qml.risk_level || '').toLowerCase().includes('medium')) {
+        riskBadge = '<span class="badge badge-med-risk">🟡 MEDIUM RISK</span>';
+      }
+
+      c.innerHTML = `
+        <div class="report-dossier-card">
+          <!-- Institutional Header -->
+          <div class="report-dossier-header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 56px; height: 56px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #0284c7); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div>
+                <h2 style="font-size: 1.35rem; margin-bottom: 0.15rem; color: #fff; letter-spacing: -0.02em;">${inst.name || 'Andhra University College of Engineering'}</h2>
+                <div style="font-size: 0.8rem; color: #94a3b8;">${inst.affiliation || 'Autonomous • NAAC A++ • NIRF #29'} &bull; ${inst.location || 'Visakhapatnam, Andhra Pradesh'}</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 0.72rem; color: #94a3b8; font-family: monospace;">REPORT ID: <strong style="color: #38bdf8;">${rc.report_id}</strong></div>
+              <div style="font-size: 0.72rem; color: #94a3b8; font-family: monospace;">SECURITY TOKEN: <strong style="color: #a855f7;">${rc.verification_hash}</strong></div>
+              <div style="font-size: 0.72rem; color: #64748b;">Issued: ${rc.issue_date}</div>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 1.25rem;">
+            <div style="display: inline-block; padding: 0.35rem 1.2rem; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 999px; font-weight: 700; font-size: 0.85rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em;">
+              Cumulative Academic Dossier & Quantum ML Progress Transcript
+            </div>
+          </div>
+
+          <!-- Student Profile Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">STUDENT NAME</div>
+              <div style="font-weight: 700; color: #fff; font-size: 1rem;">${st.full_name || '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">REGISTRATION / ROLL NO</div>
+              <div style="font-weight: 700; color: #38bdf8; font-family: monospace;">${st.roll_no || '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">PROGRAM / BRANCH</div>
+              <div style="font-weight: 600; color: #e2e8f0;">${st.program_name || st.branch || '-'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">ACADEMIC COORDINATES</div>
+              <div style="font-weight: 600; color: #e2e8f0;">${st.year || '2nd Year'} &bull; Sem ${st.semester || 1} (Sec ${st.section || 'A'})</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">REGULATION & SESSION</div>
+              <div style="font-weight: 600; color: #e2e8f0;">${st.regulation || 'R23'} &bull; AY ${rc.academic_year || '2024-2025'}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #94a3b8;">OVERALL ATTENDANCE</div>
+              <div style="font-weight: 700; color: ${st.attendance >= 75 ? '#34d399' : '#f87171'};">${st.attendance || 80}% (${st.attendance >= 75 ? 'Satisfactory' : 'Condonation Needed'})</div>
+            </div>
+          </div>
+
+          <!-- Quantum ML Diagnostics & Standing Summary -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">SEMESTER SGPA</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #38bdf8;">${metrics.sgpa || '7.50'}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">Scale 10.0</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">CUMULATIVE CGPA</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #a855f7;">${metrics.cgpa || '7.80'}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">${metrics.standing || 'First Class'}</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">QUANTUM ML EVALUATION</div>
+              <div style="margin: 0.25rem 0;">${riskBadge}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">${qml.confidence || 92}% QML Confidence</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 0.75rem; text-align: center;">
+              <div style="font-size: 0.72rem; color: #94a3b8;">XP & GAMIFICATION</div>
+              <div style="font-size: 1.2rem; font-weight: 800; color: #fbbf24;">${st.xp_points || 450} XP</div>
+              <div style="font-size: 0.7rem; color: #94a3b8;">${st.current_level || 'Level 1'}</div>
+            </div>
+          </div>
+
+          <!-- Course-wise Grade Sheet Table -->
+          <div style="margin-bottom: 1.5rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #fff; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fa-solid fa-table-list" style="color: #38bdf8; margin-right: 0.4rem;"></i> Course Gradebook Breakdown</span>
+              <span style="font-size: 0.8rem; color: #94a3b8; font-weight: normal;">Total Credits: <strong>${metrics.total_credits || 16}</strong></span>
+            </div>
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Course Title</th>
+                  <th>Type</th>
+                  <th>Credits</th>
+                  <th>Attendance</th>
+                  <th>Internal %</th>
+                  <th>Quiz %</th>
+                  <th>Overall %</th>
+                  <th>Grade</th>
+                  <th>Grade Point</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(metrics.subjects || []).map(s => `
+                  <tr>
+                    <td style="font-family: monospace; font-weight: 600; color: #38bdf8;">${s.subject_code}</td>
+                    <td style="font-weight: 600; color: #fff;">${s.subject_name}</td>
+                    <td style="text-transform: capitalize; color: #94a3b8;">${s.subject_type || 'Theory'}</td>
+                    <td style="text-align: center;">${s.credits || 3}</td>
+                    <td style="color: ${s.attendance >= 75 ? '#34d399' : '#f87171'};">${Math.round(s.attendance || 75)}%</td>
+                    <td>${Math.round(s.assessment_score || 65)}%</td>
+                    <td>${Math.round(s.quiz_score || 65)}%</td>
+                    <td style="font-weight: 700; color: #fff;">${Math.round(s.overall_score || 70)}%</td>
+                    <td style="font-weight: 800; color: ${s.grade === 'F' ? '#f87171' : '#38bdf8'};">${s.grade || 'A'}</td>
+                    <td style="font-weight: 700; text-align: center;">${s.grade_point || '8.0'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Bloom Taxonomy Mastery & Badges Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; font-size: 0.875rem; color: #fff; margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-brain" style="color: #a855f7; margin-right: 0.4rem;"></i> Bloom's Taxonomy Cognitive Mastery Index
+              </div>
+              ${Object.entries(bloom).map(([k, v]) => `
+                <div style="margin-bottom: 0.45rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
+                    <span style="color: #cbd5e1;">${k}</span>
+                    <strong style="color: #38bdf8;">${v}%</strong>
+                  </div>
+                  <div class="bloom-bar-container">
+                    <div class="bloom-bar-fill" style="width: ${v}%;"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; font-size: 0.875rem; color: #fff; margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-award" style="color: #fbbf24; margin-right: 0.4rem;"></i> Verified Achievements & Badges (${gamification.total_badges || 0})
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+                ${(gamification.badges || []).map(b => `
+                  <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 6px; padding: 0.35rem 0.6rem; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem;">
+                    <i class="fa-solid ${b.badge_icon || 'fa-medal'}" style="color: ${b.badge_color || '#fbbf24'};"></i>
+                    <span style="color: #fff; font-weight: 600;">${b.badge_name}</span>
+                  </div>
+                `).join('')}
+              </div>
+              <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 0.5rem;">
+                <div><i class="fa-solid fa-code" style="color: #38bdf8;"></i> Coding Challenges Solved: <strong style="color: #fff;">${gamification.coding_challenges_solved || 0}</strong></div>
+                <div><i class="fa-solid fa-fire" style="color: #fbbf24;"></i> Active Learning Streak: <strong style="color: #fff;">${st.learning_streak || 3} Days</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Official Signatory Stamp Footer -->
+          <div style="border-top: 1px dashed rgba(148, 163, 184, 0.3); padding-top: 1.5rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem;">
+            <div style="text-align: center; width: 180px;">
+              <div style="font-family: 'Brush Script MT', cursive, serif; font-size: 1.2rem; color: #38bdf8; min-height: 28px;">A. S. Murthy</div>
+              <div style="border-top: 1px solid rgba(148, 163, 184, 0.4); margin-top: 0.25rem; padding-top: 0.25rem; font-size: 0.7rem; color: #94a3b8;">
+                ${sigs.faculty_advisor || 'Faculty Advisor'}
+              </div>
+            </div>
+            <div style="text-align: center; width: 180px;">
+              <div style="font-family: 'Brush Script MT', cursive, serif; font-size: 1.2rem; color: #a855f7; min-height: 28px;">K. Rama Krishna</div>
+              <div style="border-top: 1px solid rgba(148, 163, 184, 0.4); margin-top: 0.25rem; padding-top: 0.25rem; font-size: 0.7rem; color: #94a3b8;">
+                ${sigs.dean_academics || 'Dean, Academic Affairs'}
+              </div>
+            </div>
+            <div style="text-align: center; width: 180px;">
+              <div style="width: 50px; height: 50px; margin: 0 auto; border: 2px solid #38bdf8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: -0.05em; line-height: 1;">
+                OFFICIAL<br>SEAL
+              </div>
+              <div style="border-top: 1px solid rgba(148, 163, 184, 0.4); margin-top: 0.25rem; padding-top: 0.25rem; font-size: 0.7rem; color: #94a3b8;">
+                ${sigs.controller_examinations || 'Controller of Exams'}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function printReportCard() {
+      window.print();
+    }
+
+    function downloadDossierJson() {
+      if (!currentReportCardData) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentReportCardData, null, 2));
+      const dlAnchorElem = document.createElement('a');
+      dlAnchorElem.setAttribute("href", dataStr);
+      dlAnchorElem.setAttribute("download", `academic_report_${currentReportCardData.student?.roll_no || 'student'}.json`);
+      dlAnchorElem.click();
+      showToast('Academic dossier JSON downloaded successfully.', 'success');
     }
 
     async function logout() {
+      if (studentChatPollInterval) clearInterval(studentChatPollInterval);
+      if (studentUnreadPollInterval) clearInterval(studentUnreadPollInterval);
       await fetch('/api/logout', { method: 'POST' });
-      window.location.href = '/student-login';
+      window.location.href = '/login';
     }
 
-    window.onload = initDashboard;
+    // Initialize
+    window.onload = () => {
+      initDashboard();
+      fetchStudentUnreadCount();
+      startRealtimeStudentMessaging();
+    };
   </script>
+
+  <!-- ================= OFFICIAL ACADEMIC REPORT CARD & TRANSCRIPT MODAL ================= -->
+  <div id="officialReportCardModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 960px;">
+      <div class="modal-header no-print">
+        <h3 style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-file-pdf" style="color: #38bdf8;"></i> Official Academic Report Card & Progress Transcript
+        </h3>
+        <button class="close-btn" onclick="closeModal('officialReportCardModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height: 650px; overflow-y: auto;">
+        <div id="reportCardPrintArea"></div>
+      </div>
+      <div class="modal-footer no-print" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 0.8rem; color: var(--text-muted);">
+          <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i> Digitally Verified by Autonomous Academic Engine
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('officialReportCardModal')">Close</button>
+          <button type="button" class="btn btn-outline-cyan" onclick="downloadDossierJson()">
+            <i class="fa-solid fa-download"></i> Download JSON
+          </button>
+          <button type="button" class="btn btn-primary" onclick="printReportCard()" style="background: linear-gradient(135deg, #4f46e5, #0284c7); border: none;">
+            <i class="fa-solid fa-print"></i> Print / Save as PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOPIC GROUNDED LEARNING & PRACTICE MODAL ================= -->
+  <div id="topicStudyModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 880px;">
+      <div class="modal-header">
+        <h3 id="studyModalTitle" style="display: flex; align-items: center; gap: 0.6rem;">
+          Topic Grounded Learning
+        </h3>
+        <button class="close-btn" onclick="closeModal('topicStudyModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="studyModalBody" style="max-height: 560px; overflow-y: auto;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('topicStudyModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SUBJECT CURRICULUM HIERARCHY MODAL ================= -->
+  <div id="subjectCurriculumModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 840px;">
+      <div class="modal-header">
+        <h3 id="curriculumModalTitle" style="display: flex; align-items: center; gap: 0.6rem;">
+          Subject Syllabus Hierarchy
+        </h3>
+        <button class="close-btn" onclick="closeModal('subjectCurriculumModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="curriculumModalBody" style="max-height: 520px; overflow-y: auto;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('subjectCurriculumModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOPIC REAL-TIME ADAPTIVE QUIZ MODAL ================= -->
+  <div id="topicQuizModal" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 820px;">
+      <div class="modal-header">
+        <h3 id="quizModalTitle" style="display: flex; align-items: center; gap: 0.6rem;">
+          Topic Adaptive Quiz Engine
+        </h3>
+        <button class="close-btn" onclick="closeModal('topicQuizModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height: 580px; overflow-y: auto;">
+        <div id="quizQuestionsContainer"></div>
+        <div id="quizResultBox" style="display: none;"></div>
+      </div>
+      <div class="modal-footer" style="display: none;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('topicQuizModal')">Close</button>
+        <button type="button" id="submitTopicQuizBtn" class="btn btn-primary" onclick="handleTopicQuizSubmit()">
+          <i class="fa-solid fa-check"></i> Submit Quiz
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
+

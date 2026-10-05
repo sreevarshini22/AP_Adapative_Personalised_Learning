@@ -1,16 +1,27 @@
 """
-Comprehensive Academic Curriculum Seed Script for AP Adaptive Education Platform
-Populates all engineering branches across ALL 4 Years and ALL 8 Semesters:
-- CSE (Computer Science & Engineering)
-- CSE (AI & ML)
-- CSE (Data Science)
-- ECE (Electronics & Communication Engineering)
-- EEE (Electrical & Electronics Engineering)
-- Mechanical Engineering
-- Civil Engineering
-- Information Technology (IT)
+Comprehensive Multi-Institution Academic Curriculum Seed Script
+AP Adaptive & Personalised Learning Platform
 
-Each semester has its authentic B.Tech curriculum subjects, lessons, labs, quizzes, and faculty assignments.
+Seeds:
+1. Multi-Institution Entities:
+   - Andhra University College of Engineering (Autonomous) [AU_ENG]
+   - JNTUK College of Engineering [JNTUK_ENG]
+   - Sri Venkateswara University College of Engineering [SVU_ENG]
+   - AP State Higher Education Council [AP_SCHE]
+2. Role-Based User Accounts:
+   - Super Admin / State Admin: state.admin@sche.ap.gov.in (admin123)
+   - Institution Admin AU: admin@au.edu.in (admin123)
+   - Institution Admin JNTUK: admin@jntuk.edu.in (admin123)
+   - Faculty AU: prof.murthy@au.edu.in / teacher@example.com (teacher123)
+   - Faculty JNTUK: dr.venkatesh@jntuk.edu.in (teacher123)
+   - Student AU (College A, AIML): student.au@au.edu.in (student123)
+   - Student JNTUK (College B, ECE): student.jntuk@jntuk.edu.in (student123)
+   - Default Demo Student (CSE): student@example.com (student123)
+3. Dynamic Curriculum Hierarchy for Critical Test Cases:
+   - College A: AIML -> Year 3 -> Sem 1 -> Machine Learning, DBMS, Computer Networks
+   - College B: ECE -> Year 3 -> Sem 1 -> Signals and Systems, VLSI Design, Digital Communication
+4. Modules, Topics, Learning Objectives, Authorized Resources, Document Chunks, Grounded Questions,
+   Student Relational Performances, and Topic Masteries.
 """
 
 import os
@@ -24,380 +35,503 @@ if PROJECT_ROOT not in sys.path:
 
 from backend.database import get_db_connection, init_db
 
+
 def seed_academic_curriculum():
     init_db()
+    
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    # 1. Faculty Accounts across departments
-    teachers_data = [
-        ("Dr. Ravi Kumar", "dr.ravi@apedu.ac.in", "CSE", "2nd Year", "A"),
-        ("Dr. K. Srinivas Murthy", "teacher@example.com", "CSE", "3rd Year", "A"),
-        ("Prof. Lakshmi Devi", "prof.lakshmi@apedu.ac.in", "CSE (AI & ML)", "2nd Year", "B"),
-        ("Dr. P. Venkatesh", "dr.venkatesh@apedu.ac.in", "ECE", "4th Year", "C"),
-        ("Prof. K. Ranga Rao", "prof.rangarao@apedu.ac.in", "EEE", "3rd Year", "A"),
-        ("Dr. M. Suresh", "dr.suresh@apedu.ac.in", "Mechanical Engineering", "2nd Year", "A"),
-        ("Dr. N. Satyanarayana", "dr.satya@apedu.ac.in", "Civil Engineering", "3rd Year", "A"),
-        ("Prof. Geetha Reddy", "prof.geetha@apedu.ac.in", "Information Technology", "2nd Year", "A")
+
+    # Check if institutions already populated
+    cursor.execute("SELECT COUNT(*) FROM institutions")
+    inst_count = cursor.fetchone()[0]
+
+    if inst_count == 0:
+        conn.close()
+        # Import master real universities and colleges dataset
+        from backend.institution_service import import_institution_dataset
+        csv_dataset_path = os.path.join(PROJECT_ROOT, "data", "master_institutions_dataset.csv")
+        if os.path.exists(csv_dataset_path):
+            import_institution_dataset(
+                file_bytes_or_path=csv_dataset_path,
+                filename="master_institutions_dataset.csv",
+                imported_by=1,
+                source="AISHE_PORTAL",
+                version_tag="v1.0.0"
+            )
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+    # Shared default passwords
+    admin_pwd = generate_password_hash("admin123")
+    teacher_pwd = generate_password_hash("teacher123")
+    student_pwd = generate_password_hash("student123")
+
+    # =========================================================================
+    # 1. INSTITUTIONS
+    # =========================================================================
+    institutions_data = [
+        ("AU_ENG", "Andhra University College of Engineering (Autonomous)", "Autonomous University", "Andhra Pradesh", "Visakhapatnam", "https://andhrauniversity.edu.in", "contact@au.edu.in", "U-0003"),
+        ("JNTUK_ENG", "JNTUK University College of Engineering", "State University", "Andhra Pradesh", "Kakinada", "https://jntuk.edu.in", "contact@jntuk.edu.in", "U-0017"),
+        ("SVU_ENG", "Sri Venkateswara University College of Engineering", "State University", "Andhra Pradesh", "Tirupati", "https://svuniversity.edu.in", "contact@svu.edu.in", "U-0036"),
+        ("AP_SCHE", "Andhra Pradesh State Higher Education Council Portal", "State Directorate", "Andhra Pradesh", "Amaravati", "https://apsche.ap.gov.in", "state.admin@sche.ap.gov.in", "AP-SCHE-01")
     ]
-    
-    default_teacher_pwd = generate_password_hash("teacher123")
-    teacher_id_map = {}
-    
-    for full_name, email, branch, yr, sec in teachers_data:
-        cursor.execute("SELECT id FROM users WHERE LOWER(email) = ?", (email.lower(),))
-        user_row = cursor.fetchone()
-        if not user_row:
+
+    inst_map = {}
+    for code, name, itype, state, dist, web, email, aishe in institutions_data:
+        cursor.execute("SELECT id FROM institutions WHERE code = ? OR aishe_code = ?", (code, aishe))
+        row = cursor.fetchone()
+        if not row:
             cursor.execute("""
-            INSERT INTO users (email, password_hash, role, full_name)
-            VALUES (?, ?, 'teacher', ?)
-            """, (email.lower(), default_teacher_pwd, full_name))
+            INSERT INTO institutions (code, name, institution_name, aishe_code, institution_type, state, district, city, website, contact_email, is_demo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+            """, (code, name, name, aishe, itype, state, dist, dist, web, email))
+            inst_id = cursor.lastrowid
+        else:
+            inst_id = row["id"]
+            cursor.execute("""
+            UPDATE institutions SET
+                aishe_code = COALESCE(aishe_code, ?),
+                institution_name = COALESCE(institution_name, ?),
+                code = COALESCE(code, ?),
+                name = COALESCE(name, ?)
+            WHERE id = ?
+            """, (aishe, name, code, name, inst_id))
+        inst_map[code] = inst_id
+
+    au_id = inst_map["AU_ENG"]
+    jntuk_id = inst_map["JNTUK_ENG"]
+    sche_id = inst_map["AP_SCHE"]
+
+    # =========================================================================
+    # 2. PROGRAMS
+    # =========================================================================
+    programs_data = [
+        (au_id, "AIML", "B.Tech in Artificial Intelligence & Machine Learning", "B.Tech", 4, 8),
+        (au_id, "CSE", "B.Tech in Computer Science & Engineering", "B.Tech", 4, 8),
+        (jntuk_id, "ECE", "B.Tech in Electronics & Communication Engineering", "B.Tech", 4, 8),
+        (jntuk_id, "CSE", "B.Tech in Computer Science & Engineering", "B.Tech", 4, 8),
+        (inst_map["SVU_ENG"], "EEE", "B.Tech in Electrical & Electronics Engineering", "B.Tech", 4, 8)
+    ]
+
+    prog_map = {}
+    for i_id, p_code, p_name, deg, yrs, sems in programs_data:
+        cursor.execute("SELECT id FROM programs WHERE institution_id = ? AND program_code = ?", (i_id, p_code))
+        row = cursor.fetchone()
+        if not row:
+            cursor.execute("""
+            INSERT INTO programs (institution_id, program_code, program_name, degree_type, total_years, total_semesters, is_demo)
+            VALUES (?, ?, ?, ?, ?, ?, 1)
+            """, (i_id, p_code, p_name, deg, yrs, sems))
+            p_id = cursor.lastrowid
+        else:
+            p_id = row["id"]
+        prog_map[(i_id, p_code)] = p_id
+
+    au_aiml_prog = prog_map[(au_id, "AIML")]
+    jntuk_ece_prog = prog_map[(jntuk_id, "ECE")]
+
+    # =========================================================================
+    # 3. CURRICULUM VERSIONS
+    # =========================================================================
+    versions_data = [
+        (au_id, au_aiml_prog, "R24", "AU Autonomous AIML Regulation 2024", "2024-2028", "published"),
+        (jntuk_id, jntuk_ece_prog, "R23", "JNTUK Regulation 2023 (ECE)", "2023-2027", "published")
+    ]
+    version_map = {}
+    for i_id, p_id, v_code, v_name, eff_yr, status in versions_data:
+        cursor.execute("SELECT id FROM curriculum_versions WHERE institution_id = ? AND program_id = ? AND version_code = ?", (i_id, p_id, v_code))
+        row = cursor.fetchone()
+        if not row:
+            cursor.execute("""
+            INSERT INTO curriculum_versions (institution_id, program_id, version_code, version_name, effective_year, approval_status, is_active, is_demo)
+            VALUES (?, ?, ?, ?, ?, ?, 1, 1)
+            """, (i_id, p_id, v_code, v_name, eff_yr, status))
+            v_id = cursor.lastrowid
+        else:
+            v_id = row["id"]
+        version_map[(i_id, p_id, v_code)] = v_id
+
+    au_v_id = version_map[(au_id, au_aiml_prog, "R24")]
+    jntuk_v_id = version_map[(jntuk_id, jntuk_ece_prog, "R23")]
+
+    # =========================================================================
+    # User Accounts
+    users_to_create = [
+        # Super / State Admin
+        ("state.admin@sche.ap.gov.in", generate_password_hash("StateAdmin@2024"), "state_admin", "Dr. AP State Higher Education Secretary", sche_id),
+        # Institution Admins
+        ("admin@au.edu.in", generate_password_hash("AdminAU@2024"), "institution_admin", "AU Academic Dean", au_id),
+        ("admin@jntuk.edu.in", generate_password_hash("AdminJNTUK@2024"), "institution_admin", "JNTUK Academic Registrar", jntuk_id),
+        # Faculty
+        ("prof.murthy@au.edu.in", generate_password_hash("ProfMurthy@2024"), "teacher", "Dr. K. Srinivas Murthy", au_id),
+        ("dr.venkatesh@jntuk.edu.in", generate_password_hash("DrVenkatesh@2024"), "teacher", "Dr. P. Venkatesh", jntuk_id),
+        ("teacher@example.com", generate_password_hash("teacher123"), "teacher", "Dr. Faculty Advisor", au_id),
+        # Students
+        ("student.au@au.edu.in", generate_password_hash("StudentAU@2024"), "student", "Aarav Sharma", au_id),
+        ("student.jntuk@jntuk.edu.in", generate_password_hash("StudentJNTUK@2024"), "student", "Bhavya Reddy", jntuk_id),
+        ("student@example.com", generate_password_hash("student123"), "student", "Student Demo", au_id)
+    ]
+
+    user_id_map = {}
+    for email, pwd, role, name, inst_id in users_to_create:
+        cursor.execute("SELECT id FROM users WHERE LOWER(email) = ?", (email.lower(),))
+        row = cursor.fetchone()
+        if not row:
+            cursor.execute("""
+            INSERT INTO users (email, password_hash, role, full_name, institution_id)
+            VALUES (?, ?, ?, ?, ?)
+            """, (email.lower(), pwd, role, name, inst_id))
             u_id = cursor.lastrowid
         else:
-            u_id = user_row["id"]
-            
+            u_id = row["id"]
+            cursor.execute("UPDATE users SET password_hash = ?, institution_id = COALESCE(?, institution_id), role = ?, full_name = ? WHERE id = ?", (pwd, inst_id, role, name, u_id))
+        user_id_map[email.lower()] = u_id
+
+    # Seed Teachers records
+    teachers_records = [
+        (user_id_map["prof.murthy@au.edu.in"], "Dr. K. Srinivas Murthy", "prof.murthy@au.edu.in", "AIML", "Artificial Intelligence", "Professor & Head", "3rd Year", "A", au_id, au_aiml_prog),
+        (user_id_map["dr.venkatesh@jntuk.edu.in"], "Dr. P. Venkatesh", "dr.venkatesh@jntuk.edu.in", "ECE", "Electronics & Communication", "Professor", "3rd Year", "A", jntuk_id, jntuk_ece_prog),
+        (user_id_map["teacher@example.com"], "Dr. Faculty Advisor", "teacher@example.com", "CSE", "Computer Science", "Associate Professor", "3rd Year", "A", au_id, None)
+    ]
+    teacher_id_map = {}
+    for uid, name, email, branch, dept, desig, yr, sec, inst_id, prog_id in teachers_records:
         cursor.execute("SELECT id FROM teachers WHERE LOWER(email) = ?", (email.lower(),))
-        t_row = cursor.fetchone()
-        if not t_row:
+        row = cursor.fetchone()
+        if not row:
             cursor.execute("""
-            INSERT INTO teachers (user_id, full_name, email, branch, year, section)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """, (u_id, full_name, email.lower(), branch, yr, sec))
+            INSERT INTO teachers (user_id, full_name, email, branch, department, designation, year, section, institution_id, program_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (uid, name, email.lower(), branch, dept, desig, yr, sec, inst_id, prog_id))
             t_id = cursor.lastrowid
         else:
-            t_id = t_row["id"]
-            
+            t_id = row["id"]
+            cursor.execute("""
+            UPDATE teachers SET institution_id = ?, program_id = ?, department = ?, designation = ? WHERE id = ?
+            """, (inst_id, prog_id, dept, desig, t_id))
         teacher_id_map[email.lower()] = t_id
 
-    # 2. Comprehensive B.Tech Curriculum across all branches and all 8 semesters
-    # Format: (subject_code, subject_name, branch, year, semester, credits, subject_type, description, assigned_teacher_email)
-    all_subjects_catalog = [
-        # =========================================================================
-        # CSE (Computer Science & Engineering) - Semesters 1 to 8
-        # =========================================================================
-        # Sem 1 (1st Year)
-        ("CS101", "Programming for Problem Solving using C", "CSE", "1st Year", 1, 3, "theory", "Algorithmic thinking, branching, loops, functions, arrays, pointers, and file operations in C.", "dr.ravi@apedu.ac.in"),
-        ("CS101L", "C Programming & Problem Solving Lab", "CSE", "1st Year", 1, 2, "lab", "Hands-on implementation of C programs, pointer arithmetic, structures, and dynamic memory allocation.", "dr.ravi@apedu.ac.in"),
-        ("MA101", "Engineering Mathematics - I (Calculus & ODE)", "CSE", "1st Year", 1, 4, "theory", "Single and multivariable calculus, Taylor series, and ordinary differential equations.", "prof.lakshmi@apedu.ac.in"),
-        ("PH101", "Applied Physics & Semiconductor Devices", "CSE", "1st Year", 1, 3, "theory", "Wave optics, quantum mechanics, dielectric materials, and semiconductor band theory.", "dr.venkatesh@apedu.ac.in"),
-        ("PH101L", "Applied Physics & Optics Lab", "CSE", "1st Year", 1, 2, "lab", "Optical bench experiments, semiconductor diode V-I characteristics, and Planck constant determination.", "dr.venkatesh@apedu.ac.in"),
-        ("EE101", "Basic Electrical & Electronics Engineering", "CSE", "1st Year", 1, 3, "integrated", "DC/AC circuit analysis, transformers, diodes, BJT amplifiers, and logic gates.", "prof.rangarao@apedu.ac.in"),
-        ("HS101", "Communicative English & Technical Writing", "CSE", "1st Year", 1, 2, "theory", "Vocabulary, reading comprehension, report generation, and formal technical communication.", "prof.lakshmi@apedu.ac.in"),
+    # Seed Classes (Institution -> Class -> Student & Teacher -> Class -> Students hierarchy)
+    classes_data = [
+        (teacher_id_map["prof.murthy@au.edu.in"], au_id, "R24", "AIML", "3rd Year", 1, "A", "2024-2025"),
+        (teacher_id_map["dr.venkatesh@jntuk.edu.in"], jntuk_id, "R23", "ECE", "3rd Year", 1, "A", "2024-2025"),
+        (teacher_id_map["teacher@example.com"], au_id, "R23", "CSE", "3rd Year", 5, "A", "2024-2025")
+    ]
+    class_id_map = {}
+    for t_id, i_id, reg, br, yr, sem, sec, ac_yr in classes_data:
+        cursor.execute("""
+        SELECT id FROM classes 
+        WHERE institution_id = ? AND regulation = ? AND branch = ? AND year = ? AND semester = ? AND section = ? AND academic_year = ?
+        """, (i_id, reg, br, yr, sem, sec, ac_yr))
+        c_row = cursor.fetchone()
+        if not c_row:
+            cursor.execute("""
+            INSERT INTO classes (teacher_id, institution_id, regulation, branch, year, semester, section, academic_year)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (t_id, i_id, reg, br, yr, sem, sec, ac_yr))
+            class_id = cursor.lastrowid
+        else:
+            class_id = c_row["id"]
+            cursor.execute("UPDATE classes SET teacher_id = ? WHERE id = ?", (t_id, class_id))
+        class_id_map[(i_id, br, yr, sec)] = class_id
 
-        # Sem 2 (1st Year)
-        ("CS102", "Python Programming & Scripting", "CSE", "1st Year", 2, 3, "theory", "Control flow, OOP in Python, list comprehensions, file I/O, and NumPy vectorization.", "dr.ravi@apedu.ac.in"),
-        ("CS102L", "Python Programming Virtual Lab", "CSE", "1st Year", 2, 2, "lab", "Hands-on Python scripts, data structures, object-oriented design, and algorithmic problem sets.", "dr.ravi@apedu.ac.in"),
-        ("MA102", "Engineering Mathematics - II (Linear Algebra & Vector Calculus)", "CSE", "1st Year", 2, 4, "theory", "Eigenvalues, Cayley-Hamilton theorem, orthogonal transformations, and Stokes theorem.", "prof.lakshmi@apedu.ac.in"),
-        ("CH102", "Engineering Chemistry & Material Science", "CSE", "1st Year", 2, 3, "theory", "Electrochemistry, polymers, phase rule, corrosion inhibitors, and nano-materials.", "dr.satya@apedu.ac.in"),
-        ("ME102", "Engineering Graphics & Design Modeling", "CSE", "1st Year", 2, 3, "integrated", "Orthographic projections, isometric views, 3D modeling, and CAD drafting principles.", "dr.suresh@apedu.ac.in"),
-        ("CS103", "Data Structures Fundamentals", "CSE", "1st Year", 2, 3, "integrated", "Dynamic memory management, linked lists, stacks, queues, and search trees.", "teacher@example.com"),
+    # Seed Teacher Class Assignments (Explicit teacher_assignments mapping)
+    teacher_assignments_data = [
+        (teacher_id_map["prof.murthy@au.edu.in"], "AIML", "3rd Year", "A", "2024-2025", 1),
+        (teacher_id_map["dr.venkatesh@jntuk.edu.in"], "ECE", "3rd Year", "A", "2024-2025", 1),
+        (teacher_id_map["teacher@example.com"], "CSE", "3rd Year", "A", "2024-2025", 1)
+    ]
+    for t_id, br, yr, sec, ac_yr, is_ct in teacher_assignments_data:
+        cursor.execute("""
+        INSERT OR REPLACE INTO teacher_assignments (teacher_id, branch, year, section, academic_year, is_class_teacher)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """, (t_id, br, yr, sec, ac_yr, is_ct))
 
-        # Sem 3 (2nd Year)
-        ("CS201", "Data Structures & Algorithms", "CSE", "2nd Year", 3, 3, "theory", "Asymptotic analysis, advanced trees, heaps, graphs, hashing, and greedy traversal techniques.", "dr.ravi@apedu.ac.in"),
-        ("CS201L", "Advanced Data Structures Lab", "CSE", "2nd Year", 3, 2, "lab", "Hands-on coding of AVL trees, red-black trees, Dijkstra shortest paths, and graph traversal.", "dr.ravi@apedu.ac.in"),
-        ("CS202", "Database Management Systems", "CSE", "2nd Year", 3, 3, "theory", "ER modeling, relational algebra, SQL DDL/DML, normalization, and ACID transactions.", "teacher@example.com"),
-        ("CS202L", "Database & SQL Systems Lab", "CSE", "2nd Year", 3, 2, "lab", "Schema design, complex SQL queries, stored procedures, triggers, and transaction isolation tests.", "teacher@example.com"),
-        ("CS203", "Operating Systems & System Programming", "CSE", "2nd Year", 3, 3, "integrated", "Processes, CPU scheduling, synchronization primitives, virtual memory paging, and deadlocks.", "dr.ravi@apedu.ac.in"),
-        ("MA201", "Discrete Mathematical Structures", "CSE", "2nd Year", 3, 3, "theory", "Set theory, propositional logic, relations, recurrence relations, and graph algorithms.", "prof.lakshmi@apedu.ac.in"),
-        ("CS204", "Computer Organization & Architecture", "CSE", "2nd Year", 3, 3, "theory", "Instruction pipelining, cache memory hierarchies, ALU design, and I/O architectures.", "teacher@example.com"),
-
-        # Sem 4 (2nd Year)
-        ("CS205", "Object Oriented Programming through Java", "CSE", "2nd Year", 4, 3, "theory", "Classes, inheritance, polymorphism, interfaces, exception handling, multithreading, and Java Collections.", "dr.ravi@apedu.ac.in"),
-        ("CS205L", "Java Programming & OOP Lab", "CSE", "2nd Year", 4, 2, "lab", "Java GUI programming, thread synchronization, socket programming, and collections framework.", "dr.ravi@apedu.ac.in"),
-        ("CS206", "Design & Analysis of Algorithms", "CSE", "2nd Year", 4, 4, "integrated", "Divide & Conquer, Dynamic Programming, Greedy paradigm, Backtracking, and NP-completeness.", "teacher@example.com"),
-        ("CS207", "Formal Languages & Automata Theory", "CSE", "2nd Year", 4, 3, "theory", "Finite automata, regular expressions, context-free grammars, pushdown automata, and Turing machines.", "dr.ravi@apedu.ac.in"),
-        ("MA203", "Probability, Statistics & Queueing Theory", "CSE", "2nd Year", 4, 3, "theory", "Probability distributions, hypothesis testing, ANOVA, Markov chains, and M/M/1 queuing models.", "prof.lakshmi@apedu.ac.in"),
-        ("CS208", "Software Engineering & Agile Methodologies", "CSE", "2nd Year", 4, 3, "theory", "SDLC models, Agile Scrum, requirements analysis, UML architectural design, and software QA.", "prof.lakshmi@apedu.ac.in"),
-
-        # Sem 5 (3rd Year)
-        ("CS301", "Machine Learning & Statistical Pattern Recognition", "CSE", "3rd Year", 5, 3, "theory", "Supervised classification, regression, SVMs, Decision Trees, Ensemble Random Forests, and Gradient Boosting.", "teacher@example.com"),
-        ("CS301L", "Machine Learning & AI Practical Lab", "CSE", "3rd Year", 5, 2, "lab", "Scikit-Learn modeling, model evaluation metrics, feature engineering, and hyperparameter tuning.", "teacher@example.com"),
-        ("CS302", "Web Technologies & Full Stack Development", "CSE", "3rd Year", 5, 3, "theory", "HTML5, CSS3, ES6 JavaScript, Node.js, Express, REST APIs, and database integration.", "dr.ravi@apedu.ac.in"),
-        ("CS302L", "Web Technologies Lab", "CSE", "3rd Year", 5, 2, "lab", "Building dynamic responsive web applications, REST API development, and asynchronous client-server calls.", "dr.ravi@apedu.ac.in"),
-        ("CS303", "Computer Networks & Protocols", "CSE", "3rd Year", 5, 3, "integrated", "Layered OSI/TCP-IP models, flow control, routing protocols (OSPF/BGP), and TCP congestion.", "teacher@example.com"),
-        ("CS304", "Microprocessors & Microcontrollers Interfacing", "CSE", "3rd Year", 5, 3, "integrated", "8086/ARM architecture, assembly programming, interrupt handling, and peripheral interfacing.", "dr.venkatesh@apedu.ac.in"),
-        ("CS305", "Artificial Intelligence Foundations", "CSE", "3rd Year", 5, 3, "theory", "Knowledge representation, heuristic search (A*), game playing, constraint satisfaction, and rule engines.", "prof.lakshmi@apedu.ac.in"),
-
-        # Sem 6 (3rd Year)
-        ("CS306", "Deep Learning & Neural Architectures", "CSE", "3rd Year", 6, 3, "theory", "Perceptrons, backpropagation, CNNs for computer vision, RNNs, and Transformer attention models.", "teacher@example.com"),
-        ("CS306L", "Deep Learning & PyTorch Lab", "CSE", "3rd Year", 6, 2, "lab", "PyTorch model training, CNN image classification, transfer learning, and sequence modeling.", "teacher@example.com"),
-        ("CS307", "Cryptography & Network Security", "CSE", "3rd Year", 6, 3, "theory", "Symmetric/Asymmetric encryption (AES, RSA), SHA-256 hashing, digital signatures, and firewalls.", "dr.ravi@apedu.ac.in"),
-        ("CS308", "Cloud Computing & DevOps CI/CD", "CSE", "3rd Year", 6, 3, "integrated", "Virtualization, AWS/Azure architectures, Docker containers, Kubernetes orchestration, and CI/CD.", "teacher@example.com"),
-        ("CS309", "Compiler Design & Code Generation", "CSE", "3rd Year", 6, 3, "theory", "Lexical analysis (Lex/Flex), syntax analysis (Yacc/Bison), intermediate code generation, and optimization.", "dr.ravi@apedu.ac.in"),
-        ("CS310", "Big Data Analytics with Apache Spark", "CSE", "3rd Year", 6, 3, "integrated", "Hadoop HDFS, MapReduce, Apache Spark RDDs, PySpark dataframes, and stream processing.", "prof.geetha@apedu.ac.in"),
-
-        # Sem 7 (4th Year)
-        ("CS401", "Distributed Systems & Cloud Architecture", "CSE", "4th Year", 7, 4, "theory", "RPC, distributed consensus (Raft/Paxos), replication, clock synchronization, and microservices.", "teacher@example.com"),
-        ("CS402", "Cyber Security, Penetration Testing & Forensics", "CSE", "4th Year", 7, 3, "theory", "Penetration testing, vulnerability scanning, malware analysis, and digital evidence handling.", "dr.ravi@apedu.ac.in"),
-        ("CS402L", "Cyber Security & Ethical Hacking Lab", "CSE", "4th Year", 7, 2, "lab", "Packet sniffing (Wireshark), vulnerability assessment (Nessus), exploit payloads, and defense logging.", "dr.ravi@apedu.ac.in"),
-        ("CS403", "Natural Language Processing & LLMs", "CSE", "4th Year", 7, 3, "integrated", "Word embeddings (Word2Vec), BERT, text classification, named entity recognition, and LLMs.", "prof.lakshmi@apedu.ac.in"),
-        ("CS404", "Mobile Application Development", "CSE", "4th Year", 7, 3, "integrated", "Android SDK, Kotlin/Flutter UI widgets, background services, REST API consumers, and SQLite.", "prof.geetha@apedu.ac.in"),
-
-        # Sem 8 (4th Year)
-        ("CS405", "Major Capstone Engineering Project", "CSE", "4th Year", 8, 8, "lab", "End-to-end engineering capstone development, system deployment, research publication, and viva.", "teacher@example.com"),
-        ("CS406", "High Performance Computing & GPU Acceleration", "CSE", "4th Year", 8, 3, "theory", "Parallel computing paradigms, OpenMP, MPI, and GPU CUDA accelerated scientific workloads.", "dr.ravi@apedu.ac.in"),
-        ("CS407", "Enterprise Full Stack Application Engineering", "CSE", "4th Year", 8, 3, "integrated", "Microservices architecture, GraphQL, JWT authentication, caching strategies, and cloud deployment.", "prof.geetha@apedu.ac.in"),
-
-        # =========================================================================
-        # CSE (AI & ML) - Specialized Semesters 1 to 8
-        # =========================================================================
-        # Sem 1
-        ("AIML101", "Introduction to Artificial Intelligence", "CSE (AI & ML)", "1st Year", 1, 3, "theory", "History of AI, problem formulations, state space search, and ethical considerations.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML101L", "Python for AI Foundations Lab", "CSE (AI & ML)", "1st Year", 1, 2, "lab", "Basic Python scripting, matrix manipulations with NumPy, and introductory search heuristics.", "prof.lakshmi@apedu.ac.in"),
-        ("MA101A", "Mathematics for Machine Learning - I", "CSE (AI & ML)", "1st Year", 1, 4, "theory", "Multivariable calculus, partial derivatives, gradients, and optimization foundations.", "prof.lakshmi@apedu.ac.in"),
-        ("PH101A", "Physics of Computation & Sensors", "CSE (AI & ML)", "1st Year", 1, 3, "theory", "Sensor physics, signal acquisition, noise characteristics, and transducer models.", "dr.venkatesh@apedu.ac.in"),
-        ("EE101A", "Digital Principles for AI Accelerators", "CSE (AI & ML)", "1st Year", 1, 3, "integrated", "Logic gates, adders, multipliers, and systolic array compute architectures.", "prof.rangarao@apedu.ac.in"),
-        
-        # Sem 2
-        ("AIML102", "Python for Scientific Computing & Data Wrangling", "CSE (AI & ML)", "1st Year", 2, 3, "theory", "NumPy, SciPy, Pandas data wrangling, and Matplotlib/Seaborn visualization.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML102L", "Scientific Python & Data Science Lab", "CSE (AI & ML)", "1st Year", 2, 2, "lab", "Data cleaning pipelines, exploratory data analysis, and multivariate visualizations.", "prof.lakshmi@apedu.ac.in"),
-        ("MA102A", "Linear Algebra for AI & Optimization", "CSE (AI & ML)", "1st Year", 2, 4, "theory", "Vector spaces, matrix decompositions, eigenvalues, and convex optimization.", "prof.lakshmi@apedu.ac.in"),
-        ("CS103A", "Data Structures for Intelligent Systems", "CSE (AI & ML)", "1st Year", 2, 4, "integrated", "Graphs, heaps, hash tables, and priority search structures.", "dr.ravi@apedu.ac.in"),
-
-        # Sem 3
-        ("AIML201", "Foundations of Artificial Intelligence", "CSE (AI & ML)", "2nd Year", 3, 3, "theory", "Search algorithms, heuristic evaluation, adversarial games, and probabilistic reasoning.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML201L", "AI Search & Heuristics Lab", "CSE (AI & ML)", "2nd Year", 3, 2, "lab", "Implementing A*, IDA*, Alpha-Beta pruning, and constraint satisfaction solvers.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML202", "Advanced Data Structures for AI", "CSE (AI & ML)", "2nd Year", 3, 3, "integrated", "Trie trees, KD-trees, priority queues, and graph representations for AI state spaces.", "dr.ravi@apedu.ac.in"),
-        ("CS202A", "Databases & Data Warehousing for AI", "CSE (AI & ML)", "2nd Year", 3, 3, "integrated", "Relational SQL, vector embeddings stores, and data pipelines.", "teacher@example.com"),
-        ("MA202", "Probability & Bayesian Inference", "CSE (AI & ML)", "2nd Year", 3, 3, "theory", "Probability distributions, maximum likelihood estimation, Bayesian networks.", "prof.lakshmi@apedu.ac.in"),
-
-        # Sem 4
-        ("AIML203", "Statistical Machine Learning", "CSE (AI & ML)", "2nd Year", 4, 3, "theory", "Regression models, decision tree ensembles, SVMs, and clustering techniques.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML203L", "Machine Learning Algorithms Lab", "CSE (AI & ML)", "2nd Year", 4, 2, "lab", "Hands-on implementations of gradient descent, random forests, and k-means clustering.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML204", "Knowledge Representation & Reasoning", "CSE (AI & ML)", "2nd Year", 4, 3, "theory", "Ontologies, first-order logic, description logics, and automated theorem provers.", "prof.lakshmi@apedu.ac.in"),
-        ("CS206A", "Algorithmic Complexity in AI", "CSE (AI & ML)", "2nd Year", 4, 4, "integrated", "Dynamic programming, randomized algorithms, and approximation bounds.", "teacher@example.com"),
-
-        # Sem 5
-        ("AIML301", "Deep Learning & Neural Architectures", "CSE (AI & ML)", "3rd Year", 5, 3, "theory", "CNN architectures, ResNets, RNNs, LSTMs, Attention mechanisms, and PyTorch frameworks.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML301L", "Deep Learning & Neural Networks Lab", "CSE (AI & ML)", "3rd Year", 5, 2, "lab", "Building CNNs, autoencoders, and sequence models using PyTorch & TensorFlow.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML303", "Natural Language Understanding", "CSE (AI & ML)", "3rd Year", 5, 3, "integrated", "Syntactic parsing, word embeddings, sequence-to-sequence models, and sentiment analysis.", "prof.lakshmi@apedu.ac.in"),
-        ("CS308A", "Cloud AI Infrastructure & MLOps", "CSE (AI & ML)", "3rd Year", 5, 3, "integrated", "MLflow, model versioning, automated deployment pipelines, and GPU clusters.", "teacher@example.com"),
-
-        # Sem 6
-        ("AIML302", "Computer Vision & Visual Perception", "CSE (AI & ML)", "3rd Year", 6, 3, "theory", "Object detection (YOLO), image segmentation, optical flow, and generative adversarial networks.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML302L", "Computer Vision & OpenCV Lab", "CSE (AI & ML)", "3rd Year", 6, 2, "lab", "Edge detection, feature matching, YOLO inference, and real-time video processing.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML304", "Reinforcement Learning & Decision Systems", "CSE (AI & ML)", "3rd Year", 6, 3, "integrated", "MDPs, Value Iteration, Q-learning, Deep Q-Networks (DQN), and Actor-Critic methods.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML305", "Big Data Analytics for AI", "CSE (AI & ML)", "3rd Year", 6, 3, "integrated", "PySpark MLlib, distributed feature stores, and stream analytics.", "prof.geetha@apedu.ac.in"),
-
-        # Sem 7
-        ("AIML401", "Generative AI & Large Language Models", "CSE (AI & ML)", "4th Year", 7, 3, "theory", "Transformer foundations, fine-tuning LLMs (LoRA), RAG architectures, and diffusion models.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML401L", "Generative AI & LLM Fine-Tuning Lab", "CSE (AI & ML)", "4th Year", 7, 2, "lab", "Building RAG pipelines with LangChain, vector databases (ChromaDB), and LoRA fine-tuning.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML403", "Autonomous Systems & Robotics AI", "CSE (AI & ML)", "4th Year", 7, 3, "integrated", "SLAM, sensor fusion, path planning algorithms, and ROS robotics middleware.", "dr.suresh@apedu.ac.in"),
-        ("AIML404", "AI Ethics, Governance & Safety", "CSE (AI & ML)", "4th Year", 7, 3, "theory", "Explainability (SHAP/LIME), algorithmic fairness, model auditing, and AI alignment.", "prof.lakshmi@apedu.ac.in"),
-
-        # Sem 8
-        ("AIML405", "AI & ML Major Capstone Project", "CSE (AI & ML)", "4th Year", 8, 8, "lab", "Production AI deployment, end-to-end pipeline implementation, and technical viva.", "prof.lakshmi@apedu.ac.in"),
-        ("AIML406", "Quantum Machine Learning", "CSE (AI & ML)", "4th Year", 8, 3, "theory", "Quantum variational circuits, PennyLane integration, and quantum support vector classifiers.", "teacher@example.com"),
-
-        # =========================================================================
-        # CSE (Data Science) - Semesters 1 to 8
-        # =========================================================================
-        ("DS101", "Foundations of Data Science", "CSE (Data Science)", "1st Year", 1, 3, "theory", "Data collection methodologies, exploratory analysis, hypothesis generation, and visualization.", "prof.geetha@apedu.ac.in"),
-        ("DS101L", "Data Science Foundations Lab", "CSE (Data Science)", "1st Year", 1, 2, "lab", "Exploratory data analysis, statistical tests, and data cleaning using Python Pandas.", "prof.geetha@apedu.ac.in"),
-        ("DS102", "Statistical Methods for Data Analysis", "CSE (Data Science)", "1st Year", 2, 4, "integrated", "Sampling distributions, hypothesis tests, regression modeling, and non-parametric statistics.", "prof.geetha@apedu.ac.in"),
-        ("DS201", "Data Wrangling & Feature Engineering", "CSE (Data Science)", "2nd Year", 3, 3, "theory", "Data cleaning pipelines, feature engineering, missing data imputation, and outlier analysis.", "prof.geetha@apedu.ac.in"),
-        ("DS201L", "Data Wrangling & ETL Lab", "CSE (Data Science)", "2nd Year", 3, 2, "lab", "Building automated ETL pipelines, data validation checks, and feature scaling.", "prof.geetha@apedu.ac.in"),
-        ("DS202", "Applied Machine Learning for Data Science", "CSE (Data Science)", "2nd Year", 4, 4, "integrated", "Supervised/unsupervised algorithms, tree ensembles, and dimensionality reduction.", "prof.geetha@apedu.ac.in"),
-        ("DS301", "Big Data Analytics & Cloud Warehousing", "CSE (Data Science)", "3rd Year", 5, 3, "theory", "Snowflake, BigQuery, Hadoop, Spark streaming, and data lake architectures.", "prof.geetha@apedu.ac.in"),
-        ("DS301L", "Big Data & Cloud Warehousing Lab", "CSE (Data Science)", "3rd Year", 5, 2, "lab", "Spark SQL querying, data warehouse schema design, and cloud analytics dashboards.", "prof.geetha@apedu.ac.in"),
-        ("DS302", "Data Visualization & Storytelling", "CSE (Data Science)", "3rd Year", 6, 4, "integrated", "Tableau, PowerBI, D3.js interactive graphs, and executive dashboard design.", "prof.geetha@apedu.ac.in"),
-        ("DS401", "Predictive Modeling & Time Series Forecasting", "CSE (Data Science)", "4th Year", 7, 3, "theory", "ARIMA models, Prophet, survival analysis, and business analytics dashboards.", "prof.geetha@apedu.ac.in"),
-        ("DS401L", "Time Series Analysis Lab", "CSE (Data Science)", "4th Year", 7, 2, "lab", "Stationarity testing, ARIMA forecasting, and anomaly detection in sequential data.", "prof.geetha@apedu.ac.in"),
-        ("DS405", "Data Science Major Capstone Project", "CSE (Data Science)", "4th Year", 8, 8, "lab", "End-to-end data product development, predictive modeling, and executive presentation.", "prof.geetha@apedu.ac.in"),
-
-        # =========================================================================
-        # ECE (Electronics & Communication Engineering) - Semesters 1 to 8
-        # =========================================================================
-        ("EC101", "Electronic Devices & Circuit Theory", "ECE", "1st Year", 1, 3, "theory", "PN junction physics, Zener diodes, BJT characteristics, FET biasing, and small signal models.", "dr.venkatesh@apedu.ac.in"),
-        ("EC101L", "Electronic Devices & Simulation Lab", "ECE", "1st Year", 1, 2, "lab", "V-I characteristics of diodes, transistor biasing circuits, and SPICE simulations.", "dr.venkatesh@apedu.ac.in"),
-        ("EC102", "Signals & Linear Systems", "ECE", "1st Year", 2, 4, "theory", "Continuous/Discrete signals, Fourier Series, Fourier Transforms, and Z-Transforms.", "dr.venkatesh@apedu.ac.in"),
-        ("EC201", "Digital Logic Design & Verilog HDL", "ECE", "2nd Year", 3, 3, "theory", "Boolean algebra, Karnaugh maps, combinational/sequential logic circuits, and FSM modeling.", "dr.venkatesh@apedu.ac.in"),
-        ("EC201L", "Digital Electronics & HDL Lab", "ECE", "2nd Year", 3, 2, "lab", "FPGA programming, Verilog testbenches, and combinational logic hardware testing.", "dr.venkatesh@apedu.ac.in"),
-        ("EC202", "Analog Communications & Modulation", "ECE", "2nd Year", 4, 3, "theory", "AM/FM modulation, superheterodyne receivers, noise analysis, and pulse modulation.", "dr.venkatesh@apedu.ac.in"),
-        ("EC202L", "Analog & Digital Communication Lab", "ECE", "2nd Year", 4, 2, "lab", "Hardware modulation/demodulation kits, spectrum analysis, and signal constellation testing.", "dr.venkatesh@apedu.ac.in"),
-        ("EC301", "Digital Communications & Information Theory", "ECE", "3rd Year", 5, 4, "integrated", "PCM, QPSK, QAM digital modulations, Shannon theorem, and error correcting codes.", "dr.venkatesh@apedu.ac.in"),
-        ("EC302", "Antennas & Wave Propagation", "ECE", "3rd Year", 6, 4, "theory", "Dipole antennas, radiation patterns, phased arrays, and tropospheric wave propagation.", "dr.venkatesh@apedu.ac.in"),
-        ("EC401", "VLSI Design & CMOS Circuitry", "ECE", "4th Year", 7, 3, "theory", "MOS transistor theory, CMOS layout rules, dynamic logic, and static timing analysis.", "dr.venkatesh@apedu.ac.in"),
-        ("EC401L", "VLSI CAD & Chip Design Lab", "ECE", "4th Year", 7, 2, "lab", "Cadence/EDA tool simulation, CMOS inverter layout design, and DRC/LVS physical verification.", "dr.venkatesh@apedu.ac.in"),
-        ("EC402", "Digital Signal Processing", "ECE", "4th Year", 7, 4, "integrated", "FFT architectures, FIR/IIR filter design, bilinear transformation, and DSP hardware.", "dr.venkatesh@apedu.ac.in"),
-        ("EC403", "Embedded Systems & RTOS Design", "ECE", "4th Year", 8, 4, "integrated", "ARM Cortex-M architecture, RTOS task scheduling, inter-process sync, and IoT edge nodes.", "dr.venkatesh@apedu.ac.in"),
-        ("EC405", "ECE Major Capstone Project", "ECE", "4th Year", 8, 8, "lab", "Hardware system prototype design, embedded firmware development, and technical evaluation.", "dr.venkatesh@apedu.ac.in"),
-
-        # =========================================================================
-        # EEE (Electrical & Electronics Engineering) - Semesters 1 to 8
-        # =========================================================================
-        ("EE101E", "Basic Electrical Engineering Fundamentals", "EEE", "1st Year", 1, 3, "theory", "Circuit theorems, single-phase AC analysis, resonance, and three-phase circuits.", "prof.rangarao@apedu.ac.in"),
-        ("EE101EL", "Electrical Circuits & Measurements Lab", "EEE", "1st Year", 1, 2, "lab", "Verification of KCL/KVL, Thevenin theorem, wattmeter measurements, and RL/RC circuits.", "prof.rangarao@apedu.ac.in"),
-        ("EE102E", "Electromagnetic Field Theory", "EEE", "1st Year", 2, 4, "theory", "Coulomb law, Gauss law, Maxwell equations, magnetic vector potential, and Poynting vector.", "prof.rangarao@apedu.ac.in"),
-        ("EE201", "Electrical Circuit Analysis & Synthesis", "EEE", "2nd Year", 3, 4, "theory", "Mesh/Nodal analysis, network theorems (Thevenin/Norton), transient response, and two-port networks.", "prof.rangarao@apedu.ac.in"),
-        ("EE202", "DC Machines & Transformers", "EEE", "2nd Year", 4, 3, "theory", "DC motor torque equations, generator characteristics, single/three-phase transformer testing.", "prof.rangarao@apedu.ac.in"),
-        ("EE202L", "Electrical Machines Practical Lab", "EEE", "2nd Year", 4, 2, "lab", "Speed control of DC shunt motors, load test on transformer, and Hopkinson test.", "prof.rangarao@apedu.ac.in"),
-        ("EE301", "Power System Generation & Transmission", "EEE", "3rd Year", 5, 4, "theory", "Thermal/Hydro generation, line parameters, corona loss, mechanical design of overhead lines.", "prof.rangarao@apedu.ac.in"),
-        ("EE302", "Power Electronics & Motor Drives", "EEE", "3rd Year", 6, 3, "theory", "Thyristors, MOSFETs, IGBTs, buck/boost converters, inverters, and variable speed motor drives.", "prof.rangarao@apedu.ac.in"),
-        ("EE302L", "Power Electronics & Simulation Lab", "EEE", "3rd Year", 6, 2, "lab", "SCR firing circuits, buck-boost converter waveforms, and PWM inverter testing using MATLAB/Simulink.", "prof.rangarao@apedu.ac.in"),
-        ("EE401", "Smart Grids & Renewable Energy Integration", "EEE", "4th Year", 7, 4, "theory", "Solar PV arrays, wind energy conversion, microgrids, battery energy storage, and SCADA.", "prof.rangarao@apedu.ac.in"),
-        ("EE405", "EEE Major Engineering Capstone Project", "EEE", "4th Year", 8, 8, "lab", "Power system simulation, hardware converter development, and faculty viva.", "prof.rangarao@apedu.ac.in"),
-
-        # =========================================================================
-        # Mechanical Engineering - Semesters 1 to 8
-        # =========================================================================
-        ("ME101", "Engineering Mechanics & Statics", "Mechanical Engineering", "1st Year", 1, 3, "theory", "Force systems, equilibrium, friction, trusses, centroid, and moment of inertia.", "dr.suresh@apedu.ac.in"),
-        ("ME101L", "Workshop Practice & Manufacturing Lab", "Mechanical Engineering", "1st Year", 1, 2, "lab", "Carpentry, fitting, welding, sheet metal, and basic machine tool operations.", "dr.suresh@apedu.ac.in"),
-        ("ME102M", "Engineering Materials & Metallurgy", "Mechanical Engineering", "1st Year", 2, 4, "theory", "Crystal structures, phase diagrams (Fe-C), heat treatment, and alloy steels.", "dr.suresh@apedu.ac.in"),
-        ("ME201", "Engineering Thermodynamics", "Mechanical Engineering", "2nd Year", 3, 4, "theory", "First & Second laws of thermodynamics, Carnot cycle, entropy, Rankine and Brayton cycles.", "dr.suresh@apedu.ac.in"),
-        ("ME202", "Strength of Materials & Solid Mechanics", "Mechanical Engineering", "2nd Year", 4, 3, "theory", "Stress-strain tensors, Mohr circle, shear force and bending moment diagrams, torsion in shafts.", "dr.suresh@apedu.ac.in"),
-        ("ME202L", "Material Testing & Mechanics Lab", "Mechanical Engineering", "2nd Year", 4, 2, "lab", "Tensile test on UTM, Izod/Charpy impact test, Rockwell hardness test, and torsion testing.", "dr.suresh@apedu.ac.in"),
-        ("ME301", "Fluid Mechanics & Hydraulic Machinery", "Mechanical Engineering", "3rd Year", 5, 3, "theory", "Bernoulli equation, Navier-Stokes, boundary layer theory, Pelton & Francis turbines, and pumps.", "dr.suresh@apedu.ac.in"),
-        ("ME301L", "Fluid Mechanics & Hydraulics Lab", "Mechanical Engineering", "3rd Year", 5, 2, "lab", "Calibration of Venturimeter/Orifice meter, performance test on Pelton turbine and centrifugal pump.", "dr.suresh@apedu.ac.in"),
-        ("ME302", "Heat Transfer & Thermal Engineering", "Mechanical Engineering", "3rd Year", 6, 3, "theory", "Conduction, convection, radiation, heat exchangers (LMTD/NTU), and boiling heat transfer.", "dr.suresh@apedu.ac.in"),
-        ("ME302L", "Thermal Engineering & Heat Transfer Lab", "Mechanical Engineering", "3rd Year", 6, 2, "lab", "Thermal conductivity of metal rod, heat transfer in forced convection, and pin fin test.", "dr.suresh@apedu.ac.in"),
-        ("ME401", "CAD/CAM & Industrial Robotics", "Mechanical Engineering", "4th Year", 7, 4, "integrated", "Geometric modeling, CNC part programming, robot kinematics (D-H parameters), and automation.", "dr.suresh@apedu.ac.in"),
-        ("ME405", "Mechanical Engineering Capstone Project", "Mechanical Engineering", "4th Year", 8, 8, "lab", "Design and fabrication of mechanical prototype, thermal/structural analysis, and viva.", "dr.suresh@apedu.ac.in"),
-
-        # =========================================================================
-        # Civil Engineering - Semesters 1 to 8
-        # =========================================================================
-        ("CE101", "Engineering Geology & Mineralogy", "Civil Engineering", "1st Year", 1, 3, "theory", "Physical geology, mineral identification, rock weathering, faulting, and tunnel site geology.", "dr.satya@apedu.ac.in"),
-        ("CE101L", "Geology & Building Drawing Lab", "Civil Engineering", "1st Year", 1, 2, "lab", "Mineral & rock specimen identification, geological map study, and plan drafting.", "dr.satya@apedu.ac.in"),
-        ("CE102", "Fluid Mechanics for Civil Engineers", "Civil Engineering", "1st Year", 2, 4, "theory", "Hydrostatics, buoyancy, flow through pipes, open channel flow, and weir equations.", "dr.satya@apedu.ac.in"),
-        ("CE201", "Surveying & Geomatics Engineering", "Civil Engineering", "2nd Year", 3, 3, "theory", "Chain, compass, theodolite leveling, total station surveying, and GPS/GIS mapping.", "dr.satya@apedu.ac.in"),
-        ("CE201L", "Surveying Field Lab", "Civil Engineering", "2nd Year", 3, 2, "lab", "Theodolite traversing, differential leveling, contour mapping, and total station fieldwork.", "dr.satya@apedu.ac.in"),
-        ("CE202", "Building Materials & Concrete Technology", "Civil Engineering", "2nd Year", 4, 3, "theory", "Cement properties, aggregate gradation, concrete mix design (IS 10262), and durability testing.", "dr.satya@apedu.ac.in"),
-        ("CE202L", "Concrete Technology & Quality Testing Lab", "Civil Engineering", "2nd Year", 4, 2, "lab", "Compressive strength of concrete cubes, slump test, Vee-Bee consistometer, and cement fineness.", "dr.satya@apedu.ac.in"),
-        ("CE301", "Structural Analysis & Determinate Systems", "Civil Engineering", "3rd Year", 5, 4, "theory", "Moment distribution method, slope deflection, influence lines, and matrix stiffness analysis.", "dr.satya@apedu.ac.in"),
-        ("CE302", "Geotechnical & Soil Mechanics", "Civil Engineering", "3rd Year", 6, 3, "theory", "Soil classification, permeability, shear strength (Direct shear/Triaxial), and shallow foundation design.", "dr.satya@apedu.ac.in"),
-        ("CE302L", "Geotechnical Soil Mechanics Lab", "Civil Engineering", "3rd Year", 6, 2, "lab", "Atterberg limits, direct shear test, standard proctor compaction test, and permeability determination.", "dr.satya@apedu.ac.in"),
-        ("CE401", "Transportation & Environmental Engineering", "Civil Engineering", "4th Year", 7, 4, "integrated", "Highway geometric design, flexible/rigid pavement design, wastewater treatment, and air pollution control.", "dr.satya@apedu.ac.in"),
-        ("CE405", "Civil Engineering Major Capstone Project", "Civil Engineering", "4th Year", 8, 8, "lab", "Structural building design (ETABS), geotechnical stability analysis, and technical report.", "dr.satya@apedu.ac.in"),
-
-        # =========================================================================
-        # Information Technology (IT) - Semesters 1 to 8
-        # =========================================================================
-        ("IT101", "Programming & Problem Solving using Java", "Information Technology", "1st Year", 1, 3, "theory", "Syntax, loops, arrays, OOP paradigms, inheritance, interfaces, and Java exceptions.", "prof.geetha@apedu.ac.in"),
-        ("IT101L", "Java Programming Foundations Lab", "Information Technology", "1st Year", 1, 2, "lab", "Writing Java classes, exception handlers, string manipulation, and I/O streams.", "prof.geetha@apedu.ac.in"),
-        ("IT102", "Computer Systems Architecture", "Information Technology", "1st Year", 2, 4, "theory", "Instruction sets, memory hierarchy, bus interfaces, and processor microarchitecture.", "prof.geetha@apedu.ac.in"),
-        ("IT201", "Data Structures & Java Programming", "Information Technology", "2nd Year", 3, 3, "theory", "Core data structures, OOP Java fundamentals, collections framework, and algorithmic efficiency.", "prof.geetha@apedu.ac.in"),
-        ("IT201L", "Data Structures with Java Lab", "Information Technology", "2nd Year", 3, 2, "lab", "Implementing trees, graphs, sorting algorithms, and hash tables in Java.", "prof.geetha@apedu.ac.in"),
-        ("IT202", "Database Technologies & Web Backend", "Information Technology", "2nd Year", 4, 4, "integrated", "Relational database modeling, NoSQL systems (MongoDB), REST backend architectures.", "prof.geetha@apedu.ac.in"),
-        ("IT301", "Cloud Infrastructure & Virtualization", "Information Technology", "3rd Year", 5, 3, "theory", "IaaS, PaaS, SaaS, hypervisors, serverless architectures, and cloud security compliance.", "prof.geetha@apedu.ac.in"),
-        ("IT301L", "Cloud Infrastructure & Containerization Lab", "Information Technology", "3rd Year", 5, 2, "lab", "Docker containerization, AWS EC2/S3 provisioning, and Kubernetes microservice deployment.", "prof.geetha@apedu.ac.in"),
-        ("IT302", "Enterprise Web Security & Cryptography", "Information Technology", "3rd Year", 6, 4, "integrated", "OWASP Top 10 defenses, OAuth2/JWT authentication, HTTPS encryption, and security testing.", "prof.geetha@apedu.ac.in"),
-        ("IT401", "Full Stack Web & Mobile App Development", "Information Technology", "4th Year", 7, 4, "integrated", "Modern web frameworks, React/React Native, state management, and cloud database persistence.", "prof.geetha@apedu.ac.in"),
-        ("IT405", "Information Technology Capstone Project", "Information Technology", "4th Year", 8, 8, "lab", "Full-scale enterprise application engineering, cloud deployment, and system evaluation.", "prof.geetha@apedu.ac.in")
+    # Seed Students records
+    students_records = [
+        # Student A: College A (AU - AIML - 3rd Year - Sem 1) -> Assigned to Prof. Murthy
+        (user_id_map["student.au@au.edu.in"], "Aarav Sharma", "21AUAIML001", "student.au@au.edu.in", "3rd Year", "AIML", "A", 1, 78.5, 62.0, 58.0, 70.0, 68.0, 65.0, 72.0, 68.0, 64.0, 62.0, 8.5, 68.0, 72.0, 58.0, 4, au_id, au_aiml_prog, au_v_id, class_id_map.get((au_id, "AIML", "3rd Year", "A")), "R24", "2024-2025", teacher_id_map["prof.murthy@au.edu.in"]),
+        # Student B: College B (JNTUK - ECE - 3rd Year - Sem 1) -> Assigned to Dr. Venkatesh
+        (user_id_map["student.jntuk@jntuk.edu.in"], "Bhavya Reddy", "21JNTUKECE042", "student.jntuk@jntuk.edu.in", "3rd Year", "ECE", "A", 1, 84.0, 70.0, 74.0, 65.0, 68.0, 70.0, 75.0, 72.0, 70.0, 72.0, 9.0, 75.0, 76.0, 65.0, 5, jntuk_id, jntuk_ece_prog, jntuk_v_id, class_id_map.get((jntuk_id, "ECE", "3rd Year", "A")), "R23", "2024-2025", teacher_id_map["dr.venkatesh@jntuk.edu.in"]),
+        # Demo Student: CSE - 3rd Year - Sem 5 -> Assigned to Default Faculty (teacher@example.com)
+        (user_id_map["student@example.com"], "Student Demo", "21AP001", "student@example.com", "3rd Year", "CSE", "A", 5, 82.0, 68.0, 70.0, 72.0, 68.0, 70.0, 75.0, 74.0, 68.0, 70.0, 7.5, 65.0, 70.0, 62.0, 3, au_id, None, None, class_id_map.get((au_id, "CSE", "3rd Year", "A")), "R23", "2024-2025", teacher_id_map["teacher@example.com"])
     ]
 
-    subject_id_map = {}
-    
-    for code, name, branch, yr, sem, credits, stype, desc, teacher_email in all_subjects_catalog:
-        cursor.execute("SELECT id FROM subjects WHERE subject_code = ?", (code,))
-        sub_row = cursor.fetchone()
-        if not sub_row:
+    student_id_map = {}
+    for uid, name, roll, email, yr, branch, sec, sem, att, m_sc, p_sc, pr_sc, ds_sc, db_sc, cm_sc, as_sc, qz_sc, ex_sc, sh, la, pp, op, ls, inst_id, prog_id, v_id, cls_id, reg, ac_yr, t_id in students_records:
+        cursor.execute("SELECT id FROM students WHERE roll_no = ? OR LOWER(email) = ?", (roll, email.lower()))
+        row = cursor.fetchone()
+        if not row:
             cursor.execute("""
-            INSERT INTO subjects (subject_code, subject_name, branch, year, semester, credits, subject_type, description)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (code, name, branch, yr, sem, credits, stype, desc))
-            sub_id = cursor.lastrowid
+            INSERT INTO students (
+                user_id, full_name, roll_no, email, year, branch, section, semester,
+                attendance, mathematics_score, physics_score, programming_score,
+                data_structures_score, database_score, communication_score,
+                assignment_score, quiz_score, exam_score, study_hours,
+                learning_activity, previous_performance, overall_progress,
+                learning_streak, institution_id, program_id, curriculum_version_id,
+                class_id, regulation, academic_year, teacher_id, is_demo
+            ) VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, 1
+            )
+            """, (
+                uid, name, roll, email.lower(), yr, branch, sec, sem,
+                att, m_sc, p_sc, pr_sc, ds_sc, db_sc, cm_sc, as_sc, qz_sc, ex_sc, sh, la, pp, op, ls, inst_id, prog_id, v_id,
+                cls_id, reg, ac_yr, t_id
+            ))
+            s_id = cursor.lastrowid
         else:
-            sub_id = sub_row["id"]
+            s_id = row["id"]
             cursor.execute("""
-            UPDATE subjects SET subject_name = ?, branch = ?, year = ?, semester = ?, credits = ?, subject_type = ?, description = ?
+            UPDATE students SET
+                user_id = ?, full_name = ?, roll_no = ?, year = ?, branch = ?, section = ?, semester = ?,
+                institution_id = ?, program_id = ?, curriculum_version_id = ?,
+                class_id = ?, regulation = ?, academic_year = ?, teacher_id = ?
             WHERE id = ?
-            """, (name, branch, yr, sem, credits, stype, desc, sub_id))
-            
-        subject_id_map[code] = sub_id
-        
-        # Connect Teacher to Subject across sections
-        t_id = teacher_id_map.get(teacher_email.lower()) or 1
-        for sec in ["A", "B", "C", "D"]:
+            """, (uid, name, roll, yr, branch, sec, sem, inst_id, prog_id, v_id, cls_id, reg, ac_yr, t_id, s_id))
+        student_id_map[roll] = s_id
+
+
+    # =========================================================================
+    # 5. DYNAMIC SUBJECTS, MODULES & TOPICS (CRITICAL TEST CASE: Requirement 43)
+    # =========================================================================
+
+    # --- COLLEGE A (AU AIML 3rd Year Sem 1) ---
+    college_a_subjects = [
+        ("CS301-AU", "Machine Learning", "AIML", "3rd Year", 1, 4, "theory", "Supervised, unsupervised, ensemble algorithms, and quantum learning foundations.", au_id, au_aiml_prog, au_v_id, [
+            (1, "Supervised Learning & Decision Trees", "Tree-based induction, information gain, and ensemble architectures.", [
+                ("Decision Trees", "ID3 and CART recursive partitioning algorithms.", "Beginner", "Textbook of Machine Learning by Tom Mitchell, Pages 112-114", "Explain the recursive splitting mechanism in decision tree induction."),
+                ("Entropy and Information Gain", "Information theoretic reduction of impurity.", "Intermediate", "Textbook of Machine Learning by Tom Mitchell, Pages 115-118", "Compute entropy given sample class distributions."),
+                ("Random Forests Ensemble", "Bagging, bootstrap aggregation, and out-of-bag error estimation.", "Intermediate", "Applied Machine Learning by Hastie et al., Pages 85-92", "Explain variance reduction in random forest ensembles.")
+            ]),
+            (2, "Probabilistic & Quantum Foundations", "Bayes classification, gradient descent, and variational quantum circuits.", [
+                ("Bayesian Classification", "Naive Bayes, posterior estimation, and Laplace smoothing.", "Intermediate", "Pattern Recognition & ML by Bishop, Pages 140-146", "Derive Maximum A Posteriori (MAP) classification rule."),
+                ("Variational Quantum Circuits", "AngleEmbedding, Parameterized Quantum Circuits (PQC), and VQC optimization.", "Advanced", "Quantum Machine Learning with PennyLane by Schuld, Pages 45-52", "Formulate parameterized Pauli-Z expectation measurements in 5-qubit VQC.")
+            ])
+        ]),
+        ("CS302-AU", "Database Management Systems", "AIML", "3rd Year", 1, 3, "theory", "Relational schema design, normalization, ACID transactions, and query optimization.", au_id, au_aiml_prog, au_v_id, [
+            (1, "Relational Modeling & Schema Design", "ER modeling, relational algebra, and schema normalization.", [
+                ("Entity-Relationship Modeling", "Entities, attributes, cardinality ratios, and ER diagrams.", "Beginner", "Database System Concepts by Silberschatz, Pages 55-64", "Design conceptual schema for enterprise domain."),
+                ("3NF and BCNF Normalization", "Functional dependencies, lossless joins, and dependency preservation.", "Intermediate", "Database System Concepts by Silberschatz, Pages 80-92", "Decompose relational schemas into Boyce-Codd Normal Form.")
+            ]),
+            (2, "Transaction & Concurrency Protocols", "ACID guarantees, two-phase locking, and write-ahead logging.", [
+                ("ACID Properties", "Atomicity, Consistency, Isolation, and Durability.", "Beginner", "Database System Concepts by Silberschatz, Pages 180-188", "Explain how write-ahead logging ensures durability."),
+                ("Two-Phase Locking Protocol", "Strict 2PL, shared/exclusive locks, and deadlock prevention.", "Advanced", "Database System Concepts by Silberschatz, Pages 210-220", "Analyze conflict serializability under two-phase locking.")
+            ])
+        ]),
+        ("CS303-AU", "Computer Networks", "AIML", "3rd Year", 1, 3, "theory", "OSI/TCP-IP layering, routing protocols, flow control, and network security.", au_id, au_aiml_prog, au_v_id, [
+            (1, "Network Layer & Routing", "IP addressing, subnets, and routing protocols.", [
+                ("IP Addressing and CIDR", "IPv4/IPv6 headers, subnet masks, and longest prefix match.", "Beginner", "Computer Networking: Top Down Approach by Kurose, Pages 95-104", "Calculate subnet broadcast and network addresses."),
+                ("OSPF Routing Protocol", "Link-state advertisements and Dijkstra shortest path routing.", "Intermediate", "Computer Networking: Top Down Approach by Kurose, Pages 120-130", "Construct link-state databases and routing tables.")
+            ]),
+            (2, "Transport Layer Protocols", "TCP flow control, congestion window, and UDP mechanics.", [
+                ("TCP Congestion Control", "Slow start, congestion avoidance, fast retransmit, and fast recovery.", "Intermediate", "Computer Networking: Top Down Approach by Kurose, Pages 230-245", "Trace congestion window dynamics during packet loss.")
+            ])
+        ])
+    ]
+
+    # --- COLLEGE B (JNTUK ECE 3rd Year Sem 1) ---
+    college_b_subjects = [
+        ("EC301-JNTUK", "Signals and Systems", "ECE", "3rd Year", 1, 4, "theory", "Continuous & discrete signal representations, Fourier, Laplace, and Z-transforms.", jntuk_id, jntuk_ece_prog, jntuk_v_id, [
+            (1, "Continuous & Discrete Transforms", "Spectral analysis and transform domain representations.", [
+                ("Continuous-Time Fourier Transform", "CTFT properties, duality, convolution, and frequency spectra.", "Intermediate", "Signals and Systems by Alan V. Oppenheim, Pages 204-212", "Evaluate frequency response of linear time-invariant systems."),
+                ("Laplace Transform Analysis", "Bilateral Laplace transform, region of convergence (ROC), and stability.", "Intermediate", "Signals and Systems by Alan V. Oppenheim, Pages 230-240", "Determine system pole-zero stability in s-plane."),
+                ("Z-Transform and ROC", "Discrete transform, inversion methods, and digital filter response.", "Advanced", "Signals and Systems by Alan V. Oppenheim, Pages 280-295", "Apply Z-transform to solve discrete linear difference equations.")
+            ])
+        ]),
+        ("EC302-JNTUK", "VLSI Design", "ECE", "3rd Year", 1, 3, "theory", "MOS transistor theory, CMOS inverter layout, stick diagrams, and timing analysis.", jntuk_id, jntuk_ece_prog, jntuk_v_id, [
+            (1, "CMOS Technology & Circuit Layout", "MOS physics, inverter transfer characteristics, and layout rules.", [
+                ("MOS Transistor Operation", "Linear and saturation regimes, threshold voltage, and body effect.", "Beginner", "CMOS VLSI Design by Weste & Harris, Pages 42-50", "Derive drain current equation in saturation mode."),
+                ("CMOS Inverter DC Characteristics", "Noise margins, switching threshold, and dynamic power dissipation.", "Intermediate", "CMOS VLSI Design by Weste & Harris, Pages 65-74", "Calculate symmetric CMOS inverter switching threshold."),
+                ("Layout Design Rules & Stick Diagrams", "Lambda rules, Euler path logic layout, and DRC physical verification.", "Advanced", "CMOS VLSI Design by Weste & Harris, Pages 98-110", "Construct Euler path for optimal CMOS diffusion layout.")
+            ])
+        ]),
+        ("EC303-JNTUK", "Digital Communication", "ECE", "3rd Year", 1, 3, "theory", "Pulse modulation, passband digital signaling, QPSK, QAM, and error rates.", jntuk_id, jntuk_ece_prog, jntuk_v_id, [
+            (1, "Baseband & Passband Modulation", "PCM, QPSK, QAM, and noise analysis in AWGN channels.", [
+                ("Pulse Code Modulation (PCM)", "Sampling theorem, uniform/non-uniform quantization, and companding.", "Beginner", "Digital Communications by Simon Haykin, Pages 110-122", "Determine signal-to-quantization noise ratio in PCM systems."),
+                ("QPSK & QAM Constellations", "Phase shift keying, constellation diagrams, and bit error probability.", "Intermediate", "Digital Communications by Simon Haykin, Pages 160-175", "Calculate bit error rate (BER) over additive white Gaussian noise."),
+                ("Information Theory & Shannon Limit", "Entropy, mutual information, and channel coding theorem.", "Advanced", "Digital Communications by Simon Haykin, Pages 210-225", "Compute channel capacity for AWGN bandwidth-constrained channel.")
+            ])
+        ])
+    ]
+
+    all_custom_subjects = college_a_subjects + college_b_subjects
+
+    for s_code, s_name, branch, yr, sem, credits, stype, desc, i_id, p_id, v_id, modules_list in all_custom_subjects:
+        cursor.execute("SELECT id FROM subjects WHERE subject_code = ?", (s_code,))
+        row = cursor.fetchone()
+        if not row:
             cursor.execute("""
-            INSERT OR IGNORE INTO teacher_subjects (teacher_id, subject_id, branch, year, semester, section)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """, (t_id, sub_id, branch, yr, sem, sec))
-
-    # 3. Ensure every subject in the database has at least 3-4 structured syllabus lessons, 2-3 labs (for integrated/lab), and quizzes/assignments
-    cursor.execute("SELECT id, subject_code, subject_name, subject_type, branch, semester FROM subjects")
-    all_stored_subjects = cursor.fetchall()
-
-    for sub in all_stored_subjects:
-        s_id = sub["id"]
-        s_code = sub["subject_code"]
-        s_name = sub["subject_name"]
-        s_type = sub["subject_type"]
-        s_branch = sub["branch"]
-        s_sem = sub["semester"]
-
-        # 3.1 Lessons
-        cursor.execute("SELECT count(*) FROM lessons WHERE subject_id = ?", (s_id,))
-        if cursor.fetchone()[0] < 3:
-            cursor.execute("DELETE FROM lessons WHERE subject_id = ?", (s_id,))
+            INSERT INTO subjects (
+                institution_id, program_id, curriculum_version_id, subject_code,
+                subject_name, branch, year, semester, credits, subject_type, description, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'published')
+            """, (i_id, p_id, v_id, s_code, s_name, branch, yr, sem, credits, stype, desc))
+            s_id = cursor.lastrowid
+        else:
+            s_id = row["id"]
             cursor.execute("""
-            INSERT INTO lessons (subject_id, title, description, topic, content, difficulty, estimated_minutes, order_number)
-            VALUES 
-            (?, 'Unit 1: Foundations & Architecture of ' || ?, 'Introduction, core terminology, theoretical paradigms, and historical context.', 'Foundations', '# Unit 1: Foundations of ' || ? || '\n\n### Overview\nWelcome to the foundational module for **' || ? || '**. This unit introduces core principles, architectural models, and analytical tools.\n\n### Key Learning Objectives\n- Understand fundamental mechanisms and definitions.\n- Master mathematical and logical models.\n- Formulate standard engineering problem sets.', 'Beginner', 45, 1),
-            (?, 'Unit 2: Core Analytical Methodologies & Implementation', 'Formal algorithms, mathematical representations, design rules, and data structures.', 'Core Methodologies', '# Unit 2: Core Methodologies\n\n### Theoretical Formulations\nIn this unit, we explore standard transformations, system dynamics, and implementation pipelines.\n\n```python\n# Example algorithmic formulation for ' || ? || '\ndef compute_baseline_metric(inputs, parameters):\n    \"\"\"Calculates system equilibrium or operational response.\"\"\"\n    processed = [x * parameters.get(\"weight\", 1.0) for x in inputs]\n    return sum(processed) / max(len(processed), 1)\n```\n\n### Analysis\nReview step-by-step proofs and performance constraints.', 'Intermediate', 50, 2),
-            (?, 'Unit 3: Advanced Optimization & Scaling Strategies', 'System optimization, latency/complexity reduction, bottleneck diagnosis, and performance tuning.', 'Advanced Optimization', '# Unit 3: Advanced Optimization\n\n### Scaling Principles\nFocuses on scaling algorithms, parallel execution, hardware acceleration, and fault-tolerant mechanisms.\n\n### Industry Best Practices\n1. Ensure strict parameter validation.\n2. Profile memory allocations and CPU overhead.\n3. Incorporate automated verification telemetry.', 'Advanced', 60, 3),
-            (?, 'Unit 4: Case Studies, Practical Deployments & Future Frontiers', 'Industrial case studies, end-to-end integration, and future research directions.', 'Emerging Technologies', '# Unit 4: Case Studies & Frontiers\n\n### Real-World Case Studies\nExamines real-world production deployments, fault recovery benchmarks, and emerging quantum/AI enhancements in **' || ? || '**.\n\n### Summary & Review Checklist\n- Complete all diagnostic problem sets.\n- Review lab exercises and simulation results.', 'Advanced', 55, 4)
-            """, (s_id, s_name, s_name, s_name, s_id, s_name, s_id, s_id, s_name))
+            UPDATE subjects SET
+                institution_id = ?, program_id = ?, curriculum_version_id = ?, status = 'published'
+            WHERE id = ?
+            """, (i_id, p_id, v_id, s_id))
 
-        # 3.2 Labs
-        if s_type in ['integrated', 'lab']:
-            cursor.execute("SELECT count(*) FROM labs WHERE subject_id = ?", (s_id,))
-            if cursor.fetchone()[0] < 2:
-                cursor.execute("DELETE FROM labs WHERE subject_id = ?", (s_id,))
+        # Create authorized resource for the subject
+        cursor.execute("SELECT id FROM learning_resources WHERE subject_id = ?", (s_id,))
+        if not cursor.fetchone():
+            cursor.execute("""
+            INSERT INTO learning_resources (
+                institution_id, subject_id, title, file_name, resource_type, source,
+                authorization_status, copyright_acknowledged, version, is_demo
+            ) VALUES (?, ?, ?, ?, 'textbook', 'Official Institution Syllabus Committee', 'authorized', 1, '1.0', 1)
+            """, (i_id, s_id, f"Official Reference Text: {s_name}", f"{s_code}_Textbook.pdf"))
+            res_id = cursor.lastrowid
+        else:
+            res_id = cursor.fetchone()
+
+        # Modules & Topics
+        for m_num, m_name, m_desc, topics_list in modules_list:
+            cursor.execute("SELECT id FROM modules WHERE subject_id = ? AND module_number = ?", (s_id, m_num))
+            m_row = cursor.fetchone()
+            if not m_row:
                 cursor.execute("""
-                INSERT INTO labs (subject_id, title, description, instructions, experiment_number, difficulty, estimated_minutes)
-                VALUES 
-                (?, 'Experiment 1: Baseline Hardware/Software Verification of ' || ?, 'Configure virtual runtime, verify parameters, and record baseline experimental outputs.', '# Experiment 1: Baseline Verification\n\n### Objectives\n- Initialize virtual laboratory workspace.\n- Set up input test vectors and calibrate measurement instruments.\n- Record and tabulate baseline operational data.\n\n### Procedure\n1. Launch simulation environment.\n2. Input calibration parameters.\n3. Record observed metrics and calculate percentage deviation.', 1, 'Beginner', 60),
-                (?, 'Experiment 2: Parameter Variation & Performance Profiling', 'Execute dynamic parameter sweeps, evaluate efficiency curves, and identify operational bottlenecks.', '# Experiment 2: Performance Profiling\n\n### Objectives\n- Perform parameter sweep across operational ranges.\n- Plot response curves (throughput, latency, error rate, power).\n- Determine optimal operating equilibrium.\n\n### Deliverables\n- Tabulated measurement matrix.\n- Comparative response graphs.', 2, 'Intermediate', 75),
-                (?, 'Experiment 3: Advanced Optimization & Fault Diagnosis', 'Simulate stress workloads, fault injection scenarios, and verify automated recovery mechanisms.', '# Experiment 3: Stress Testing & Optimization\n\n### Objectives\n- Subject system to edge-case stress conditions.\n- Measure recovery time and data integrity under failure.\n- Apply corrective tuning and verify performance restoration.', 3, 'Advanced', 90)
-                """, (s_id, s_name, s_id, s_id))
+                INSERT INTO modules (subject_id, module_number, module_name, description)
+                VALUES (?, ?, ?, ?)
+                """, (s_id, m_num, m_name, m_desc))
+                mod_id = cursor.lastrowid
+            else:
+                mod_id = m_row["id"]
 
-        # 3.3 Quizzes
-        cursor.execute("SELECT count(*) FROM quizzes WHERE subject_id = ?", (s_id,))
-        if cursor.fetchone()[0] == 0:
-            cursor.execute("""
-            INSERT INTO quizzes (subject_id, title, description, topic, difficulty, time_limit, total_questions)
-            VALUES (?, ? || ' Diagnostic Quiz', 'Comprehensive assessment of key concepts, analytical thinking, and problem-solving skills.', 'Core Theory', 'Intermediate', 15, 3)
-            """, (s_id, s_name))
-            q_id = cursor.lastrowid
+            for t_idx, (t_name, t_desc, t_diff, t_source, t_obj) in enumerate(topics_list, start=1):
+                cursor.execute("SELECT id FROM topics WHERE module_id = ? AND topic_name = ?", (mod_id, t_name))
+                t_row = cursor.fetchone()
+                if not t_row:
+                    cursor.execute("""
+                    INSERT INTO topics (module_id, subject_id, topic_name, description, difficulty, order_number)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """, (mod_id, s_id, t_name, t_desc, t_diff, t_idx))
+                    top_id = cursor.lastrowid
+                else:
+                    top_id = t_row["id"]
 
-            cursor.execute("""
-            INSERT INTO quiz_questions (quiz_id, question, option_a, option_b, option_c, option_d, correct_option, explanation, marks)
-            VALUES 
-            (?, 'What is the primary operational objective of ' || ? || '?', 'To optimize efficiency and systematic engineering execution', 'Random trial execution without validation', 'Manual non-standard operations', 'None of the above', 'A', 'Systematic modeling and algorithmic optimization are fundamental to the discipline.', 1.0),
-            (?, 'Which parameter governs performance scaling in ' || ? || '?', 'Input size, complexity bounds, and resource allocation', 'Display refresh rate', 'Keyboard layout configuration', 'None of the above', 'A', 'Input complexity directly determines time and memory requirements.', 1.0),
-            (?, 'Which of the following represents a recommended best engineering practice?', 'Rigorous modular design, boundary checks, and automated unit testing', 'Hardcoding variable states into source routines', 'Ignoring runtime edge cases and error bounds', 'Skipping validation benchmarks', 'A', 'Modular architectural design and automated testing ensure production resilience.', 1.0)
-            """, (q_id, s_name, q_id, s_name, q_id))
+                # Add Lesson for backward compatibility and lessons portal
+                cursor.execute("SELECT id FROM lessons WHERE subject_id = ? AND topic = ?", (s_id, t_name))
+                if not cursor.fetchone():
+                    cursor.execute("""
+                    INSERT INTO lessons (subject_id, title, description, topic, content, difficulty, estimated_minutes, order_number)
+                    VALUES (?, ?, ?, ?, ?, ?, 45, ?)
+                    """, (s_id, f"Core Lesson: {t_name}", t_desc, t_name, f"# {t_name}\n\n{t_desc}\n\n**Source Reference:** {t_source}\n\n## Core Principles\n- Operational foundations and mathematical formulation.\n- Practical implementation guidelines.", t_diff, t_idx))
 
-        # 3.4 Assignments
-        cursor.execute("SELECT count(*) FROM assignments WHERE subject_id = ?", (s_id,))
-        if cursor.fetchone()[0] == 0:
-            cursor.execute("""
-            INSERT INTO assignments (subject_id, title, description, instructions, total_marks, due_date)
-            VALUES 
-            (?, 'Assignment 1: Comprehensive Problem Set on ' || ?, 'Solve analytical problem formulations, theoretical proofs, and design trade-offs.', '# Assignment 1 Instructions\n\n1. Review Unit 1 & Unit 2 core lecture notes.\n2. Provide step-by-step derivation for all problem items.\n3. Include diagrams and algorithmic complexity calculations.', 100.0, '2026-10-15'),
-            (?, 'Assignment 2: Case Study & Empirical Analysis', 'Real-world application analysis, runtime performance profiling, and optimization report.', '# Assignment 2 Instructions\n\n1. Benchmark runtime metrics against standard benchmarks.\n2. Identify system bottlenecks and efficiency limitations.\n3. Propose and document concrete optimization recommendations.', 100.0, '2026-11-01')
-            """, (s_id, s_name, s_id))
+                # Add Document Chunk for retrieval grounding
+                cursor.execute("SELECT id FROM document_chunks WHERE topic_id = ?", (top_id,))
+                if not cursor.fetchone() and res_id:
+                    cursor.execute("""
+                    INSERT INTO document_chunks (
+                        resource_id, subject_id, module_id, topic_id, page_number,
+                        section_heading, chunk_text, token_count
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, 60)
+                    """, (res_id, s_id, mod_id, top_id, t_idx * 15, t_name, f"Approved curriculum content for {t_name}. Core theoretical derivation, operational trade-offs, and design principles according to {t_source}."))
 
-    # 4. Auto-enroll existing seeded students into all matching subjects for their Branch + Year + Semester
-    cursor.execute("SELECT id, branch, year, semester FROM students")
-    all_students = cursor.fetchall()
-    for st in all_students:
-        st_id = st["id"]
+                # Add Grounded Question
+                cursor.execute("SELECT id FROM grounded_questions WHERE topic_id = ?", (top_id,))
+                if not cursor.fetchone():
+                    cursor.execute("""
+                    INSERT INTO grounded_questions (
+                        subject_id, module_id, topic_id, question_text, question_type,
+                        option_a, option_b, option_c, option_d, correct_answer, explanation,
+                        difficulty, source_reference, source_page, generation_method, approval_status
+                    ) VALUES (?, ?, ?, ?, 'MCQ', ?, ?, ?, ?, 'A', ?, ?, ?, ?, 'grounded_rag', 'approved')
+                    """, (
+                        s_id, mod_id, top_id,
+                        f"According to {s_name} standards, what is the core engineering purpose of {t_name}?",
+                        f"Systematic algorithmic optimization and bounded error control for {t_name}.",
+                        "Manual non-standard trial and error without metrics.",
+                        "Bypassing runtime validation checks.",
+                        "None of the above.",
+                        f"Approved source {t_source} establishes exact analytical bounds for {t_name}.",
+                        t_diff, t_source, t_idx * 15
+                    ))
+
+    # =========================================================================
+    # 6. AUTO-ENROLL STUDENTS & SEED PERFORMANCE / TOPIC MASTERY
+    # =========================================================================
+    student_a_id = student_id_map["21AUAIML001"]
+    student_b_id = student_id_map["21JNTUKECE042"]
+
+    # Student A (College A - AU AIML)
+    cursor.execute("SELECT id FROM subjects WHERE institution_id = ? AND program_id = ?", (au_id, au_aiml_prog))
+    for s_row in cursor.fetchall():
+        s_id = s_row["id"]
+        cursor.execute("INSERT OR IGNORE INTO student_subjects (student_id, subject_id) VALUES (?, ?)", (student_a_id, s_id))
         cursor.execute("""
-        SELECT id FROM subjects 
-        WHERE branch = ? AND year = ? AND semester = ?
-        """, (st["branch"], st["year"], st["semester"]))
-        matching_subs = cursor.fetchall()
-        for msub in matching_subs:
-            cursor.execute("""
-            INSERT OR IGNORE INTO student_subjects (student_id, subject_id)
-            VALUES (?, ?)
-            """, (st_id, msub["id"]))
+        INSERT OR IGNORE INTO student_subject_performance (student_id, subject_id, attendance, assessment_score, assignment_score, quiz_score, lab_score, overall_score, mastery_score)
+        VALUES (?, ?, 78.5, 62.0, 70.0, 58.0, 72.0, 65.0, 56.0)
+        """, (student_a_id, s_id))
+
+    # Seed topic mastery for Student A on Decision Trees (weak = 42%)
+    cursor.execute("SELECT id, subject_id FROM topics WHERE topic_name = 'Decision Trees'")
+    dt_row = cursor.fetchone()
+    if dt_row:
+        cursor.execute("""
+        INSERT OR REPLACE INTO student_topic_mastery (student_id, topic_id, subject_id, mastery_score, quiz_score, attempts, time_spent_minutes, status)
+        VALUES (?, ?, ?, 42.0, 40.0, 3, 45.0, 'needs_revision')
+        """, (student_a_id, dt_row["id"], dt_row["subject_id"]))
+
+    cursor.execute("SELECT id, subject_id FROM topics WHERE topic_name = 'Entropy and Information Gain'")
+    ent_row = cursor.fetchone()
+    if ent_row:
+        cursor.execute("""
+        INSERT OR REPLACE INTO student_topic_mastery (student_id, topic_id, subject_id, mastery_score, quiz_score, attempts, time_spent_minutes, status)
+        VALUES (?, ?, ?, 38.0, 35.0, 2, 30.0, 'needs_revision')
+        """, (student_a_id, ent_row["id"], ent_row["subject_id"]))
+
+    # Student B (College B - JNTUK ECE)
+    cursor.execute("SELECT id FROM subjects WHERE institution_id = ? AND program_id = ?", (jntuk_id, jntuk_ece_prog))
+    for s_row in cursor.fetchall():
+        s_id = s_row["id"]
+        cursor.execute("INSERT OR IGNORE INTO student_subjects (student_id, subject_id) VALUES (?, ?)", (student_b_id, s_id))
+        cursor.execute("""
+        INSERT OR IGNORE INTO student_subject_performance (student_id, subject_id, attendance, assessment_score, assignment_score, quiz_score, lab_score, overall_score, mastery_score)
+        VALUES (?, ?, 84.0, 72.0, 75.0, 70.0, 78.0, 74.0, 72.0)
+        """, (student_b_id, s_id))
+
+    # Seed topic mastery for Student B
+    cursor.execute("SELECT id, subject_id FROM topics WHERE topic_name = 'Continuous-Time Fourier Transform'")
+    ctft_row = cursor.fetchone()
+    if ctft_row:
+        cursor.execute("""
+        INSERT OR REPLACE INTO student_topic_mastery (student_id, topic_id, subject_id, mastery_score, quiz_score, attempts, time_spent_minutes, status)
+        VALUES (?, ?, ?, 48.0, 50.0, 2, 35.0, 'needs_revision')
+        """, (student_b_id, ctft_row["id"], ctft_row["subject_id"]))
+
+    cursor.execute("SELECT id, subject_id FROM topics WHERE topic_name = 'CMOS Inverter DC Characteristics'")
+    cmos_row = cursor.fetchone()
+    if cmos_row:
+        cursor.execute("""
+        INSERT OR REPLACE INTO student_topic_mastery (student_id, topic_id, subject_id, mastery_score, quiz_score, attempts, time_spent_minutes, status)
+        VALUES (?, ?, ?, 78.0, 80.0, 1, 20.0, 'in_progress')
+        """, (student_b_id, cmos_row["id"], cmos_row["subject_id"]))
+
+    # Assign faculty to subjects
+    prof_murthy_id = cursor.execute("SELECT id FROM teachers WHERE email = 'prof.murthy@au.edu.in'").fetchone()[0]
+    dr_venk_id = cursor.execute("SELECT id FROM teachers WHERE email = 'dr.venkatesh@jntuk.edu.in'").fetchone()[0]
+
+    cursor.execute("SELECT id FROM subjects WHERE subject_code = 'CS301-AU'")
+    ml_sub_row = cursor.fetchone()
+    if ml_sub_row:
+        cursor.execute("INSERT OR IGNORE INTO teacher_subjects (teacher_id, subject_id, branch, year, semester, section) VALUES (?, ?, 'AIML', '3rd Year', 1, 'A')", (prof_murthy_id, ml_sub_row["id"]))
+
+    cursor.execute("SELECT id FROM subjects WHERE subject_code = 'EC301-JNTUK'")
+    sig_sub_row = cursor.fetchone()
+    if sig_sub_row:
+        cursor.execute("INSERT OR IGNORE INTO teacher_subjects (teacher_id, subject_id, branch, year, semester, section) VALUES (?, ?, 'ECE', '3rd Year', 1, 'A')", (dr_venk_id, sig_sub_row["id"]))
 
     conn.commit()
     conn.close()
-    print("[+] Complete B.Tech curriculum, labs, lessons, assignments, and student subject enrollments seeded!")
+    print("[+] State-scale multi-institution curriculum, roles, grounded resources, and test cases seeded successfully!")
+
 
 if __name__ == "__main__":
     seed_academic_curriculum()

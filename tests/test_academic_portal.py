@@ -172,10 +172,14 @@ class TestAcademicLearningPortal(unittest.TestCase):
         c = conn.cursor()
         c.execute("SELECT id FROM subjects WHERE subject_code = 'CS201'")
         ds_id = c.fetchone()[0]
+        c.execute("SELECT id FROM teachers WHERE LOWER(email) = 'dr.ravi@apedu.ac.in'")
+        t_row = c.fetchone()
+        t_id = t_row[0] if t_row else None
         conn.close()
         
         res_msg = self.client.post("/api/student/messages", json={
             "subject_id": ds_id,
+            "teacher_id": t_id,
             "message": "Dr. Ravi, can you please clarify tree traversals?"
         })
         self.assertEqual(res_msg.status_code, 201)
